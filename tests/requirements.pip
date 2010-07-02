@@ -1,0 +1,4 @@
+django==1.2.1
+pylint
+coverage
+

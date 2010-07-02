@@ -1,0 +1,7 @@
+.cache
+.ve
+.coverage
+*.pyc
+reports
+
+
