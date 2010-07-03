@@ -21,8 +21,8 @@ class Command(BaseCommand):
         Run pylint and test with coverage and xml reports
         """
         output_dir=options.get('output_dir')
-
-        os.mkdir(output_dir)
+        if not path.exists(output_dir):
+            os.makedirs(output_dir)
 
         app_labels = Command.app_list()
 
