@@ -28,6 +28,7 @@ setup(
         'pylint',
     ],
     packages = find_packages(),
+    package_data={'django_hudson': ['management/commands/pylint.rc']},
     zip_safe = False,
     include_package_data = True
 )
