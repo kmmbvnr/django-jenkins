@@ -13,7 +13,7 @@ try:
         raise
 except ImportError:
     #Must not have south
-    patch_for_test_db_setup = lambda x: pass
+    patch_for_test_db_setup = lambda x: None
 
 class Command(BaseCommand):
     help = "Runs the test suite with reporting to xml"
