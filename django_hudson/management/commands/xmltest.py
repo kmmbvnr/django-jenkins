@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from optparse import make_option
 from django.core.management.base import BaseCommand
-from xmlrunner import XmlDjangoTestSuiteRunner
+from django_hudson.xmlrunner import XmlDjangoTestSuiteRunner
 
 class Command(BaseCommand):
     help = "Runs the test suite with reporting to xml"
