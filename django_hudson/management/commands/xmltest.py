@@ -29,7 +29,7 @@ class Command(BaseCommand):
         patch_for_test_db_setup()
         output_dir=options.get('output_dir')
         
-        test_runner = XmlDjangoTestSuiteRunner(output_dir=output_dir)
+        test_runner = XmlDjangoTestSuiteRunner(output_dir=output_dir, interactive=False)
         failures = test_runner.run_tests(test_labels)
 
         if failures:
