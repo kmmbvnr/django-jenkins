@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import sys, os
+import sys, os, pprint
 from os import path
 import coverage
 from optparse import make_option
@@ -45,7 +45,7 @@ class Command(BaseCommand):
         coverage.start()
         
         #tests
-        test_runner = XmlDjangoTestSuiteRunner(output_dir=output_dir, interactive=interactive)
+        test_runner = XmlDjangoTestSuiteRunner(output_dir=output_dir, interactive=interactive, verbosity=verbosity)
         failures = test_runner.run_tests(test_labels)
 
         #save coverage report
@@ -53,7 +53,11 @@ class Command(BaseCommand):
 
         modules = [module for name, module in sys.modules.items() \
                        if module and any([name.endswith(label) for label in test_labels])]
-        print modules
+
+        if verbosity > 0:
+            print "Coverage being generated for:"
+            pprint.pprint(modules)
+
         morfs = [ m.__file__ for m in modules if hasattr(m, '__file__') ]
         coverage._the_coverage.xml_report(morfs, outfile=path.join(output_dir,'coverage.xml'))
     
