@@ -56,27 +56,36 @@ class Command(BaseCommand):
         #save coverage report
         coverage.stop()
 
-        modules = [ (module, name) for name, module in sys.modules.items() \
-                       if module and any([label for label in test_labels if label in name]) ]
-        modules = [ module for module, name in modules if self.want_module(name, excludes) ]
+        modules = [ module for name, module in sys.modules.items() \
+                    if self.want_module(name, module, test_labels, excludes)
+        ]
+        morfs = [ self.src(m.__file__) for m in modules if self.src(m.__file__).endswith(".py")]
         
-        modules = [ module for module in modules if self.src(module.__file__).endswith('.py') ]
-
         if verbosity > 0:
             if excludes:
                 print "Excluding any module containing of these words:"
                 pprint.pprint(excludes)
             
             print "Coverage being generated for:"
-            pprint.pprint(modules)
+            pprint.pprint(morfs)
 
-        morfs = [ m.__file__ for m in modules if hasattr(m, '__file__') ]
         coverage._the_coverage.xml_report(morfs, outfile=path.join(output_dir,'coverage.xml'))
 
-    def want_module(self, filename, excludes=[]):
+    def want_module(self, modname, mod, test_labels=[], excludes=[]):
+        #No cover if it ain't got a file
+        if not hasattr(mod, "__file__"): return False
+
+        #If it's not being explicity excluded
         for exclude in excludes:
-            if exclude and exclude in filename:
+            if exclude and exclude in modname:
                 return False
+        
+        if test_labels:
+            #If it's one of the explicit test labels called for
+            for label in test_labels:
+                if label and label in modname:
+                    return True
+            return False
         return True
 
     def src(self, filename):
