@@ -17,6 +17,9 @@ class Command(BaseCommand):
                     help='Reports directory'),
         make_option('--noinput', action='store_false', dest='interactive', default=True,
             help='Tells Django to NOT prompt the user for input of any kind.'),
+        make_option('--excludes', dest="excludes", default='',
+            help="""Comma seperated list of words, modules containing those words
+            will be excluded from coverage reports."""),
     )
 
     def handle(self, *test_labels, **options):
@@ -27,7 +30,9 @@ class Command(BaseCommand):
 
         verbosity = int(options.get('verbosity', 1))
         interactive = options.get('interactive', True)
-
+        excludes = options.get('excludes', '').split(',')
+        excludes = [ exclude.strip() for exclude in excludes ]
+        
         output_dir=options.get('output_dir')
         if not path.exists(output_dir):
             os.makedirs(output_dir)
@@ -51,15 +56,42 @@ class Command(BaseCommand):
         #save coverage report
         coverage.stop()
 
-        modules = [module for name, module in sys.modules.items() \
-                       if module and any([name.endswith(label) for label in test_labels])]
+        modules = [ (module, name) for name, module in sys.modules.items() \
+                       if module and any([label for label in test_labels if label in name]) ]
+        modules = [ module for module, name in modules if self.want_module(name, excludes) ]
+        
+        modules = [ module for module in modules if self.src(module.__file__).endswith('.py') ]
 
         if verbosity > 0:
+            if excludes:
+                print "Excluding any module containing of these words:"
+                pprint.pprint(excludes)
+            
             print "Coverage being generated for:"
             pprint.pprint(modules)
 
         morfs = [ m.__file__ for m in modules if hasattr(m, '__file__') ]
         coverage._the_coverage.xml_report(morfs, outfile=path.join(output_dir,'coverage.xml'))
+
+    def want_module(self, filename, excludes=[]):
+        for exclude in excludes:
+            if exclude and exclude in filename:
+                return False
+        return True
+
+    def src(self, filename):
+        """Find the python source file for a .pyc, .pyo or $py.class file on
+        jython. Returns the filename provided if it is not a python source
+        file. Cribbed from nose.util
+        """
+        if filename is None:
+            return filename
+        if sys.platform.startswith('java') and filename.endswith('$py.class'):
+            return '.'.join((filename[:-9], 'py'))
+        base, ext = os.path.splitext(filename)
+        if ext in ('.pyc', '.pyo', '.py'):
+            return '.'.join((base, 'py'))
+        return filename
     
     @staticmethod
     def test_labels():
