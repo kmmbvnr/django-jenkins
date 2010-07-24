@@ -39,6 +39,9 @@ class Command(BaseCommand):
 
         if not test_labels:
             test_labels = Command.test_labels()
+        
+        if verbosity > 0:
+            pprint.pprint("Testing and covering the following apps:\n%s" % (test_labels, ))
 
         #TODO: Make lint work and with external rc file
         # pylint
