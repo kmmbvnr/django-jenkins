@@ -32,47 +32,52 @@ class Command(BaseCommand):
         interactive = options.get('interactive', True)
         excludes = options.get('excludes', '').split(',')
         excludes = [ exclude.strip() for exclude in excludes ]
-        
+
+        tasks = getattr(settings, 'HUDSON_TASKS',
+                        ['pylint', 'coverage', 'tests'])
+
         output_dir=options.get('output_dir')
         if not path.exists(output_dir):
             os.makedirs(output_dir)
 
         if not test_labels:
             test_labels = Command.test_labels()
-        
+
         if verbosity > 0:
             pprint.pprint("Testing and covering the following apps:\n%s" % (test_labels, ))
 
         #TODO: Make lint work and with external rc file
-        # pylint
-        #pylint().handle(*app_labels, 
-                         #output_file=path.join(output_dir,'pylint.report'))
+        if 'pylint' in tasks:
+            pylint().handle(*app_labels,
+                             output_file=path.join(output_dir,'pylint.report'))
 
-        #coverage
-        coverage.exclude('#pragma[: ]+[nN][oO] [cC][oO][vV][eE][rR]')
-        coverage.start()
-        
-        #tests
-        test_runner = XmlDjangoTestSuiteRunner(output_dir=output_dir, interactive=interactive, verbosity=verbosity)
-        failures = test_runner.run_tests(test_labels)
+        if 'coverage' in tasks:
+            coverage.exclude('#pragma[: ]+[nN][oO] [cC][oO][vV][eE][rR]')
+            coverage.start()
+
+        if 'tests' in tasks:
+            test_runner = XmlDjangoTestSuiteRunner(output_dir=output_dir, interactive=interactive, verbosity=verbosity)
+            failures = test_runner.run_tests(test_labels)
 
         #save coverage report
-        coverage.stop()
+        if 'coverage' in tasks:
+            coverage.stop()
 
         modules = [ module for name, module in sys.modules.items() \
                     if self.want_module(name, module, test_labels, excludes)
         ]
         morfs = [ self.src(m.__file__) for m in modules if self.src(m.__file__).endswith(".py")]
-        
+
         if verbosity > 0:
             if excludes:
                 print "Excluding any module containing of these words:"
                 pprint.pprint(excludes)
-            
+
             print "Coverage being generated for:"
             pprint.pprint(morfs)
 
-        coverage._the_coverage.xml_report(morfs, outfile=path.join(output_dir,'coverage.xml'))
+        if 'coverage' in tasks:
+            coverage._the_coverage.xml_report(morfs, outfile=path.join(output_dir,'coverage.xml'))
 
     def want_module(self, modname, mod, test_labels=[], excludes=[]):
         #No cover if it ain't got a file
@@ -82,7 +87,7 @@ class Command(BaseCommand):
         for exclude in excludes:
             if exclude and exclude in modname:
                 return False
-        
+
         if test_labels:
             #If it's one of the explicit test labels called for
             for label in test_labels:
@@ -104,7 +109,7 @@ class Command(BaseCommand):
         if ext in ('.pyc', '.pyo', '.py'):
             return '.'.join((base, 'py'))
         return filename
-    
+
     @staticmethod
     def test_labels():
         excludes = getattr(settings, 'TEST_EXCLUDES', [])
