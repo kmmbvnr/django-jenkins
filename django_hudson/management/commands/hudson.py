@@ -54,7 +54,8 @@ class Command(BaseCommand):
         if 'coverage' in tasks:
             coverage.exclude('#pragma[: ]+[nN][oO] [cC][oO][vV][eE][rR]')
             coverage.start()
-
+        
+        failures = 0
         if 'tests' in tasks:
             test_runner = XmlDjangoTestSuiteRunner(output_dir=output_dir, interactive=interactive, verbosity=verbosity)
             failures = test_runner.run_tests(test_labels)
@@ -78,6 +79,9 @@ class Command(BaseCommand):
 
         if 'coverage' in tasks:
             coverage._the_coverage.xml_report(morfs, outfile=path.join(output_dir,'coverage.xml'))
+
+        if failures:
+            sys.exit(bool(failures))
 
     def want_module(self, modname, mod, test_labels=[], excludes=[]):
         #No cover if it ain't got a file
