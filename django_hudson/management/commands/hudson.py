@@ -48,7 +48,7 @@ class Command(BaseCommand):
 
         #TODO: Make lint work and with external rc file
         if 'pylint' in tasks:
-            pylint().handle(*app_labels,
+            pylint().handle(*test_labels,
                              output_file=path.join(output_dir,'pylint.report'))
 
         if 'coverage' in tasks:
