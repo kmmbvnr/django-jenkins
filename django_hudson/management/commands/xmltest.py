@@ -39,3 +39,4 @@ class Command(BaseCommand):
 
         if failures:
             sys.exit(bool(failures))
+

@@ -116,5 +116,8 @@ class Command(BaseCommand):
 
     @staticmethod
     def test_labels():
+        apps = settings.INSTALLED_APPS
+        if hasattr(settings, 'PROJECT_APPS'):
+            apps = settings.PROJECT_APPS
         excludes = getattr(settings, 'TEST_EXCLUDES', [])
-        return [app for app in settings.INSTALLED_APPS if app not in excludes ]
+        return [app for app in  apps if app not in excludes ]
