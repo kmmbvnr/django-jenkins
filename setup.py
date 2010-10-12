@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'django-hudson',
-    version = '0.0.1',
+    version = '0.9.0',
     author = 'Mikhail Podgurskiy',
     author_email = 'kmmbvnr@gmail.com',
     description = 'Plug and play continuous integration with django and hudson',
@@ -13,7 +13,7 @@ setup(
     keywords = ['pyunit', 'unittest', 'testrunner', 'hudson', 'django'],
     url = 'http://github.com/kmmbvnr/django-hudson',
     classifiers = [
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
         'Natural Language :: English',
