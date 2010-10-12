@@ -1,4 +1,9 @@
 django==1.2.1
 pylint
-coverage
+coverage>=3.4b1
+
+# tests only
+ipdb
+ipython
+
 
