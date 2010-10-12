@@ -120,4 +120,4 @@ class Command(BaseCommand):
         if hasattr(settings, 'PROJECT_APPS'):
             apps = settings.PROJECT_APPS
         excludes = getattr(settings, 'TEST_EXCLUDES', [])
-        return [app for app in  apps if app not in excludes ]
+        return [app.split('.')[-1] for app in  apps if app not in excludes ]
