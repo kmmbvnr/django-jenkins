@@ -24,6 +24,7 @@ Configure hudson to run the following command:
 This will create reports/ directory with junit xml, coverage and pylint
 reports.
 
+For more details see the tutorial: http://sites.google.com/site/kmmbvnr/home/django-hudson-tutorial
 
 Authors
 -------
