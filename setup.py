@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'django-hudson',
-    version = '0.9.0',
+    version = '0.9.1',
     author = 'Mikhail Podgurskiy',
     author_email = 'kmmbvnr@gmail.com',
     description = 'Plug and play continuous integration with django and hudson',
@@ -24,8 +24,8 @@ setup(
     ],
     install_requires=[
         'Django>=1.2',
-        'coverage>=3.4b1',
-        'pylint',
+        'coverage>=3.4',
+        'pylint>=0.22',
     ],
     packages = ['django_hudson', 'django_hudson.management', 'django_hudson.management.commands'],
     package_data={'django_hudson': ['management/commands/pylint.rc']},
