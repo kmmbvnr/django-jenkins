@@ -30,10 +30,12 @@ For more details see the tutorial: http://sites.google.com/site/kmmbvnr/home/dja
 Changelog
 -------
 django-hudson 0.9.1 2010-12-15
+
    * Python 2.5 compatibility
    * Sets compatible with latest pylint only
 
 django-hudson 0.9.0 2010-10-15
+
    * Initial public release
 
 
