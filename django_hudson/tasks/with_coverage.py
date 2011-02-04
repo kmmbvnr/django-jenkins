@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=W0201
 import os, sys
 from coverage.control import coverage
 from django.conf import settings
@@ -50,7 +51,8 @@ class Task(BaseTask):
         Predicate for covered modules
         """
         #No cover if it ain't got a file
-        if not hasattr(mod, "__file__"): return False
+        if not hasattr(mod, "__file__"): 
+            return False
 
         if self.test_labels:
             #If it's one of the explicit test labels called for

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=W0201, W0141
 """
 XMLTest runner based on unittest-xml-reporting project code
 https://github.com/danielfm/unittest-xml-reporting/
@@ -358,7 +359,7 @@ class XmlDjangoTestSuiteRunner(DjangoTestSuiteRunner):
 class Task(BaseTask):
     def configure(self, test_modules, options):
         if 'south' in settings.INSTALLED_APPS:
-            from south.management.commands import patch_for_test_db_setup
+            from south.management.commands import patch_for_test_db_setup # pylint: disable=F0401
             patch_for_test_db_setup()
 
         self.output_dir = options.get('output_dir', 'reports')

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=W0201
 import os, sys
 from pylint import lint
 from pylint.reporters.text import ParseableTextReporter
