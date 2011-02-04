@@ -27,6 +27,7 @@ class Task(BaseTask):
     def run_task(self):
         args = ["--rcfile=%s" % self.config_path] + list(self.test_labels)
         lint.Run(args, reporter=ParseableTextReporter(output=self.output), exit=False)
+        return True
 
     @staticmethod
     def default_config_path():

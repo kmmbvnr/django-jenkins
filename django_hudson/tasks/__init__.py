@@ -10,7 +10,7 @@ class BaseTask(object):
         pass
 
     def run_task(self):
-        pass
+        return True
 
     def after_tasks_run(self):
         pass
