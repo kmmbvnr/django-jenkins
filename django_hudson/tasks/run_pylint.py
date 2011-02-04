@@ -2,6 +2,7 @@
 import os, sys
 from pylint import lint
 from pylint.reporters.text import ParseableTextReporter
+from django.conf import settings
 from django_hudson.tasks import BaseTask
 
 class Task(BaseTask):
@@ -38,6 +39,11 @@ class Task(BaseTask):
 
     @staticmethod
     def default_config_path():
+        rcfile = getattr(settings, 'PYLINT_RCFILE', 'pylint.rc')
+        if os.path.exists(rcfile):
+            return rcfile
+
+        # use build-in
         root_dir = os.path.normpath(os.path.dirname(__file__))
         return os.path.join(root_dir, 'pylint.rc')
 
