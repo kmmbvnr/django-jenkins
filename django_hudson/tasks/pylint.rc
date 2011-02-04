@@ -18,7 +18,7 @@ disable=C0111,I0011,I0012,W0704,W0142,W0212,W0232,W0613,W0702
 
 [REPORTS]
 output-format=parseable
-include-ids=no
+include-ids=yes
 
 
 [BASIC]

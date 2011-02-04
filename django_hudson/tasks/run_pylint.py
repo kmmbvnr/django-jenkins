@@ -24,9 +24,16 @@ class Task(BaseTask):
         else:
             self.output = sys.stdout
 
+        self.errors_only = options['pylint_errors_only']
+
     def run_task(self):
-        args = ["--rcfile=%s" % self.config_path] + list(self.test_labels)
+        args = ["--rcfile=%s" % self.config_path] 
+        if self.errors_only:
+            args += ['--errors-only']
+        args += list(self.test_labels)
+
         lint.Run(args, reporter=ParseableTextReporter(output=self.output), exit=False)
+
         return True
 
     @staticmethod
