@@ -25,7 +25,7 @@ setup(
     install_requires=[
         'Django>=1.2',
         'coverage>=3.4',
-        'pylint>=0.22',
+        'pylint>=0.23',
     ],
     packages = ['django_hudson', 'django_hudson.management', 'django_hudson.management.commands'],
     package_data={'django_hudson': ['management/commands/pylint.rc']},

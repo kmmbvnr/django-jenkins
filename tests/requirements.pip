@@ -1,8 +1,9 @@
 django>=1.2
-pylint
-coverage>=3.4b1
+pylint>=0.23
+coverage>=3.4
+windmill
 
-# tests only
+# development only
 ipdb
 ipython
 
