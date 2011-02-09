@@ -12,3 +12,9 @@ INSTALLED_APPS = (
     'django_hudson',
     'test_app',)
 DATABASE_ENGINE = 'sqlite3'
+
+HUDSON_TASKS = ('django_hudson.tasks.run_pylint',
+                'django_hudson.tasks.with_coverage',
+                'django_hudson.tasks.run_xmltest',
+                'django_hudson.tasks.run_windmill',
+)

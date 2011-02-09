@@ -11,7 +11,7 @@ from django_hudson.tasks import BaseTask
 from django_hudson.tasks.run_xmltest import XmlDjangoTestSuiteRunner
 
 WM_TEST_MODULE = 'wmtests'
-port = 0
+TEST_SERVER_PORT = 0
 
 def get_tests(app_module):
     try:
@@ -103,8 +103,6 @@ def build_test(label):
         pass
 
 
-
-
 class StoppableWSGIServer(basehttp.WSGIServer):
     """WSGIServer with short timeout, so that server thread can stop this server."""
 
@@ -112,8 +110,9 @@ class StoppableWSGIServer(basehttp.WSGIServer):
         """Sets timeout to 1 second."""
         basehttp.WSGIServer.server_bind(self)
         self.socket.settimeout(1)
-        global port
-        port = self.socket.getsockname()[1]
+
+        global TEST_SERVER_PORT
+        TEST_SERVER_PORT = self.socket.getsockname()[1]
 
 
     def get_request(self):
@@ -129,9 +128,8 @@ class StoppableWSGIServer(basehttp.WSGIServer):
 class TestServerThread(threading.Thread):
     """Thread for running a http server while tests are running."""
 
-    def __init__(self, address, port):
-        self.address = address
-        self.port = port
+    def __init__(self, server_addr):
+        self.server_addr = server_addr
         self._stopevent = threading.Event()
         self.started = threading.Event()
         self.error = None
@@ -141,8 +139,7 @@ class TestServerThread(threading.Thread):
         """Sets up test server and loops over handling http requests."""
         try:
             handler = basehttp.AdminMediaHandler(WSGIHandler())
-            server_address = (self.address, self.port)
-            httpd = StoppableWSGIServer(server_address, basehttp.WSGIRequestHandler)
+            httpd = StoppableWSGIServer(self.server_addr, basehttp.WSGIRequestHandler)
             httpd.application = handler
             self.started.set()
         except basehttp.WSGIServerException as err:
@@ -161,17 +158,20 @@ class TestServerThread(threading.Thread):
 
 
 class WindmillTestSuiteRunner(XmlDjangoTestSuiteRunner):
+    def __init__(self, test_server_addr, **kwargs):
+        super(WindmillTestSuiteRunner, self).__init__(**kwargs)
+        self.test_server_addr = test_server_addr
+
     def setup_test_environment(self, **kwargs):
         super(WindmillTestSuiteRunner, self).setup_test_environment(**kwargs)
 
         # configure windmill
-        if not hasattr(windmill, 'settings'):
-            admin_lib.configure_global_settings(logging_on=False)
+        admin_lib.configure_global_settings(logging_on=False)
         self.windmill_dict = admin_lib.setup()
         self.windmill_dict['start_firefox']()
 
         #run wsgi server
-        self.server_thread = TestServerThread('127.0.0.2', 0)
+        self.server_thread = TestServerThread(self.test_server_addr)
         self.server_thread.start()
         self.server_thread.started.wait()
         if self.server_thread.error:
@@ -220,8 +220,11 @@ class Task(BaseTask):
         self.output_dir = options.get('output_dir', 'reports')
         self.verbosity = int(options.get('verbosity', 1))
         self.test_labels = [module_name.split('.')[-1] for module_name in  test_modules ]
+        self.test_server_host = getattr(settings, 'WINDMILL_HOST', '127.0.0.2') # for 127.0.0.1 FF always ignore proxy for me
+        self.test_server_port = getattr(settings, 'WINDMILL_PORT', 0) # select random available port
 
     def run_task(self):
-        test_runner = WindmillTestSuiteRunner(output_dir=self.output_dir, interactive=False, verbosity=self.verbosity)
+        test_runner = WindmillTestSuiteRunner(output_dir=self.output_dir, interactive=False, verbosity=self.verbosity,
+                                              test_server_addr = (self.test_server_host, self.test_server_port))
         return not test_runner.run_tests(self.test_labels)
 

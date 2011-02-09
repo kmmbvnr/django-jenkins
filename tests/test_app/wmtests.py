@@ -11,10 +11,8 @@ class TestWMClickPage(TestCase):
         client.click(id='sethome')
 
     def test_wmclick(self):
-        port = run_windmill.port
-        
         client = WindmillTestClient(__name__)
-        client.open(url=u'http://127.0.0.2:%d/wm_test_click' % port)
+        client.open(url=u'http://127.0.0.2:%d/wm_test_click' % run_windmill.TEST_SERVER_PORT)
         client.waits.forPageLoad(timeout=u'5000')
         client.click(id='wm_click')
         client.asserts.assertText(validator=u'Button clicked', id=u'wm_target')
