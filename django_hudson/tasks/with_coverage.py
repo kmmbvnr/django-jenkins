@@ -11,10 +11,6 @@ class Task(BaseTask):
                          dest="coverage_rcfile",
                          default="",
                          help="coverage configuration file.")
-        group.add_option("--coverage-output",
-                         dest="coverage_report_file",
-                         default="coverage.xml",
-                         help="File to which coverage output should be reported. Default: '%default'")
         group.add_option("--coverage-html-report",
                          dest="coverage_html_report_dir",
                          default="",
@@ -26,10 +22,9 @@ class Task(BaseTask):
 
     def configure(self, test_labels, options):
         self.test_labels = test_labels
-        self.output_dir = options.get('output_dir', '')
-        self.output_file = options["coverage_report_file"]
-        self.html_dir = options["coverage_html_report_dir"]
-        self.coverage = coverage(branch = options['coverage_measure_branch'], 
+        self.output_dir = options['output_dir']
+        self.html_dir = options['coverage_html_report_dir']
+        self.coverage = coverage(branch = options['coverage_measure_branch'],
                                  source = test_labels or None,
                                  config_file = options.get('coverage_rcfile', Task.default_config_path))
         self.coverage.start()
@@ -41,7 +36,7 @@ class Task(BaseTask):
                         if self.want_module(name, module)]
         morfs = [ self.src(m.__file__) for m in modules if self.src(m.__file__).endswith(".py")]
 
-        self.coverage.xml_report(morfs, outfile=os.path.join(self.output_dir,self.output_file))
+        self.coverage.xml_report(morfs, outfile=os.path.join(self.output_dir, 'coverage.xml'))
 
         if self.html_dir:
             self.coverage.html_report(morfs, directory=self.html_dir)
