@@ -11,6 +11,7 @@ from django_hudson.tasks import BaseTask
 from django_hudson.tasks.run_xmltest import XmlDjangoTestSuiteRunner
 
 WM_TEST_MODULE = 'wmtests'
+port = 0
 
 def get_tests(app_module):
     try:
@@ -111,6 +112,9 @@ class StoppableWSGIServer(basehttp.WSGIServer):
         """Sets timeout to 1 second."""
         basehttp.WSGIServer.server_bind(self)
         self.socket.settimeout(1)
+        global port
+        port = self.socket.getsockname()[1]
+
 
     def get_request(self):
         """Checks for timeout when getting request."""
@@ -167,7 +171,7 @@ class WindmillTestSuiteRunner(XmlDjangoTestSuiteRunner):
         self.windmill_dict['start_firefox']()
 
         #run wsgi server
-        self.server_thread = TestServerThread('127.0.0.1', 8081)
+        self.server_thread = TestServerThread('127.0.0.2', 0)
         self.server_thread.start()
         self.server_thread.started.wait()
         if self.server_thread.error:
