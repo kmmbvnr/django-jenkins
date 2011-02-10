@@ -29,10 +29,10 @@ class Task(BaseTask):
                                  source = test_labels or None,
                                  config_file = options.get('coverage_rcfile', Task.default_config_path))
     
-    def before_suite_run(self, **kwargs):
+    def setup_test_environment(self, **kwargs):
         self.coverage.start()
 
-    def after_suite_run(self, **kwargs):
+    def teardown_test_environment(self, **kwargs):
         self.coverage.stop()
 
         modules = [ module for name, module in sys.modules.items() \
