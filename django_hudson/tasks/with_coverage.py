@@ -1,35 +1,38 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=W0201
 import os, sys
+from optparse import make_option
 from coverage.control import coverage
 from django.conf import settings
-from django_hudson.tasks import BaseTask
+from django_hudson.tasks import BaseTask, get_apps_under_test
 
 class Task(BaseTask):
-    def add_options(self, group):
-        group.add_option("--coverage-rcfile",
-                         dest="coverage_rcfile",
-                         default="",
-                         help="coverage configuration file.")
-        group.add_option("--coverage-html-report",
-                         dest="coverage_html_report_dir",
-                         default="",
-                         help="Directory to which HTML coverage report should be written. If not specified, no report is generated.")
-        group.add_option("--coverage-no-branch-measure",
-                         action="store_false", default=True,
-                         dest="coverage_measure_branch",
-                         help="Don't measure branch coverage.")
+    option_list = [make_option("--coverage-rcfile",
+                               dest="coverage_rcfile",
+                               default="",
+                               help="coverage configuration file."),
+                   make_option("--coverage-html-report",
+                              dest="coverage_html_report_dir",
+                              default="",
+                              help="Directory to which HTML coverage report should be written. If not specified, no report is generated."),
+                   make_option("--coverage-no-branch-measure",
+                               action="store_false", default=True,
+                               dest="coverage_measure_branch",
+                               help="Don't measure branch coverage.")]
 
-    def configure(self, test_labels, options):
-        self.test_labels = test_labels
+    def __init__(self, test_labels, options):
+        super(Task, self).__init__(test_labels, options)
+        self.test_apps = get_apps_under_test(test_labels)
         self.output_dir = options['output_dir']
         self.html_dir = options['coverage_html_report_dir']
         self.coverage = coverage(branch = options['coverage_measure_branch'],
                                  source = test_labels or None,
                                  config_file = options.get('coverage_rcfile', Task.default_config_path))
+    
+    def before_suite_run(self, **kwargs):
         self.coverage.start()
 
-    def after_tasks_run(self):
+    def after_suite_run(self, **kwargs):
         self.coverage.stop()
 
         modules = [ module for name, module in sys.modules.items() \
@@ -49,11 +52,9 @@ class Task(BaseTask):
         if not hasattr(mod, "__file__"): 
             return False
 
-        if self.test_labels:
-            #If it's one of the explicit test labels called for
-            for label in self.test_labels:
-                if label and label in modname:
-                    return True
+        for label in self.test_apps:
+            if label in modname:
+                return True
             return False
         return True
 

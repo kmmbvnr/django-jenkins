@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-import os, sys
+import inspect, sys
 from optparse import make_option, OptionGroup
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils.importlib import import_module
+from django_hudson import signals
+from django_hudson.runner import CITestSuiteRunner
 
 class TaskListCommand(BaseCommand):
     """
@@ -19,36 +21,24 @@ class TaskListCommand(BaseCommand):
     )
 
     def __init__(self):
-        self.tasks = [import_module(module_name).Task() for module_name in self.get_task_list()]
+        self.tasks_cls = [import_module(module_name).Task for module_name in self.get_task_list()]
                 
 
     def handle(self, *test_labels, **options):
-        # handle all, or whitelisted apps
-        if not test_labels:
-            test_modules = settings.INSTALLED_APPS
-            if hasattr(settings, 'PROJECT_APPS') and not options['test_all']:
-                test_modules = settings.PROJECT_APPS
-        else:
-            test_modules = [app for app in settings.INSTALLED_APPS \
-                                for label in test_labels \
-                                if app == label or app.endswith('.%s' % label)]
+        # instantiate tasks
+        self.tasks = [task_cls(test_labels, options) for task_cls in self.tasks_cls]
 
-        # configure
-        self.preprocess_options(options)
-        for task in self.tasks:
-            task.configure(test_modules, options)
-
-        # run_suite
-        succeed = True
-        for task in self.tasks:
-            if not task.run_task():
-                succeed = False
-
-        # after_tasks_run
-        for task in self.tasks:
-            task.after_tasks_run()
-
-        if not succeed:
+        # subscribe
+        for signal_name, signal in inspect.getmembers(signals):            
+            for task in self.tasks:
+                signal_handler = getattr(task, signal_name, None)
+                if signal_handler:
+                    signal.connect(signal_handler)
+        
+        # run
+        test_runner = CITestSuiteRunner(output_dir=options['output_dir'], interactive=False)
+        
+        if test_runner.run_tests(test_labels):
             sys.exit(1)
 
     def get_task_list(self):
@@ -59,19 +49,18 @@ class TaskListCommand(BaseCommand):
         """
         return []
 
-    def preprocess_options(self, options):
-        """
-        Override task default options for command
-        """
-
     def create_parser(self, *args):
-        # extend the option list with tasks specific options
+        """
+        Extend the option list with tasks specific options
+        """
         parser = super(TaskListCommand, self).create_parser(*args)
 
-        for task in self.tasks:
-            option_group = OptionGroup(parser, task.__module__, "")
-            task.add_options(option_group)
-            if option_group.option_list:
+        for task_cls in self.tasks_cls:
+            option_group = OptionGroup(parser, task_cls.__module__, "")
+
+            if task_cls.option_list:
+                for option in task_cls.option_list:
+                    option_group.add_option(option)
                 parser.add_option_group(option_group)
 
         return parser

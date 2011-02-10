@@ -1,24 +1,26 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=W0201
 import os, sys
+from optparse import make_option
 from pylint import lint
 from pylint.reporters.text import ParseableTextReporter
 from django.conf import settings
-from django_hudson.tasks import BaseTask
+from django_hudson.tasks import BaseTask, get_apps_under_test
 
 class Task(BaseTask):
-    def add_options(self, group):
-        group.add_option("--pylint-rcfile",
-                dest="pylint_rcfile",
-                help="pylint configuration file. Default: %s" % Task.default_config_path())
-        group.add_option("--pylint-errors-only",
-                dest="pylint_errors_only",
-                action="store_true", default=False,
-                help="pylint output errors only mode")
+    option_list = [make_option("--pylint-rcfile",
+                               dest="pylint_rcfile",
+                               help="pylint configuration file"),
+                   make_option("--pylint-errors-only",
+                               dest="pylint_errors_only",
+                               action="store_true", default=False,
+                               help="pylint output errors only mode")]
 
-    def configure(self, test_labels, options):
-        self.test_labels = test_labels
+    def __init__(self, test_labels, options):
+        super(Task, self).__init__(test_labels, options)
+
         self.config_path = options['pylint_rcfile'] or Task.default_config_path()
+        self.errors_only = options['pylint_errors_only']
         
         if options.get('pylint_file_output', True):
             output_dir = options['output_dir']
@@ -28,13 +30,11 @@ class Task(BaseTask):
         else:
             self.output = sys.stdout
 
-        self.errors_only = options['pylint_errors_only']
-
-    def run_task(self):
+    def teardown_test_environment(self, **kwargs):        
         args = ["--rcfile=%s" % self.config_path] 
         if self.errors_only:
             args += ['--errors-only']
-        args += list(self.test_labels)
+        args += get_apps_under_test(self.test_labels)
 
         lint.Run(args, reporter=ParseableTextReporter(output=self.output), exit=False)
 
