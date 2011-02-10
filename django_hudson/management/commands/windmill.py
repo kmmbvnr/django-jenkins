@@ -5,5 +5,5 @@ class Command(TaskListCommand):
     help = "Run windmill unittests"
  
     def get_task_list(self):
-        return ('django_hudson.tasks.run_windmill',)
+        return ('django_hudson.tasks.windmill_tests',)
 
