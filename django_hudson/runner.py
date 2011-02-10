@@ -3,6 +3,7 @@
 Extensible dango test runner
 """
 import unittest, os, sys, time
+from cStringIO import StringIO
 from unittest import _TextTestResult, TestResult
 from xml.dom.minidom import Document
 from django.conf import settings
@@ -237,9 +238,8 @@ class _XMLTestResult(_TextTestResult):
         "Generates the XML reports to a given XMLTestRunner object."
         all_results = self._get_info_by_testcase()
         
-        if type(test_runner.output) == str and not \
-            os.path.exists(test_runner.output):
-            os.makedirs(test_runner.output)
+        if not os.path.exists(test_runner.output_dir):
+            os.makedirs(test_runner.output_dir)
         
         for suite, tests in all_results.items():
             doc = Document()
@@ -251,16 +251,11 @@ class _XMLTestResult(_TextTestResult):
             _XMLTestResult._report_output(test_runner, testsuite, doc)
             xml_content = doc.toprettyxml(indent='\t')
             
-            if type(test_runner.output) is str:
-                report_file = file('%s%sTEST-%s.xml' % \
-                    (test_runner.output, os.sep, suite), 'w')
-                try:
-                    report_file.write(xml_content)
-                finally:
-                    report_file.close()
-            else:
-                # Assume that test_runner.output is a stream
-                test_runner.output.write(xml_content)
+            report_file = file('%s%sTEST-%s.xml' % (test_runner.output_dir, os.sep, suite), 'w')
+            try:
+                report_file.write(xml_content)
+            finally:
+                report_file.close()
 
 
 class XMLTestRunner(DjangoTestRunner):
@@ -274,6 +269,26 @@ class XMLTestRunner(DjangoTestRunner):
     def _makeResult(self):
         return _XMLTestResult(self.stream, self.descriptions, self.verbosity)
 
+    def _patch_standard_output(self):
+        """Replace the stdout and stderr streams with string-based streams
+        in order to capture the tests' output.
+        """
+        (self.old_stdout, self.old_stderr) = (sys.stdout, sys.stderr)
+        (sys.stdout, sys.stderr) = (self.stdout, self.stderr) = \
+            (StringIO(), StringIO())
+    
+    def _restore_standard_output(self):
+        "Restore the stdout and stderr streams."
+        (sys.stdout, sys.stderr) = (self.old_stdout, self.old_stderr)
+
+    def run(self, test):
+        try:
+            self._patch_standard_output()
+            result = super(XMLTestRunner, self).run(test)
+            result.generate_reports(self)
+        finally:
+            self._restore_standard_output()
+        return result
 
 class CITestSuiteRunner(DjangoTestSuiteRunner):
     """

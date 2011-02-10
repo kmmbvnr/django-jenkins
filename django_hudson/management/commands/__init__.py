@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import inspect, sys
 from optparse import make_option, OptionGroup
-from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils.importlib import import_module
 from django_hudson import signals
