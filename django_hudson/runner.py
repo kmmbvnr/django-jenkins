@@ -49,7 +49,8 @@ class _TestInfo(object):
 
 
 class _XMLTestResult(_TextTestResult):
-    """A test result class that can express test results in a XML report.
+    """
+    A test result class that can express test results in a XML report.
 
     Used by XMLTestRunner.
     """
@@ -240,7 +241,7 @@ class _XMLTestResult(_TextTestResult):
         
         if not os.path.exists(test_runner.output_dir):
             os.makedirs(test_runner.output_dir)
-        
+
         for suite, tests in all_results.items():
             doc = Document()
             
@@ -262,8 +263,9 @@ class XMLTestRunner(DjangoTestRunner):
     """
     A test result class that can express test results in a XML report.
     """
-    def __init__(self, output_dir, **kwargs):
+    def __init__(self, output_dir, debug=False, **kwargs):
         super(XMLTestRunner, self).__init__(**kwargs)
+        self.debug = debug
         self.output_dir = output_dir
 
     def _makeResult(self):
@@ -274,8 +276,10 @@ class XMLTestRunner(DjangoTestRunner):
         in order to capture the tests' output.
         """
         (self.old_stdout, self.old_stderr) = (sys.stdout, sys.stderr)
-        (sys.stdout, sys.stderr) = (self.stdout, self.stderr) = \
-            (StringIO(), StringIO())
+        (self.stdout, self.stderr) =  (StringIO(), StringIO())
+
+        if not self.debug:
+            (sys.stdout, sys.stderr) = (self.stdout, self.stderr)
     
     def _restore_standard_output(self):
         "Restore the stdout and stderr streams."
@@ -295,8 +299,9 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
     """
     Continues integration test runner
     """
-    def __init__(self, output_dir, **kwargs):
+    def __init__(self, output_dir, debug=False, **kwargs):
         super(CITestSuiteRunner, self).__init__(**kwargs)
+        self.debug = debug
         self.output_dir = output_dir
 
     def setup_test_environment(self, **kwargs):
@@ -333,7 +338,7 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
 
     def run_suite(self, suite, **kwargs):
         signals.before_suite_run.send(sender=self)
-        result = XMLTestRunner(verbosity = self.verbosity, output_dir = self.output_dir).run(suite)
+        result = XMLTestRunner(verbosity = self.verbosity, output_dir = self.output_dir, debug=self.debug).run(suite)
         signals.after_suite_run.send(sender=self)
         
         return result
