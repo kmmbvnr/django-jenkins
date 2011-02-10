@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-from django.test import TestCase
-from windmill.authoring import WindmillTestClient
-from django_hudson.tasks import windmill_tests
+from django_hudson.tasks.windmill_tests import WindmillTestCase
 
-class TestWMClickPage(TestCase):
+class TestWMClickPage(WindmillTestCase):
     def test_wmclick(self):
-        client = WindmillTestClient(__name__)        
-        client.open(url=u'http://127.0.0.2:%d/wm_test_click' % windmill_tests.TEST_SERVER_PORT)
-        client.waits.forPageLoad(timeout=u'5000')
-        client.click(id='wm_click')
-        client.asserts.assertText(validator=u'Button clicked', id=u'wm_target')
+        self.windmill.open('wm_test_click')
+        self.windmill.waits.forPageLoad(timeout=u'5000')
+        self.windmill.click(id='wm_click')
+        self.windmill.asserts.assertText(validator=u'Button clicked', id=u'wm_target')
 

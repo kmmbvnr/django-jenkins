@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 import socket, threading, unittest
 from windmill.bin import admin_lib
+from windmill.authoring import WindmillTestClient
 from django.db.models import get_app, get_apps
 from django.conf import settings
+from django.core import urlresolvers
 from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers import basehttp
 from django.test.simple import reorder_suite
-from django.test.testcases import TestCase
+from django.test import TestCase, TransactionTestCase
 from django_hudson.tasks import BaseTask
 
 WM_TEST_MODULE = 'wmtests'
+TEST_SERVER_HOST = '127.0.0.2'
 TEST_SERVER_PORT = 0
 
 def get_tests(app_module):
@@ -110,8 +113,10 @@ class StoppableWSGIServer(basehttp.WSGIServer):
         basehttp.WSGIServer.server_bind(self)
         self.socket.settimeout(1)
 
-        global TEST_SERVER_PORT
-        TEST_SERVER_PORT = self.socket.getsockname()[1]
+        global TEST_SERVER_HOST, TEST_SERVER_PORT
+        TEST_SERVER_HOST, TEST_SERVER_PORT = self.socket.getsockname()
+        if TEST_SERVER_PORT == '0.0.0.0':
+            TEST_SERVER_HOST = '127.0.0.2'
 
 
     def get_request(self):
@@ -199,4 +204,36 @@ class Task(BaseTask):
                 suite.addTest(build_suite(app))
 
         return reorder_suite(suite, (TestCase,))
+
+
+class WindmillMixin(object):
+    @property
+    def base_url(self):
+        return "http://%s:%s" % (TEST_SERVER_HOST, TEST_SERVER_PORT)
+
+    def __call__(self, result=None):
+        
+        self.windmill = WindmillTestClient(__name__)
+        old_opener = self.windmill.open
+        def opener(url, *args, **kwargs):
+            if url.startswith('http'):
+                return old_opener(url=url)
+
+            if not url.startswith('/'):
+                path = urlresolvers.reverse(url, args=args, kwargs=kwargs)
+            else:
+                path = url
+
+            return old_opener(url=self.base_url + path)
+        self.windmill.open = opener
+
+        return super(TestCase, self).__call__(result=result)
+
+
+class WindmillTransactionalTestCase(WindmillMixin, TransactionTestCase):
+    pass
+
+
+class WindmillTestCase(WindmillMixin, TestCase):
+    pass
 
