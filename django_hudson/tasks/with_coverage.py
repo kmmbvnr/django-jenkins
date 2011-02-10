@@ -51,12 +51,11 @@ class Task(BaseTask):
         #No cover if it ain't got a file
         if not hasattr(mod, "__file__"): 
             return False
-
+        
         for label in self.test_apps:
             if label in modname:
                 return True
-            return False
-        return True
+        return False
 
     @staticmethod
     def src(filename):

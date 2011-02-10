@@ -290,6 +290,7 @@ class XMLTestRunner(DjangoTestRunner):
             self._restore_standard_output()
         return result
 
+
 class CITestSuiteRunner(DjangoTestSuiteRunner):
     """
     Continues integration test runner
