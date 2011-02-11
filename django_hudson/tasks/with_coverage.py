@@ -10,7 +10,7 @@ class Task(BaseTask):
     option_list = [make_option("--coverage-rcfile",
                                dest="coverage_rcfile",
                                default="",
-                               help="coverage configuration file."),
+                               help="Specify configuration file."),
                    make_option("--coverage-html-report",
                               dest="coverage_html_report_dir",
                               default="",
@@ -18,13 +18,18 @@ class Task(BaseTask):
                    make_option("--coverage-no-branch-measure",
                                action="store_false", default=True,
                                dest="coverage_measure_branch",
-                               help="Don't measure branch coverage.")]
+                               help="Don't measure branch coverage."),
+                   make_option("--coverage-exclude", action="append", 
+                               default=[], dest="coverage_excludes",
+                               help="Module name to exclude")]
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
         self.test_apps = get_apps_under_test(test_labels)
         self.output_dir = options['output_dir']
+        self.excludes = options['coverage_excludes']
         self.html_dir = options['coverage_html_report_dir']
+        
         self.coverage = coverage(branch = options['coverage_measure_branch'],
                                  source = test_labels or None,
                                  config_file = options.get('coverage_rcfile', Task.default_config_path))
@@ -52,6 +57,10 @@ class Task(BaseTask):
         if not hasattr(mod, "__file__"): 
             return False
         
+        for exclude in self.excludes:
+            if exclude in modname:
+                return False
+
         for label in self.test_apps:
             if label in modname:
                 return True
