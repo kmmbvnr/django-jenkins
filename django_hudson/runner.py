@@ -321,7 +321,7 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
     def build_suite(self, test_labels, **kwargs):
         suite = unittest.TestSuite()
         signals.build_suite.send(sender=self, suite=suite)
-        return reorder_suite(suite, (TestCase,))
+        return suite
 
     def run_tests(self, test_labels, extra_tests=None, **kwargs):
         self.setup_test_environment()

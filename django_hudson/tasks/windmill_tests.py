@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-import socket, threading, unittest
+import windmill
+import sys, socket, threading, unittest
+from optparse import make_option
 from windmill.bin import admin_lib
 from windmill.authoring import WindmillTestClient
 from django.db.models import get_app, get_apps
@@ -7,7 +9,6 @@ from django.conf import settings
 from django.core import urlresolvers
 from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers import basehttp
-from django.test.simple import reorder_suite
 from django.test import TestCase, TransactionTestCase
 from django_hudson.tasks import BaseTask
 
@@ -162,20 +163,34 @@ class TestServerThread(threading.Thread):
 
 
 class Task(BaseTask):
+    option_list = [make_option("--with-browser",
+                               dest="browsers", action="append", default=None,
+                               help="Select browser for test. This option could be added multiple times")]
+
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
+        self.windmill_cmds = {}
+        self.browsers = options['browsers'] or ["firefox"]
         self.output_dir = options.get('output_dir', 'reports')
         self.verbosity = int(options.get('verbosity', 1))
         self.test_server_host = getattr(settings, 'WINDMILL_HOST', '127.0.0.2') # for 127.0.0.1 FF always ignore proxy for me
         self.test_server_port = getattr(settings, 'WINDMILL_PORT', 0) # select random available port
 
     def setup_test_environment(self, **kwargs):
-                # configure windmill
+        #configure windmill
         admin_lib.configure_global_settings(logging_on=False)
-        self.windmill_dict = admin_lib.setup()
-        self.windmill_dict['start_firefox']()
+        windmill.settings['shell_objects'] = self.windmill_cmds
 
-        #run wsgi server
+        self.windmill_cmds['httpd'], self.windmill_cmds['httpd_thread'] = \
+            admin_lib.run_threaded(windmill.settings['CONSOLE_LOG_LEVEL'])
+
+        from windmill.bin import shell_objects
+        for attribute in dir(shell_objects):
+            self.windmill_cmds[attribute] = getattr(shell_objects, attribute)
+
+        self.windmill_cmds['setup_has_run'] = True
+
+        #run wsgi django server
         self.server_thread = TestServerThread((self.test_server_host, self.test_server_port))
         self.server_thread.start()
         self.server_thread.started.wait()
@@ -183,27 +198,60 @@ class Task(BaseTask):
             raise self.server_thread.error
 
     def teardown_test_environment(self, **kwargs):
-        # stop windmill browser
-        admin_lib.teardown(self.windmill_dict)
-        #self.windmill_dict['xmlrpc_client'].stop_runserver()
+        # stop windmill server
+        self.windmill_cmds['httpd'].stop()
 
-        # stop wsgi server
+        # stop django wsgi server
         if self.server_thread:
             self.server_thread.join()
 
     def build_suite(self, suite, **kwargs):
-        if self.test_labels:
-            for label in self.test_labels:
-                if '.' in label:
-                    suite.addTest(build_test(label))
-                else:
-                    app = get_app(label)
-                    suite.addTest(build_suite(app))
-        else:
-            for app in get_apps():
-                suite.addTest(build_suite(app))
+        for browser in self.browsers:
+            windmill_suite = WindmillTestSuite(windmill_cmds=self.windmill_cmds, browser=browser)
 
-        return reorder_suite(suite, (TestCase,))
+            if self.test_labels:
+                for label in self.test_labels:
+                    if '.' in label:
+                        windmill_suite.addTest(build_test(label))
+                    else:
+                        app = get_app(label)
+                        windmill_suite.addTest(build_suite(app))
+            else:
+                for app in get_apps():
+                    windmill_suite.addTest(build_suite(app))
+
+            suite.addTest(windmill_suite)
+
+        return suite
+
+
+class WindmillTestSuite(unittest.TestSuite):
+    def __init__(self, windmill_cmds, browser, **kwargs):
+        super(WindmillTestSuite, self).__init__(**kwargs)
+        self.windmill_cmds = windmill_cmds
+        self.browser = browser
+
+    def __call__(self, *args, **kwargs):
+        try:
+            # Need to enshure, that standard streams have original values
+            # elsewhere Popen windmill calls fails
+            old_stdout, old_stdin, old_stderr = sys.stdout, sys.stdin, sys.stderr
+            sys.stdout, sys.stdin, sys.stderr = sys.__stdout__, sys.__stdin__, sys.__stderr__
+
+            # configure windmill
+            self.windmill_cmds['start_'+self.browser]()
+
+            # restore
+            sys.stdout, sys.stdin, sys.stderr = sys.__stdout__, sys.__stdin__, sys.__stderr__
+
+            # run tests
+            super(WindmillTestSuite, self).__call__(*args, **kwargs)
+        finally:
+            # stop windmill browser
+            self.windmill_cmds['clear_queue']()
+            for controller in windmill.settings['controllers']:
+                controller.stop()
+            windmill.settings['controllers'] = []
 
 
 class WindmillMixin(object):
@@ -212,7 +260,6 @@ class WindmillMixin(object):
         return "http://%s:%s" % (TEST_SERVER_HOST, TEST_SERVER_PORT)
 
     def __call__(self, result=None):
-        
         self.windmill = WindmillTestClient(__name__)
         old_opener = self.windmill.open
         def opener(url, *args, **kwargs):
