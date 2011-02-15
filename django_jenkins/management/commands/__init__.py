@@ -13,7 +13,7 @@ class TaskListCommand(BaseCommand):
     requires_model_validation = False # if True, breaks coverage of models.py files
 
     option_list = BaseCommand.option_list + (
-        make_option('--all', action='store_false', dest='test_all', default=True,
+        make_option('--all', action='store_false', dest='test_all', default=False,
             help='Ignore PROJECT_APPS settings and run through all INSTALLED_APPS'),
         make_option('--debug', action='store_true', dest='debug', default=False,
             help='Do not intercept stdout and stderr, friendly for console debuggers'),

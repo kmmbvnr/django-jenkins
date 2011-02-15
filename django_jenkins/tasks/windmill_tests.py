@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-import sys, socket, threading, unittest
+import os, sys, socket, threading, unittest
+from imp import find_module
 from optparse import make_option
 from windmill.bin import admin_lib
 from windmill.authoring import WindmillTestClient
@@ -27,8 +28,6 @@ def get_tests(app_module):
     except ImportError:
         # Couldn't import tests.py. Was it due to a missing file, or
         # due to an import error in a tests.py that actually exists?
-        import os.path
-        from imp import find_module
         try:
             mod = find_module(WM_TEST_MODULE, [os.path.dirname(app_module.__file__)])
         except ImportError:
@@ -179,6 +178,9 @@ class Task(BaseTask):
         self.verbosity = int(options.get('verbosity', 1))
         self.test_server_host = getattr(settings, 'WINDMILL_HOST', '127.0.0.2') # for 127.0.0.1 FF always ignore proxy for me
         self.test_server_port = getattr(settings, 'WINDMILL_PORT', 0) # select random available port
+        if not self.test_labels:
+            if hasattr(settings, 'PROJECT_APPS') and not options['test_all']:
+                self.test_labels = [app_name.split('.')[-1] for app_name in settings.PROJECT_APPS]
 
     def setup_test_environment(self, **kwargs):
         #configure windmill

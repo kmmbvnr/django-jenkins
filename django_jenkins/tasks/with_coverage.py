@@ -25,7 +25,7 @@ class Task(BaseTask):
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
-        self.test_apps = get_apps_under_test(test_labels)
+        self.test_apps = get_apps_under_test(test_labels, options['test_all'])
         self.output_dir = options['output_dir']
         self.excludes = options['coverage_excludes']
         self.html_dir = options['coverage_html_report_dir']

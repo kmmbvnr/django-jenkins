@@ -9,14 +9,21 @@ TEMPLATE_LOADERS = (
 )
 
 
-INSTALLED_APPS = (
+PROJECT_APPS = (
     'django.contrib.sessions', # just to enshure that dotted apps test works
     'django_jenkins',
-    'test_app',)
+    'test_app',
+)
+
+INSTALLED_APPS = (
+    'django.contrib.contenttypes',
+) + PROJECT_APPS
+
 DATABASE_ENGINE = 'sqlite3'
 
-JENKINS_TASKS = ('django_jenkins.tasks.with_coverage',
-                'django_jenkins.tasks.django_tests',
+JENKINS_TASKS = (
+    'django_jenkins.tasks.with_coverage',
+    'django_jenkins.tasks.django_tests',
 )
 
 # python > 2.4
