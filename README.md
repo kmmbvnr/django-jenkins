@@ -16,8 +16,8 @@ Installation
 Usage
 -----
 
-Add django_hudson to your INSTALLED_APPS list.
-Configure hudson to run the following command:
+Add django_jenkins to your INSTALLED_APPS list.
+Configure jenkins to run the following command:
 
     $ ./manage.py jenkins
 
