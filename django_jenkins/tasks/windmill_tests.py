@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import windmill
 import sys, socket, threading, unittest
 from optparse import make_option
 from windmill.bin import admin_lib
@@ -11,6 +10,11 @@ from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers import basehttp
 from django.test import TestCase, TransactionTestCase
 from django_jenkins.tasks import BaseTask
+
+if sys.version_info[1] < 5:
+    raise AssertionError('windmill task require python>=2.5 version')
+
+import windmill
 
 WM_TEST_MODULE = 'wmtests'
 TEST_SERVER_HOST = '127.0.0.2'

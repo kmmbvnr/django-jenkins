@@ -1,3 +1,5 @@
+import sys
+
 DEBUG=True
 TEMPLATE_DEBUG=DEBUG
 ROOT_URLCONF = 'test_app.urls'
@@ -13,8 +15,11 @@ INSTALLED_APPS = (
     'test_app',)
 DATABASE_ENGINE = 'sqlite3'
 
-JENKINS_TASKS = ('django_jenkins.tasks.run_pylint',
-                'django_jenkins.tasks.with_coverage',
+JENKINS_TASKS = ('django_jenkins.tasks.with_coverage',
                 'django_jenkins.tasks.django_tests',
-                'django_jenkins.tasks.windmill_tests',
 )
+
+# python > 2.4
+if sys.version_info[1] > 4:
+    JENKINS_TASKS += ('django_jenkins.tasks.run_pylint',
+                      'django_jenkins.tasks.windmill_tests')
