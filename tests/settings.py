@@ -13,7 +13,7 @@ INSTALLED_APPS = (
     'test_app',)
 DATABASE_ENGINE = 'sqlite3'
 
-JENKINS2_TASKS = ('django_jenkins.tasks.run_pylint',
+JENKINS_TASKS = ('django_jenkins.tasks.run_pylint',
                 'django_jenkins.tasks.with_coverage',
                 'django_jenkins.tasks.django_tests',
                 'django_jenkins.tasks.windmill_tests',
