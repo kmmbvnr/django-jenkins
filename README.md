@@ -32,7 +32,7 @@ Changelog
 django-jenkins 0.10.0 2010-02-15
 
    * Pluggable ci tasks refactoring
-   * Alfa support for windmill tests
+   * Alpha support for windmill tests
    * Partial python 2.4 compatibility
    * Renamed to django-jenkins
 
