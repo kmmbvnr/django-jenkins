@@ -3,15 +3,15 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = 'django-hudson',
+    name = 'django-jenkins',
     version = '0.10.0',
     author = 'Mikhail Podgurskiy',
     author_email = 'kmmbvnr@gmail.com',
-    description = 'Plug and play continuous integration with django and hudson',
+    description = 'Plug and play continuous integration with django and jenkins',
     license = 'LGPL',
     platforms = ['Any'],
-    keywords = ['pyunit', 'unittest', 'testrunner', 'hudson', 'django'],
-    url = 'http://github.com/kmmbvnr/django-hudson',
+    keywords = ['pyunit', 'unittest', 'testrunner', 'hudson', 'jenkins', 'django'],
+    url = 'http://github.com/kmmbvnr/django-jenkins',
     classifiers = [
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
@@ -27,8 +27,8 @@ setup(
         'coverage>=3.4',
         'pylint>=0.23',
     ],
-    packages = ['django_hudson', 'django_hudson.management', 'django_hudson.management.commands'],
-    package_data={'django_hudson': ['management/commands/pylint.rc']},
+    packages = ['django_jenkins', 'django_jenkins.management', 'django_jenkins.tasks', 'django_jenkins.management.commands'],
+    package_data={'django_jenkins': ['tasks/pylint.rc']},
     zip_safe = False,
     include_package_data = True
 )

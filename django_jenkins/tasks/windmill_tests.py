@@ -10,7 +10,7 @@ from django.core import urlresolvers
 from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers import basehttp
 from django.test import TestCase, TransactionTestCase
-from django_hudson.tasks import BaseTask
+from django_jenkins.tasks import BaseTask
 
 WM_TEST_MODULE = 'wmtests'
 TEST_SERVER_HOST = '127.0.0.2'

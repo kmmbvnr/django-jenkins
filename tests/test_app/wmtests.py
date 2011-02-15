@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django_hudson.tasks.windmill_tests import WindmillTestCase
+from django_jenkins.tasks.windmill_tests import WindmillTestCase
 
 class TestWMClickPage(WindmillTestCase):
     def test_wmclick(self):

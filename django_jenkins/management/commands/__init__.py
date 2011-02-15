@@ -3,8 +3,8 @@ import inspect, sys
 from optparse import make_option, OptionGroup
 from django.core.management.base import BaseCommand
 from django.utils.importlib import import_module
-from django_hudson import signals
-from django_hudson.runner import CITestSuiteRunner
+from django_jenkins import signals
+from django_jenkins.runner import CITestSuiteRunner
 
 class TaskListCommand(BaseCommand):
     """

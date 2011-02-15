@@ -4,7 +4,7 @@ import os, sys
 from optparse import make_option
 from coverage.control import coverage
 from django.conf import settings
-from django_hudson.tasks import BaseTask, get_apps_under_test
+from django_jenkins.tasks import BaseTask, get_apps_under_test
 
 class Task(BaseTask):
     option_list = [make_option("--coverage-rcfile",

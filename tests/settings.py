@@ -9,12 +9,12 @@ TEMPLATE_LOADERS = (
 
 INSTALLED_APPS = (
     'django.contrib.sessions', # just to enshure that dotted apps test works
-    'django_hudson',
+    'django_jenkins',
     'test_app',)
 DATABASE_ENGINE = 'sqlite3'
 
-HUDSON_TASKS = ('django_hudson.tasks.run_pylint',
-                'django_hudson.tasks.with_coverage',
-                'django_hudson.tasks.django_tests',
-                'django_hudson.tasks.windmill_tests',
+JENKINS2_TASKS = ('django_jenkins.tasks.run_pylint',
+                'django_jenkins.tasks.with_coverage',
+                'django_jenkins.tasks.django_tests',
+                'django_jenkins.tasks.windmill_tests',
 )

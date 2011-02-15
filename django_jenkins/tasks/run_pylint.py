@@ -5,7 +5,7 @@ from optparse import make_option
 from pylint import lint
 from pylint.reporters.text import ParseableTextReporter
 from django.conf import settings
-from django_hudson.tasks import BaseTask, get_apps_under_test
+from django_jenkins.tasks import BaseTask, get_apps_under_test
 
 class Task(BaseTask):
     option_list = [make_option("--pylint-rcfile",
