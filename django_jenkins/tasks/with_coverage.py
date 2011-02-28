@@ -32,7 +32,7 @@ class Task(BaseTask):
         
         self.coverage = coverage(branch = options['coverage_measure_branch'],
                                  source = test_labels or None,
-                                 config_file = options.get('coverage_rcfile', Task.default_config_path))
+                                 config_file = options['coverage_rcfile'] or Task.default_config_path())
     
     def setup_test_environment(self, **kwargs):
         self.coverage.start()
