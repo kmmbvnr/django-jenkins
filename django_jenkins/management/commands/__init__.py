@@ -22,8 +22,9 @@ class TaskListCommand(BaseCommand):
     )
 
     def __init__(self):
+        super(TaskListCommand, self).__init__()
         self.tasks_cls = [import_module(module_name).Task for module_name in self.get_task_list()]
-                
+
 
     def handle(self, *test_labels, **options):
         # instantiate tasks
