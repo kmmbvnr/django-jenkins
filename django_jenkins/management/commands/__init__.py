@@ -5,6 +5,8 @@ from django.core.management.base import BaseCommand
 from django.utils.importlib import import_module
 from django_jenkins import signals
 from django_jenkins.runner import CITestSuiteRunner
+from django.test.utils import get_runner
+from django.conf import settings
 
 class TaskListCommand(BaseCommand):
     """
@@ -38,10 +40,16 @@ class TaskListCommand(BaseCommand):
                     signal.connect(signal_handler)
         
         # run
-        test_runner = CITestSuiteRunner(output_dir=options['output_dir'], interactive=False, debug=options['debug'])
-        
-        if test_runner.run_tests(test_labels):
-            sys.exit(1)
+        TestRunner = get_runner(settings)
+
+        if not issubclass(TestRunner, CITestSuiteRunner):
+            raise ValueError('Your custom TestRunner should extend the CITestSuiteRunner class.')
+
+        test_runner = TestRunner(output_dir=options['output_dir'], interactive=False, debug=options['debug'])
+        failures = test_runner.run_tests(test_labels)
+
+        if failures:
+            sys.exit(bool(failures))
 
     def get_task_list(self):
         """
