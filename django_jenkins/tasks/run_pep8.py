@@ -39,7 +39,13 @@ class Task(BaseTask):
         pep8.process_options(self.pep8_options + locations)
 
         # run pep8 tool with captured output
-        pep8.message = lambda text: self.output.write(re.sub(r': ([WE]\d+)', r': [\1]', text) + '\n')
+        def report_error(instance, line_number, offset, text, check):
+            filepath = os.path.relpath(instance.filename)
+            message = re.sub(r'([WE]\d+)', r'[\1]', text)
+            sourceline = instance.line_offset + line_number
+            self.output.write('%s:%s: %s\n' % (filepath, sourceline, message))
+        pep8.Checker.report_error = report_error
+
         for location in locations:
             pep8.input_dir(location, runner=pep8.input_file)
 
