@@ -8,7 +8,6 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.load_template_source',
 )
 
-
 PROJECT_APPS = (
     'django.contrib.sessions', # just to enshure that dotted apps test works
     'django_jenkins',
@@ -24,6 +23,7 @@ DATABASE_ENGINE = 'sqlite3'
 JENKINS_TASKS = (
     'django_jenkins.tasks.with_coverage',
     'django_jenkins.tasks.django_tests',
+    'django_jenkins.tasks.run_pep8',
 )
 
 # python > 2.4

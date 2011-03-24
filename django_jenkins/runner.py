@@ -7,8 +7,7 @@ from cStringIO import StringIO
 from unittest import _TextTestResult, TestResult
 from xml.dom.minidom import Document
 from django.conf import settings
-from django.test.simple import DjangoTestSuiteRunner, DjangoTestRunner, reorder_suite
-from django.test.testcases import TestCase
+from django.test.simple import DjangoTestSuiteRunner, DjangoTestRunner
 from django_jenkins import signals
 
 
