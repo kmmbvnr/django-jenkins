@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-import re, os, pep8, sys
+import re
+import os
+import sys
+import pep8
 from optparse import make_option
 from django_jenkins.tasks import BaseTask, get_apps_under_test
 from django.db.models import get_app
+
 
 def relpath(path, start=os.path.curdir):
     """Return a relative version of a path"""
@@ -32,7 +36,7 @@ class Task(BaseTask):
                                help="select errors and warnings (e.g. E,W6)"),
                    make_option("--pep8-ignore", dest="pep8-ignore",
                                help="skip errors and warnings (e.g. E4,W)")]
-    
+
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
         self.test_all = options['test_all']
@@ -68,4 +72,3 @@ class Task(BaseTask):
             pep8.input_dir(location, runner=pep8.input_file)
 
         self.output.close()
-

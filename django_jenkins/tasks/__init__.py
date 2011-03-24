@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 
+
 class BaseTask(object):
     """
     Base interface for ci tasks
@@ -30,7 +31,7 @@ def get_apps_under_test(test_labels, all_apps=False):
     """
     Convert test_lables for apps names
 
-    all_apps - if test_labels empty, ignore white list, 
+    all_apps - if test_labels empty, ignore white list,
     and returns all installed apps
     """
     if not test_labels:
@@ -43,4 +44,3 @@ def get_apps_under_test(test_labels, all_apps=False):
                     for label in test_labels \
                     if app == label.split('.')[0] or app.endswith('.%s' % label.split('.')[0])]
     return apps
-

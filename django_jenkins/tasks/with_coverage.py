@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=W0201
-import os, sys
+import os
+import sys
 from optparse import make_option
 from coverage.control import coverage
 from django.conf import settings
 from django_jenkins.tasks import BaseTask, get_apps_under_test
+
 
 class Task(BaseTask):
     option_list = [make_option("--coverage-rcfile",
@@ -19,7 +21,7 @@ class Task(BaseTask):
                                action="store_false", default=True,
                                dest="coverage_measure_branch",
                                help="Don't measure branch coverage."),
-                   make_option("--coverage-exclude", action="append", 
+                   make_option("--coverage-exclude", action="append",
                                default=[], dest="coverage_excludes",
                                help="Module name to exclude")]
 
@@ -29,34 +31,34 @@ class Task(BaseTask):
         self.output_dir = options['output_dir']
         self.excludes = options['coverage_excludes']
         self.html_dir = options['coverage_html_report_dir']
-        
+
         self.coverage = coverage(branch = options['coverage_measure_branch'],
                                  source = test_labels or None,
                                  config_file = options['coverage_rcfile'] or Task.default_config_path())
-    
+
     def setup_test_environment(self, **kwargs):
         self.coverage.start()
 
     def teardown_test_environment(self, **kwargs):
         self.coverage.stop()
 
-        modules = [ module for name, module in sys.modules.items() \
+        modules = [module for name, module in sys.modules.items() \
                         if self.want_module(name, module)]
-        morfs = [ self.src(m.__file__) for m in modules if self.src(m.__file__).endswith(".py")]
+        morfs = [self.src(m.__file__) for m in modules if self.src(m.__file__).endswith(".py")]
 
         self.coverage.xml_report(morfs, outfile=os.path.join(self.output_dir, 'coverage.xml'))
 
         if self.html_dir:
             self.coverage.html_report(morfs, directory=self.html_dir)
-    
+
     def want_module(self, modname, mod):
         """
         Predicate for covered modules
         """
         #No cover if it ain't got a file
-        if not hasattr(mod, "__file__"): 
+        if not hasattr(mod, "__file__"):
             return False
-        
+
         for exclude in self.excludes:
             if exclude in modname:
                 return False
@@ -88,4 +90,3 @@ class Task(BaseTask):
         if os.path.exists(rcfile):
             return rcfile
         return None
-

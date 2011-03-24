@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-import os, sys, socket, threading, unittest
+import os
+import sys
+import socket
+import threading
+import unittest
 from imp import find_module
 from optparse import make_option
 from windmill.bin import admin_lib
@@ -11,6 +15,7 @@ from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers import basehttp
 from django.test import TestCase, TransactionTestCase
 from django_jenkins.tasks import BaseTask
+
 
 if sys.version_info[1] < 5:
     raise AssertionError('windmill task require python>=2.5 version')
@@ -97,12 +102,12 @@ def build_test(label):
 
     try:
         if issubclass(TestClass, unittest.TestCase):
-            if len(parts) == 2: # label is app.TestClass
+            if len(parts) == 2:  # label is app.TestClass
                 try:
                     return unittest.TestLoader().loadTestsFromTestCase(TestClass)
                 except TypeError:
                     raise ValueError("Test label '%s' does not refer to a test class" % label)
-            else: # label is app.TestClass.test_method
+            else:  # label is app.TestClass.test_method
                 return TestClass(parts[2])
     except TypeError:
         # TestClass isn't a TestClass - it must be a method or normal class
@@ -121,7 +126,6 @@ class StoppableWSGIServer(basehttp.WSGIServer):
         TEST_SERVER_HOST, TEST_SERVER_PORT = self.socket.getsockname()
         if TEST_SERVER_PORT == '0.0.0.0':
             TEST_SERVER_HOST = '127.0.0.2'
-
 
     def get_request(self):
         """Checks for timeout when getting request."""
@@ -245,7 +249,7 @@ class WindmillTestSuite(unittest.TestSuite):
             sys.stdout, sys.stdin, sys.stderr = sys.__stdout__, sys.__stdin__, sys.__stderr__
 
             # configure windmill
-            self.windmill_cmds['start_'+self.browser]()
+            self.windmill_cmds['start_' + self.browser]()
 
             # restore
             sys.stdout, sys.stdin, sys.stderr = sys.__stdout__, sys.__stdin__, sys.__stderr__
@@ -268,6 +272,7 @@ class WindmillMixin(object):
     def __call__(self, result=None):
         self.windmill = WindmillTestClient(__name__)
         old_opener = self.windmill.open
+
         def opener(url, *args, **kwargs):
             if url.startswith('http'):
                 return old_opener(url=url)
@@ -289,4 +294,3 @@ class WindmillTransactionalTestCase(WindmillMixin, TransactionTestCase):
 
 class WindmillTestCase(WindmillMixin, TestCase):
     pass
-

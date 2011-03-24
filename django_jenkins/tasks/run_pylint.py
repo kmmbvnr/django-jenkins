@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=W0201
-import os, sys
+import os
+import sys
 from optparse import make_option
 from django.conf import settings
 from django_jenkins.tasks import BaseTask, get_apps_under_test
+
 
 if sys.version_info[1] < 5:
     raise AssertionError('pylint task require python>=2.5 version')
 
 from pylint import lint
 from pylint.reporters.text import ParseableTextReporter
+
 
 class Task(BaseTask):
     option_list = [make_option("--pylint-rcfile",
@@ -26,7 +29,7 @@ class Task(BaseTask):
         self.test_all = options['test_all']
         self.config_path = options['pylint_rcfile'] or Task.default_config_path()
         self.errors_only = options['pylint_errors_only']
-        
+
         if options.get('pylint_file_output', True):
             output_dir = options['output_dir']
             if not os.path.exists(output_dir):
@@ -35,8 +38,8 @@ class Task(BaseTask):
         else:
             self.output = sys.stdout
 
-    def teardown_test_environment(self, **kwargs):        
-        args = ["--rcfile=%s" % self.config_path] 
+    def teardown_test_environment(self, **kwargs):
+        args = ["--rcfile=%s" % self.config_path]
         if self.errors_only:
             args += ['--errors-only']
         args += get_apps_under_test(self.test_labels, self.test_all)
@@ -54,4 +57,3 @@ class Task(BaseTask):
         # use build-in
         root_dir = os.path.normpath(os.path.dirname(__file__))
         return os.path.join(root_dir, 'pylint.rc')
-
