@@ -1,8 +1,26 @@
 # -*- coding: utf-8 -*-
-import re, os.path, pep8, sys
+import re, os, pep8, sys
 from optparse import make_option
 from django_jenkins.tasks import BaseTask, get_apps_under_test
 from django.db.models import get_app
+
+def relpath(path, start=os.path.curdir):
+    """Return a relative version of a path"""
+
+    if not path:
+        raise ValueError("no path specified")
+
+    start_list = os.path.abspath(start).split(os.path.sep)
+    path_list = os.path.abspath(path).split(os.path.sep)
+
+    # Work out how much of the filepath is shared by start and path.
+    i = len(os.path.commonprefix([start_list, path_list]))
+
+    rel_list = [os.path.pardir] * (len(start_list)-i) + path_list[i:]
+    if not rel_list:
+        return os.path.curdir
+    return os.path.join(*rel_list)
+
 
 class Task(BaseTask):
     option_list = [make_option("--pep8-exclude",
@@ -40,7 +58,7 @@ class Task(BaseTask):
 
         # run pep8 tool with captured output
         def report_error(instance, line_number, offset, text, check):
-            filepath = os.path.relpath(instance.filename)
+            filepath = relpath(instance.filename)
             message = re.sub(r'([WE]\d+)', r'[\1] PEP8:', text)
             sourceline = instance.line_offset + line_number
             self.output.write('%s:%s: %s\n' % (filepath, sourceline, message))
