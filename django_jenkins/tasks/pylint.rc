@@ -54,7 +54,7 @@ defining-attr-methods=__init__,__new__,setUp
 
 [VARIABLES]
 init-import=no
-ummy-variables-rgx=_|dummy
+dummy-variables-rgx=_|dummy
 
 [SIMILARITIES]
 min-similarity-lines=6
