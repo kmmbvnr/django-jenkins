@@ -8,4 +8,3 @@ before_suite_run = Signal()
 after_suite_run = Signal()
 
 build_suite = Signal(providing_args=["suite"])
-

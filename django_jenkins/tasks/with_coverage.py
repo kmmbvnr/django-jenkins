@@ -32,9 +32,9 @@ class Task(BaseTask):
         self.excludes = options['coverage_excludes']
         self.html_dir = options['coverage_html_report_dir']
 
-        self.coverage = coverage(branch = options['coverage_measure_branch'],
-                                 source = test_labels or None,
-                                 config_file = options['coverage_rcfile'] or Task.default_config_path())
+        self.coverage = coverage(branch=options['coverage_measure_branch'],
+                                 source=test_labels or None,
+                                 config_file=options['coverage_rcfile'] or Task.default_config_path())
 
     def setup_test_environment(self, **kwargs):
         self.coverage.start()

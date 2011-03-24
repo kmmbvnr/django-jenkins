@@ -26,6 +26,7 @@ WM_TEST_MODULE = 'wmtests'
 TEST_SERVER_HOST = '127.0.0.2'
 TEST_SERVER_PORT = 0
 
+
 def get_tests(app_module):
     try:
         app_path = app_module.__name__.split('.')[:-1]
@@ -180,8 +181,8 @@ class Task(BaseTask):
         self.browsers = options['browsers'] or ["firefox"]
         self.output_dir = options.get('output_dir', 'reports')
         self.verbosity = int(options.get('verbosity', 1))
-        self.test_server_host = getattr(settings, 'WINDMILL_HOST', '127.0.0.2') # for 127.0.0.1 FF always ignore proxy for me
-        self.test_server_port = getattr(settings, 'WINDMILL_PORT', 0) # select random available port
+        self.test_server_host = getattr(settings, 'WINDMILL_HOST', '127.0.0.2')  # for 127.0.0.1 FF always ignore proxy for me
+        self.test_server_port = getattr(settings, 'WINDMILL_PORT', 0)  # select random available port
         if not self.test_labels:
             if hasattr(settings, 'PROJECT_APPS') and not options['test_all']:
                 self.test_labels = [app_name.split('.')[-1] for app_name in settings.PROJECT_APPS]
@@ -252,7 +253,7 @@ class WindmillTestSuite(unittest.TestSuite):
             self.windmill_cmds['start_' + self.browser]()
 
             # restore
-            sys.stdout, sys.stdin, sys.stderr = sys.__stdout__, sys.__stdin__, sys.__stderr__
+            sys.stdout, sys.stdin, sys.stderr = old_stdout, old_stdin, old_stderr
 
             # run tests
             super(WindmillTestSuite, self).__call__(*args, **kwargs)

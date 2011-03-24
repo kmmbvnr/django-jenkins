@@ -7,4 +7,3 @@ class Command(TaskListCommand):
 
     def get_task_list(self):
         return ('django_jenkins.tasks.windmill_tests',)
-

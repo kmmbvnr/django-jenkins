@@ -20,7 +20,7 @@ def relpath(path, start=os.path.curdir):
     # Work out how much of the filepath is shared by start and path.
     i = len(os.path.commonprefix([start_list, path_list]))
 
-    rel_list = [os.path.pardir] * (len(start_list)-i) + path_list[i:]
+    rel_list = [os.path.pardir] * (len(start_list) - i) + path_list[i:]
     if not rel_list:
         return os.path.curdir
     return os.path.join(*rel_list)
@@ -54,7 +54,6 @@ class Task(BaseTask):
             self.pep8_options.append('--select=%s' % options['pep8-select'])
         if options['pep8-ignore']:
             self.pep8_options.append('--ignore=%s' % options['pep8-ignore'])
-        print self.pep8_options
 
     def teardown_test_environment(self, **kwargs):
         locations = [os.path.dirname(get_app(app_name.split('.')[-1]).__file__) \
