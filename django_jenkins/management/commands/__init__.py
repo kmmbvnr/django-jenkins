@@ -40,14 +40,17 @@ class TaskListCommand(BaseCommand):
                     signal.connect(signal_handler)
         
         # run
-        TestRunner = get_runner(settings)
+		try:
+			TestRunner = get_runner(settings)
 
-        if not issubclass(TestRunner, CITestSuiteRunner):
-            raise ValueError('Your custom TestRunner should extend the CITestSuiteRunner class.')
+			if not issubclass(TestRunner, CITestSuiteRunner):
+				raise ValueError('Your custom TestRunner should extend the CITestSuiteRunner class.')
 
-        test_runner = TestRunner(output_dir=options['output_dir'], interactive=False, debug=options['debug'])
-        failures = test_runner.run_tests(test_labels)
+			test_runner = TestRunner(output_dir=options['output_dir'], interactive=False, debug=options['debug'])
+		except:
+			test_runner = CITestSuiteRunner(output_dir=options['output_dir'], interactive=False, debug=options['debug'])
 
+		failures = test_runner.run_tests(test_labels)
         if failures:
             sys.exit(bool(failures))
 
