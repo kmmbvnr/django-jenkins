@@ -52,8 +52,9 @@ class Task(BaseTask):
         self.pep8_options = ['--exclude=%s' % options['pep8-exclude']]
         if options['pep8-select']:
             self.pep8_options.append('--select=%s' % options['pep8-select'])
-        if options['pep8-exclude']:
-            self.pep8_options.append('--exclude=%s' % options['pep8-exclude'])
+        if options['pep8-ignore']:
+            self.pep8_options.append('--ignore=%s' % options['pep8-ignore'])
+        print self.pep8_options
 
     def teardown_test_environment(self, **kwargs):
         locations = [os.path.dirname(get_app(app_name.split('.')[-1]).__file__) \
@@ -62,6 +63,9 @@ class Task(BaseTask):
 
         # run pep8 tool with captured output
         def report_error(instance, line_number, offset, text, check):
+            code = text[:4]
+            if pep8.ignore_code(code):
+                return
             filepath = relpath(instance.filename)
             message = re.sub(r'([WE]\d+)', r'[\1] PEP8:', text)
             sourceline = instance.line_offset + line_number
