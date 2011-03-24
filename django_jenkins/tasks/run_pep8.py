@@ -41,7 +41,7 @@ class Task(BaseTask):
         # run pep8 tool with captured output
         def report_error(instance, line_number, offset, text, check):
             filepath = os.path.relpath(instance.filename)
-            message = re.sub(r'([WE]\d+)', r'[\1]', text)
+            message = re.sub(r'([WE]\d+)', r'[\1] PEP8:', text)
             sourceline = instance.line_offset + line_number
             self.output.write('%s:%s: %s\n' % (filepath, sourceline, message))
         pep8.Checker.report_error = report_error
