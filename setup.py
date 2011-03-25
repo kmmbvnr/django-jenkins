@@ -26,6 +26,7 @@ setup(
         'Django>=1.2',
         'coverage>=3.4',
         'pylint>=0.23',
+        'pep8',#version?
     ],
     packages = ['django_jenkins', 'django_jenkins.management', 'django_jenkins.tasks', 'django_jenkins.management.commands'],
     package_data={'django_jenkins': ['tasks/pylint.rc']},
