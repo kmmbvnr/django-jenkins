@@ -4,26 +4,7 @@ import os
 import sys
 import pep8
 from optparse import make_option
-from django_jenkins.tasks import BaseTask, get_apps_under_test
-from django.db.models import get_app
-
-
-def relpath(path, start=os.path.curdir):
-    """Return a relative version of a path"""
-
-    if not path:
-        raise ValueError("no path specified")
-
-    start_list = os.path.abspath(start).split(os.path.sep)
-    path_list = os.path.abspath(path).split(os.path.sep)
-
-    # Work out how much of the filepath is shared by start and path.
-    i = len(os.path.commonprefix([start_list, path_list]))
-
-    rel_list = [os.path.pardir] * (len(start_list) - i) + path_list[i:]
-    if not rel_list:
-        return os.path.curdir
-    return os.path.join(*rel_list)
+from django_jenkins.tasks import BaseTask, get_apps_locations
 
 
 class Task(BaseTask):
@@ -56,8 +37,7 @@ class Task(BaseTask):
             self.pep8_options.append('--ignore=%s' % options['pep8-ignore'])
 
     def teardown_test_environment(self, **kwargs):
-        locations = [os.path.dirname(get_app(app_name.split('.')[-1]).__file__) \
-                     for app_name in get_apps_under_test(self.test_labels, self.test_all)]
+        locations = get_apps_locations(self.test_labels, self.test_all)
         pep8.process_options(self.pep8_options + locations)
 
         # run pep8 tool with captured output
@@ -65,10 +45,9 @@ class Task(BaseTask):
             code = text[:4]
             if pep8.ignore_code(code):
                 return
-            filepath = relpath(instance.filename)
             message = re.sub(r'([WE]\d+)', r'[\1] PEP8:', text)
             sourceline = instance.line_offset + line_number
-            self.output.write('%s:%s: %s\n' % (filepath, sourceline, message))
+            self.output.write('%s:%s: %s\n' % (instance.filename, sourceline, message))
         pep8.Checker.report_error = report_error
 
         for location in locations:

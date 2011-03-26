@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+import os
 from django.conf import settings
-
+from django.db.models import get_app
 
 class BaseTask(object):
     """
@@ -44,3 +45,29 @@ def get_apps_under_test(test_labels, all_apps=False):
                     for label in test_labels \
                     if app == label.split('.')[0] or app.endswith('.%s' % label.split('.')[0])]
     return apps
+
+
+def get_apps_locations(test_labels, all_apps=False):
+    """
+    Returns list of paths to tested apps
+    """
+    def relpath(path, start=os.path.curdir):
+        """Return a relative version of a path"""
+
+        if not path:
+            raise ValueError("no path specified")
+
+        start_list = os.path.abspath(start).split(os.path.sep)
+        path_list = os.path.abspath(path).split(os.path.sep)
+
+        # Work out how much of the filepath is shared by start and path.
+        i = len(os.path.commonprefix([start_list, path_list]))
+
+        rel_list = [os.path.pardir] * (len(start_list) - i) + path_list[i:]
+        if not rel_list:
+            return os.path.curdir
+        return os.path.join(*rel_list)
+
+    return [relpath(os.path.dirname(get_app(app_name.split('.')[-1]).__file__)) \
+            for app_name in get_apps_under_test(test_labels, all_apps)]
+
