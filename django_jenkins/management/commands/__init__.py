@@ -15,8 +15,10 @@ class TaskListCommand(BaseCommand):
     requires_model_validation = False  # if True, breaks coverage of models.py files
 
     option_list = BaseCommand.option_list + (
-        make_option('--all', action='store_false', dest='test_all', default=False,
+        make_option('--all', action='store_true', dest='test_all', default=False,
             help='Ignore PROJECT_APPS settings and run through all INSTALLED_APPS'),
+        make_option('--interactive', action='store_true', dest='interactive', default=False,
+            help='Allow to ask user input'),
         make_option('--debug', action='store_true', dest='debug', default=False,
             help='Do not intercept stdout and stderr, friendly for console debuggers'),
         make_option('--output-dir', dest='output_dir', default="reports",
@@ -39,7 +41,8 @@ class TaskListCommand(BaseCommand):
                     signal.connect(signal_handler)
 
         # run
-        test_runner = CITestSuiteRunner(output_dir=options['output_dir'], interactive=False, debug=options['debug'])
+        test_runner = CITestSuiteRunner(output_dir=options['output_dir'], interactive=options['interactive'],
+                                        debug=options['debug'], verbosity=options.get('verbosity', 1))
 
         if test_runner.run_tests(test_labels):
             sys.exit(1)
