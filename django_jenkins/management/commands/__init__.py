@@ -42,7 +42,7 @@ class TaskListCommand(BaseCommand):
 
         # run
         test_runner = CITestSuiteRunner(output_dir=options['output_dir'], interactive=options['interactive'],
-                                        debug=options['debug'], verbosity=options.get('verbosity', 1))
+                                        debug=options['debug'], verbosity=int(options.get('verbosity', 1)))
 
         if test_runner.run_tests(test_labels):
             sys.exit(1)
