@@ -1,4 +1,6 @@
-import sys
+import os, sys
+
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 DEBUG=True
 TEMPLATE_DEBUG=DEBUG
@@ -25,7 +27,10 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.django_tests',
     'django_jenkins.tasks.run_pep8',
     'django_jenkins.tasks.run_pyflakes',
+    'django_jenkins.tasks.run_jslint',
 )
+
+JSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'media/js/test.js')]
 
 # python > 2.4
 if sys.version_info[1] > 4:

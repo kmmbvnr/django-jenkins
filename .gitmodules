@@ -1,0 +1,3 @@
+[submodule "django_jenkins/tasks/jslint"]
+	path = django_jenkins/tasks/jslint
+	url = http://github.com/douglascrockford/JSLint.git
