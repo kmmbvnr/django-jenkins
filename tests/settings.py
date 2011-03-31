@@ -30,7 +30,7 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_jslint',
 )
 
-JSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'media/js/test.js')]
+JSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/js/test.js')]
 
 # python > 2.4
 if sys.version_info[1] > 4:

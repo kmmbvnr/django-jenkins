@@ -4,6 +4,7 @@ import re
 import sys
 from pyflakes.scripts import pyflakes
 from cStringIO import StringIO
+from django_jenkins.functions import relpath
 from django_jenkins.tasks import BaseTask, get_apps_locations
 
 
@@ -29,12 +30,12 @@ class Task(BaseTask):
         try:
             for location in locations:
                 if os.path.isdir(location):
-                    for dirpath, dirnames, filenames in os.walk(location):
+                    for dirpath, dirnames, filenames in os.walk(relpath(location)):
                         for filename in filenames:
                             if filename.endswith('.py'):
                                 pyflakes.checkPath(os.path.join(dirpath, filename))
                 else:
-                    pyflakes.checkPath(location)
+                    pyflakes.checkPath(relpath(location))
         finally:
             sys.stdout = old_stdout
 

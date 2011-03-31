@@ -4,6 +4,7 @@ import os
 import sys
 import pep8
 from optparse import make_option
+from django_jenkins.functions import relpath
 from django_jenkins.tasks import BaseTask, get_apps_locations
 
 
@@ -51,6 +52,6 @@ class Task(BaseTask):
         pep8.Checker.report_error = report_error
 
         for location in locations:
-            pep8.input_dir(location, runner=pep8.input_file)
+            pep8.input_dir(relpath(location), runner=pep8.input_file)
 
         self.output.close()
