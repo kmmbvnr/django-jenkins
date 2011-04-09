@@ -2,10 +2,28 @@
 import inspect
 import sys
 from optparse import make_option, OptionGroup
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils.importlib import import_module
 from django_jenkins import signals
 from django_jenkins.runner import CITestSuiteRunner
+
+def get_runner():
+    if hasattr(settings, 'JENKINS_TEST_RUNNER'):
+        test_path = settings.JENKINS_TEST_RUNNER.split('.')
+        # Allow for Python 2.5 relative paths
+        if len(test_path) > 1:
+            test_module_name = '.'.join(test_path[:-1])
+        else:
+            test_module_name = '.'
+        test_module = __import__(test_module_name, {}, {}, test_path[-1])
+        test_runner = getattr(test_module, test_path[-1])
+
+        if not issubclass(test_runner, CITestSuiteRunner):
+            raise ValueError('Your custom TestRunner should extend the CITestSuiteRunner class.')
+        return test_runner
+    else:
+        return CITestSuiteRunner
 
 
 class TaskListCommand(BaseCommand):
@@ -41,8 +59,9 @@ class TaskListCommand(BaseCommand):
                     signal.connect(signal_handler)
 
         # run
-        test_runner = CITestSuiteRunner(output_dir=options['output_dir'], interactive=options['interactive'],
-                                        debug=options['debug'], verbosity=int(options.get('verbosity', 1)))
+        test_runner_cls = get_runner()
+        test_runner = test_runner_cls(output_dir=options['output_dir'], interactive=options['interactive'],
+                                      debug=options['debug'], verbosity=int(options.get('verbosity', 1)))
 
         if test_runner.run_tests(test_labels):
             sys.exit(1)
