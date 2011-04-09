@@ -59,12 +59,14 @@ class Task(BaseTask):
         if not hasattr(mod, "__file__"):
             return False
 
+        mod_parts = modname.split('.')
+        
         for exclude in self.excludes:
-            if exclude in modname:
+            if exclude in mod_parts:
                 return False
 
         for label in self.test_apps:
-            if label in modname:
+            if label in mod_parts:
                 return True
         return False
 
