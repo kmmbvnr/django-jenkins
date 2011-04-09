@@ -2,6 +2,7 @@
 import os
 import sys
 import socket
+import tempfile
 import threading
 import unittest
 from imp import find_module
@@ -191,7 +192,7 @@ class Task(BaseTask):
         #configure windmill
         admin_lib.configure_global_settings(logging_on=False)
         windmill.settings['shell_objects'] = self.windmill_cmds
-
+        
         self.windmill_cmds['httpd'], self.windmill_cmds['httpd_thread'] = \
             admin_lib.run_threaded(windmill.settings['CONSOLE_LOG_LEVEL'])
 
@@ -200,6 +201,11 @@ class Task(BaseTask):
             self.windmill_cmds[attribute] = getattr(shell_objects, attribute)
 
         self.windmill_cmds['setup_has_run'] = True
+
+        # firefox 4.0 compatibiliy hack
+        if 'MOZILLA_DEFAULT_PROFILE' not in windmill.settings:
+            tmp_profile = tempfile.mkdtemp(suffix='.mozrunner')
+            windmill.settings['MOZILLA_DEFAULT_PROFILE']= tmp_profile
 
         #run wsgi django server
         self.server_thread = TestServerThread((self.test_server_host, self.test_server_port))
