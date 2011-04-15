@@ -5,13 +5,19 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 DEBUG=True
 TEMPLATE_DEBUG=DEBUG
 ROOT_URLCONF = 'test_app.urls'
+SITE_ID = 1
 
 TEMPLATE_LOADERS = (
-    'django.template.loaders.app_directories.load_template_source',
+    'django.template.loaders.filesystem.Loader', 
+    'django.template.loaders.app_directories.Loader', 
 )
 
 PROJECT_APPS = (
-    'django.contrib.sessions', # just to enshure that dotted apps test works
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.admin',
     'django_jenkins',
     'test_app',
 )
@@ -20,7 +26,12 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
 ) + PROJECT_APPS
 
-DATABASE_ENGINE = 'sqlite3'
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+    }
+}
+
 
 JENKINS_TASKS = (
     'django_jenkins.tasks.with_coverage',
