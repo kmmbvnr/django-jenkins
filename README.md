@@ -97,7 +97,7 @@ Changelog
 -------
 django-jenkins 0.11.0 2010-04-15
 
-   * Suuport pep8, pyflakes, jslint tools
+   * Support pep8, pyflakes, jslint tools
    * Added jtest command
    * Allow specify custom test runner
    * Various fixes, thnk githubbers :)
