@@ -13,7 +13,7 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
         self.test_all = options['test_all']
 
-        if options.get('pep8_file_output', True):
+        if options.get('pyflakes_file_output', True):
             output_dir = options['output_dir']
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
