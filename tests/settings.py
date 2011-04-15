@@ -13,17 +13,16 @@ TEMPLATE_LOADERS = (
 )
 
 PROJECT_APPS = (
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.admin',
     'django_jenkins',
     'test_app',
 )
 
 INSTALLED_APPS = (
+    'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.admin',
 ) + PROJECT_APPS
 
 DATABASES = {
