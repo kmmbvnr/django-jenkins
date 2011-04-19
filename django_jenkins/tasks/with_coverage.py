@@ -42,11 +42,14 @@ class Task(BaseTask):
     def teardown_test_environment(self, **kwargs):
         self.coverage.stop()
 
-        modules = [module for name, module in sys.modules.items() \
-                        if self.want_module(name, module)]
-        morfs = [self.src(m.__file__) for m in modules if self.src(m.__file__).endswith(".py")]
+        modules = [module for name, module in sys.modules.items()
+                    if self.want_module(name, module)]
 
-        self.coverage.xml_report(morfs, outfile=os.path.join(self.output_dir, 'coverage.xml'))
+        morfs = [self.src(m.__file__) for m in modules
+                    if self.src(m.__file__).endswith(".py")]
+
+        self.coverage.xml_report(morfs, outfile=os.path.join(self.output_dir,
+                                                             'coverage.xml'))
 
         if self.html_dir:
             self.coverage.html_report(morfs, directory=self.html_dir)
@@ -59,15 +62,13 @@ class Task(BaseTask):
         if not hasattr(mod, "__file__"):
             return False
 
-        mod_parts = modname.split('.')
-        
-        for exclude in self.excludes:
-            if exclude in mod_parts:
-                return False
+        if modname in self.excludes:
+            return False
 
-        for label in self.test_apps:
-            if label in mod_parts:
+        for app_modname in self.test_apps:
+            if modname.startswith(app_modname):
                 return True
+
         return False
 
     @staticmethod
