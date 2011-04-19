@@ -1,5 +1,5 @@
 .cache
-.ve2?
+.ve*
 .coverage
 *.pyc
 reports
