@@ -62,11 +62,15 @@ class Task(BaseTask):
         if not hasattr(mod, "__file__"):
             return False
 
+        mod_parts = modname.split(".")
+
         if modname in self.excludes:
             return False
 
         for app_modname in self.test_apps:
-            if modname.startswith(app_modname):
+            app_parts = app_modname.split(".")
+
+            if mod_parts[:len(app_parts)] == app_parts:
                 return True
 
         return False
