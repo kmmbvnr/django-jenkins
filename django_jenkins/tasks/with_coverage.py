@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=W0201
 import os
-import sys
 from optparse import make_option
 from coverage.control import coverage
 from django.conf import settings
+from django.utils.importlib import import_module
 from django_jenkins.tasks import BaseTask, get_apps_under_test
 
 
@@ -29,11 +29,17 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
         self.test_apps = get_apps_under_test(test_labels, options['test_all'])
         self.output_dir = options['output_dir']
-        self.excludes = options['coverage_excludes']
         self.html_dir = options['coverage_html_report_dir']
 
+        self.exclude_locations = []
+        for modname in options['coverage_excludes']:
+            try:
+                self.exclude_locations.append(os.path.dirname(import_module(modname).__file__))
+            except ImportError:
+                pass
+
         self.coverage = coverage(branch=options['coverage_measure_branch'],
-                                 source=test_labels or None,
+                                 source=self.test_apps,
                                  config_file=options['coverage_rcfile'] or Task.default_config_path())
 
     def setup_test_environment(self, **kwargs):
@@ -42,49 +48,19 @@ class Task(BaseTask):
     def teardown_test_environment(self, **kwargs):
         self.coverage.stop()
 
-        modules = [module for name, module in sys.modules.items() \
-                        if self.want_module(name, module)]
-        morfs = [self.src(m.__file__) for m in modules if self.src(m.__file__).endswith(".py")]
+        morfs = [filename for filename in self.coverage.data.measured_files() \
+                 if self.want_file(filename)]
 
-        self.coverage.xml_report(morfs, outfile=os.path.join(self.output_dir, 'coverage.xml'))
+        self.coverage.xml_report(morfs=morfs, outfile=os.path.join(self.output_dir, 'coverage.xml'))
 
         if self.html_dir:
-            self.coverage.html_report(morfs, directory=self.html_dir)
+            self.coverage.html_report(morfs=morfs, directory=self.html_dir)
 
-    def want_module(self, modname, mod):
-        """
-        Predicate for covered modules
-        """
-        #No cover if it ain't got a file
-        if not hasattr(mod, "__file__"):
-            return False
-
-        mod_parts = modname.split('.')
-        
-        for exclude in self.excludes:
-            if exclude in mod_parts:
+    def want_file(self, filename):
+        for location in self.exclude_locations:
+            if filename.startswith(location):
                 return False
-
-        for label in self.test_apps:
-            if label in mod_parts:
-                return True
-        return False
-
-    @staticmethod
-    def src(filename):
-        """
-        Find the python source file for a .pyc, .pyo or $py.class file on
-        jython. Returns the filename provided if it is not a python source
-        file. Cribbed from nose.util
-        """
-        if filename is None:
-            return filename
-        if sys.platform.startswith('java') and filename.endswith('$py.class'):
-            return '.'.join((filename[:-9], 'py'))
-        base, ext = os.path.splitext(filename)
-        if ext in ('.pyc', '.pyo', '.py'):
-            return '.'.join((base, 'py'))
-        return filename
+            return True
 
     @staticmethod
     def default_config_path():
