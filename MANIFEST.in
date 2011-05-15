@@ -3,4 +3,5 @@ include README.md
 include MANIFEST.in
 include django_jenkins/tasks/pylint.rc
 include django_jenkins/tasks/jslint/fulljslint.js
+include django_jenkins/tasks/jslint_runner.js
 recursive-include tests *
