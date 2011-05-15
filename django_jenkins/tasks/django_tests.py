@@ -6,6 +6,7 @@ Build suite with normal django tests
 from django.test.simple import build_suite, build_test
 from django.db.models import get_app, get_apps
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django_jenkins.tasks import BaseTask
 
 
@@ -22,8 +23,11 @@ class Task(BaseTask):
                 if '.' in label:
                     suite.addTest(build_test(label))
                 else:
-                    app = get_app(label)
-                    suite.addTest(build_suite(app))
+                    try:
+                        app = get_app(label)
+                        suite.addTest(build_suite(app))
+                    except ImproperlyConfigured:
+                        pass
         else:
             for app in get_apps():
                 suite.addTest(build_suite(app))
