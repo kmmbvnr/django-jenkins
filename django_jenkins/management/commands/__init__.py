@@ -41,6 +41,8 @@ class TaskListCommand(BaseCommand):
             help='Do not intercept stdout and stderr, friendly for console debuggers'),
         make_option('--output-dir', dest='output_dir', default="reports",
             help='Report files directory'),
+        make_option('--no-report', dest='no_report', default=False,
+            help='Disable XML report generation'),
     )
 
     def __init__(self):
@@ -61,7 +63,7 @@ class TaskListCommand(BaseCommand):
         # run
         test_runner_cls = get_runner()
         test_runner = test_runner_cls(output_dir=options['output_dir'], interactive=options['interactive'],
-                                      debug=options['debug'], verbosity=int(options.get('verbosity', 1)))
+                                      debug=options['debug'], verbosity=int(options.get('verbosity', 1)), no_report=options['no_report'])
 
         if test_runner.run_tests(test_labels):
             sys.exit(1)

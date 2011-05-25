@@ -9,7 +9,8 @@ class BaseTask(object):
     """
     option_list = []
 
-    def __init__(self, test_labels, options):
+    def __init__(self, test_labels, options, no_report=False):
+        self.no_report = no_report
         self.test_labels = test_labels
 
     def setup_test_environment(self, **kwargs):

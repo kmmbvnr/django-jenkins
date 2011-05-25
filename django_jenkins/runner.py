@@ -268,6 +268,7 @@ class XMLTestRunner(DjangoTestRunner):
     A test result class that can express test results in a XML report.
     """
     def __init__(self, output_dir, debug=False, **kwargs):
+        self.no_report = False if 'no_report' not in kwargs else kwargs.pop('no_report')
         super(XMLTestRunner, self).__init__(**kwargs)
         self.debug = debug
         self.output_dir = output_dir
@@ -293,7 +294,8 @@ class XMLTestRunner(DjangoTestRunner):
         try:
             self._patch_standard_output()
             result = super(XMLTestRunner, self).run(test)
-            result.generate_reports(self)
+            if not self.no_report:
+                result.generate_reports(self)
         finally:
             self._restore_standard_output()
         return result
@@ -305,6 +307,7 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
     """
     def __init__(self, output_dir, debug=False, **kwargs):
         super(CITestSuiteRunner, self).__init__(**kwargs)
+        self.no_report = False if 'no_report' not in kwargs else kwargs.pop('no_report')
         self.debug = debug
         self.output_dir = output_dir
 
@@ -344,7 +347,7 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
         signals.before_suite_run.send(sender=self)
         result = XMLTestRunner(verbosity=self.verbosity,
                                output_dir=self.output_dir,
-                               debug=self.debug).run(suite)
+                               debug=self.debug, no_report=self.no_report).run(suite)
         signals.after_suite_run.send(sender=self)
 
         return result
