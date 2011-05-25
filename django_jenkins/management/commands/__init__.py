@@ -41,7 +41,7 @@ class TaskListCommand(BaseCommand):
             help='Do not intercept stdout and stderr, friendly for console debuggers'),
         make_option('--output-dir', dest='output_dir', default="reports",
             help='Report files directory'),
-        make_option('--no-report', dest='no_report', default=False,
+        make_option('--no-report', action='store_true', dest='no_report', default=False,
             help='Disable XML report generation'),
     )
 
