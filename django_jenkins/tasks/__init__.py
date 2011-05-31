@@ -9,7 +9,8 @@ class BaseTask(object):
     """
     option_list = []
 
-    def __init__(self, test_labels, options):
+    def __init__(self, test_labels, options, no_report=False):
+        self.no_report = no_report
         self.test_labels = test_labels
 
     def setup_test_environment(self, **kwargs):
@@ -40,11 +41,7 @@ def get_apps_under_test(test_labels, all_apps=False):
             apps = settings.PROJECT_APPS
         else:
             apps = settings.INSTALLED_APPS
-    else:
-        apps = [app for app in settings.INSTALLED_APPS \
-                    for label in test_labels \
-                    if app == label.split('.')[0] or app.endswith('.%s' % label.split('.')[0])]
-    return apps
+    return [app.split('.')[-1] for app in apps]
 
 
 def get_apps_locations(test_labels, all_apps=False):
