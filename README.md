@@ -95,6 +95,13 @@ You should have windmill python package installed to run this tasks
 
 Changelog
 -------
+django-jenkins 0.11.1 2010-06-15
+
+   * Do no produce file reports for jtest command by default
+   * Ignore django apps without models.py file, as in django test command
+   * Fix jslint_runner.js packaging
+   * Fix coverage file filtering
+
 django-jenkins 0.11.0 2010-04-15
 
    * Support pep8, pyflakes, jslint tools
