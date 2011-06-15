@@ -11,7 +11,7 @@ TEMPLATE_LOADERS = (
 )
 
 PROJECT_APPS = (
-    'django.contrib.sessions', # just to enshure that dotted apps test works
+    'django.contrib.sessions', # just to ensure that dotted apps test works
     'django_jenkins',
     'test_app',
 )
@@ -20,7 +20,13 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
 ) + PROJECT_APPS
 
+
 DATABASE_ENGINE = 'sqlite3'
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.%s' % DATABASE_ENGINE,
+        }
+}
 
 JENKINS_TASKS = (
     'django_jenkins.tasks.with_coverage',
