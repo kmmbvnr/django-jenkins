@@ -97,7 +97,7 @@ Changelog
 -------
 django-jenkins 0.11.1 2010-06-15
 
-   * Do no produce file reports for jtest command by default
+   * Do not produce file reports for jtest command by default
    * Ignore django apps without models.py file, as in django test command
    * Fix jslint_runner.js packaging
    * Fix coverage file filtering
