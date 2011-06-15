@@ -267,8 +267,9 @@ class XMLTestRunner(DjangoTestRunner):
     """
     A test result class that can express test results in a XML report.
     """
-    def __init__(self, output_dir, debug=False, **kwargs):
+    def __init__(self, output_dir, debug=False, with_reports=True, **kwargs):
         super(XMLTestRunner, self).__init__(**kwargs)
+        self.with_reports = with_reports
         self.debug = debug
         self.output_dir = output_dir
 
@@ -293,7 +294,8 @@ class XMLTestRunner(DjangoTestRunner):
         try:
             self._patch_standard_output()
             result = super(XMLTestRunner, self).run(test)
-            result.generate_reports(self)
+            if self.with_reports:
+                result.generate_reports(self)
         finally:
             self._restore_standard_output()
         return result
@@ -303,8 +305,9 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
     """
     Continues integration test runner
     """
-    def __init__(self, output_dir, debug=False, **kwargs):
+    def __init__(self, output_dir, debug=False, with_reports=True, **kwargs):
         super(CITestSuiteRunner, self).__init__(**kwargs)
+        self.with_reports = with_reports
         self.debug = debug
         self.output_dir = output_dir
 
@@ -342,9 +345,11 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
 
     def run_suite(self, suite, **kwargs):
         signals.before_suite_run.send(sender=self)
-        result = XMLTestRunner(verbosity=self.verbosity,
-                               output_dir=self.output_dir,
-                               debug=self.debug).run(suite)
+        result = XMLTestRunner(
+            verbosity=self.verbosity,
+            output_dir=self.output_dir,
+            debug=self.debug,
+            with_reports=self.with_reports).run(suite)
         signals.after_suite_run.send(sender=self)
 
         return result

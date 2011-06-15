@@ -60,8 +60,12 @@ class TaskListCommand(BaseCommand):
 
         # run
         test_runner_cls = get_runner()
-        test_runner = test_runner_cls(output_dir=options['output_dir'], interactive=options['interactive'],
-                                      debug=options['debug'], verbosity=int(options.get('verbosity', 1)))
+        test_runner = test_runner_cls(
+            output_dir=options['output_dir'],
+            interactive=options['interactive'],
+            debug=options['debug'],
+            verbosity=int(options.get('verbosity', 1)),
+            with_reports=options.get('with_reports', True))
 
         if test_runner.run_tests(test_labels):
             sys.exit(1)
