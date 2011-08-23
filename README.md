@@ -93,6 +93,12 @@ Each tests should be inherited from `django_jenkins.tasks.windmill_tests.Windmil
 
 You should have windmill python package installed to run this tasks
 
+### `django_jenkins.tasks.lettuce_tests`
+
+Discover lettuce tests from app/feature directories.
+
+You should have the lettuce python package installed to run these tasks
+
 Changelog
 -------
 django-jenkins 0.11.1 2010-06-15
