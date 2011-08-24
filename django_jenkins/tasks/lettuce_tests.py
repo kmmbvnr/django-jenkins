@@ -10,22 +10,10 @@ from lettuce import registry
 
 class Task(BaseTask):
     option_list = [
-        make_option("--lettuce-apps",
-               dest="lettuce-apps",
-               help="list of django apps with lettuce tests",
-               default=""),
-        make_option("--lettuce-avoid-apps",
-               dest="lettuce-avoid-apps",
-               help="list of django apps for lettuce to avoid",
-               default=""),
         make_option("--lettuce-server",
                dest="lettuce-server",
                help="do not start runserver for lettuce tests",
                default=False),
-        make_option("--lettuce-verbosity",
-               dest="lettuce-verbosity",
-               help="see lettuce docs for verbosity settings",
-               default=1),
     ]
 
     def __init__(self, test_labels, options):
@@ -34,10 +22,7 @@ class Task(BaseTask):
             if hasattr(settings, 'PROJECT_APPS') and not options['test_all']:
                 self.test_labels = [app_name.split('.')[-1] for app_name in settings.PROJECT_APPS]
 
-        self.lettuce_apps = options['lettuce-apps']
-        self.avoid_apps = options['lettuce-avoid-apps']
         self.lettuce_server = options['lettuce-server']
-        self.verbosity = options['lettuce-verbosity']
         self.output_dir = options['output_dir']
 
     def setup_test_environment(self, **kwargs):
@@ -51,10 +36,9 @@ class Task(BaseTask):
             self.server.stop()
 
     def build_suite(self, suite, **kwargs):
-        paths = harvest_lettuces(self.lettuce_apps, self.avoid_apps)
+        paths = harvest_lettuces(self.test_labels)
         for app_path, app_module in paths:
             runner = Runner(app_path,
-                            verbosity=self.verbosity,
                             enable_xunit=True,
                             xunit_filename=path.join(self.output_dir, 'lettuce.xml'))
 
