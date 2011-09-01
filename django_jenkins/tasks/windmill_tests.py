@@ -7,7 +7,7 @@ import threading
 import unittest
 from imp import find_module
 from optparse import make_option
-from unittest import _strclass
+
 from windmill.bin import admin_lib
 from windmill.authoring import WindmillTestClient
 from django.db.models import get_app, get_apps
@@ -18,6 +18,10 @@ from django.core.servers import basehttp
 from django.test import TestCase, TransactionTestCase
 from django_jenkins.tasks import BaseTask
 
+try:
+    from unittest import _strclass
+except ImportError:
+    _strclass = str
 
 if sys.version_info[1] < 5:
     raise AssertionError('windmill task require python>=2.5 version')
