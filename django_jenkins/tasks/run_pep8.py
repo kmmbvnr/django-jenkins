@@ -37,7 +37,7 @@ class Task(BaseTask):
         if options['pep8-ignore']:
             self.pep8_options.append('--ignore=%s' % options['pep8-ignore'])
 
-    def teardown_test_environment(self, **kwargs):
+    def run(self, **kwargs):
         locations = get_apps_locations(self.test_labels, self.test_all)
         pep8.process_options(self.pep8_options + locations)
 

@@ -47,6 +47,15 @@ class TaskListCommand(BaseCommand):
         super(TaskListCommand, self).__init__()
         self.tasks_cls = [import_module(module_name).Task for module_name in self.get_task_list()]
 
+    def handle_static_tasks(self, test_labels, options):
+        # wait until everything else is done running to start static tasks by default
+        pass
+
+    def finish_static_tasks(self):
+        for task in self.tasks:
+            if hasattr(task, 'run'):
+                task.run()
+
     def handle(self, *test_labels, **options):
         # instantiate tasks
         self.tasks = [task_cls(test_labels, options) for task_cls in self.tasks_cls]
@@ -58,7 +67,6 @@ class TaskListCommand(BaseCommand):
                 if signal_handler:
                     signal.connect(signal_handler)
 
-        # run
         test_runner_cls = get_runner()
         test_runner = test_runner_cls(
             output_dir=options['output_dir'],
@@ -67,7 +75,14 @@ class TaskListCommand(BaseCommand):
             verbosity=int(options.get('verbosity', 1)),
             with_reports=options.get('with_reports', True))
 
-        if test_runner.run_tests(test_labels):
+        # run non-test dependent tasks in parallel
+        self.handle_static_tasks(test_labels, options)
+
+        # run tests
+        results = test_runner.run_tests(test_labels)
+        self.finish_static_tasks()
+
+        if results:
             sys.exit(1)
 
     def get_task_list(self):

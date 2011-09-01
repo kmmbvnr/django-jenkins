@@ -38,7 +38,7 @@ class Task(BaseTask):
         else:
             self.output = sys.stdout
 
-    def teardown_test_environment(self, **kwargs):
+    def run(self, **kwargs):
         args = ["--rcfile=%s" % self.config_path]
         if self.errors_only:
             args += ['--errors-only']

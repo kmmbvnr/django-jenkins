@@ -21,7 +21,7 @@ class Task(BaseTask):
         else:
             self.output = sys.stdout
 
-    def teardown_test_environment(self, **kwargs):
+    def run(self, **kwargs):
         locations = get_apps_locations(self.test_labels, self.test_all)
 
         # run pyflakes tool with captured output
