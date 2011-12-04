@@ -11,7 +11,7 @@ setup(
     author = 'Mikhail Podgurskiy',
     author_email = 'kmmbvnr@gmail.com',
     description = 'Plug and play continuous integration with django and jenkins',
-    long_description=read(os.path.abspath(path.join(path.dirname(__file__), 'README.rst'))),
+    long_description=read(path.abspath(path.join(path.dirname(__file__), 'README.rst'))),
     license = 'LGPL',
     platforms = ['Any'],
     keywords = ['pyunit', 'unittest', 'testrunner', 'hudson', 'jenkins', 'django'],
