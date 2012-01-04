@@ -88,10 +88,11 @@ You should have pyflakes python package installed to run this tasks
 
 Changelog
 -------
-django-jenkins 0.12.0 2011-01-XX
+django-jenkins 0.12.0 2012-01-XX
 
    * Django 1.3 in requirements
    * Windmill support was removed (django 1.4 have better impl)
+   * Ignore south migrations by default
 
 django-jenkins 0.11.1 2010-06-15
 
