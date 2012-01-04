@@ -84,7 +84,13 @@ You should have pep8 python package installed to run this tasks
 Runs pyflakes tool over selected django apps.
 Creates pylint compatible report for jenkins.
 
-You should have pyflakes python package installed to run this tasks
+### `django_jenkins.tasks.run_sloccount`
+
+Runs sloccount tool over selected django apps.
+Creates sloccount plugin compatible report for jenkins.
+
+You should have sloccount program installed to run this tasks
+
 
 Changelog
 -------
@@ -93,6 +99,7 @@ django-jenkins 0.12.0 2012-01-XX
    * Django 1.3 in requirements
    * Windmill support was removed (django 1.4 have better impl)
    * Ignore south migrations by default
+   * Added sloccount task
 
 django-jenkins 0.11.1 2010-06-15
 
