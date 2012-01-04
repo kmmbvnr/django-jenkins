@@ -24,7 +24,7 @@ class Task(BaseTask):
                    make_option("--coverage-with-migrations",
                                action="store_true", default=False,
                                dest="coverage_with_migrations",
-                               help="Don't measure branch coverage."),
+                               help="Don't measure migrations coverage."),
                    make_option("--coverage-exclude", action="append",
                                default=[], dest="coverage_excludes",
                                help="Module name to exclude")]
