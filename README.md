@@ -59,7 +59,7 @@ Runs pylint over selected django apps.
 
 ### `django_jenkins.tasks.with_coverage`
 
-Produces xml coverage report for jenkinx
+Produces xml coverage report for jenkins
 
 ### `django_jenkins.tasks.django_tests`
 
