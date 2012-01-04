@@ -2,6 +2,7 @@
 import os
 import re
 import sys
+from optparse import make_option
 from pyflakes.scripts import pyflakes
 from cStringIO import StringIO
 from django_jenkins.functions import relpath
@@ -9,9 +10,16 @@ from django_jenkins.tasks import BaseTask, get_apps_locations
 
 
 class Task(BaseTask):
+    option_list = [
+        make_option("--pyflakes-with-migrations",
+                    action="store_true", default=False,
+                    dest="pyflakes_with_migrations",
+                    help="Don't check migrations with pyflakes.")]
+
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
         self.test_all = options['test_all']
+        self.with_migrations = options['pyflakes_with_migrations']
 
         if options.get('pyflakes_file_output', True):
             output_dir = options['output_dir']
@@ -31,6 +39,8 @@ class Task(BaseTask):
             for location in locations:
                 if os.path.isdir(location):
                     for dirpath, dirnames, filenames in os.walk(relpath(location)):
+                        if not self.with_migrations and 'migrations' in dirpath:
+                            continue
                         for filename in filenames:
                             if filename.endswith('.py'):
                                 pyflakes.checkPath(os.path.join(dirpath, filename))
