@@ -12,7 +12,7 @@ class Task(BaseTask):
                                help="Javascript interpreter for running jslint"),
                    make_option("--jslint-implementation",
                                dest="jslint_implementation",
-                               help="Full path to fulljslint.js, by default used build-in"),
+                               help="Full path to jslint.js, by default used build-in"),
                    make_option("--jslint-exclude",
                                dest="jslint_exclude", default="",
                                help="Exclude patterns")]
@@ -28,7 +28,7 @@ class Task(BaseTask):
 
         self.implementation = options['jslint_implementation']
         if not self.implementation:
-            self.implementation = os.path.join(root_dir, 'jslint', 'fulljslint.js')
+            self.implementation = os.path.join(root_dir, 'jslint', 'jslint.js')
 
         if options.get('jslint_file_output', True):
             output_dir = options['output_dir']
