@@ -10,8 +10,12 @@ from cStringIO import StringIO
 from unittest import _TextTestResult, TestResult
 from xml.dom.minidom import Document
 from django.conf import settings
-from django.test.simple import DjangoTestSuiteRunner, DjangoTestRunner
+from django.test.simple import DjangoTestSuiteRunner
 from django_jenkins import signals
+try:
+    from django.test.simple import TextTestRunner as TestRunner
+except ImportError:
+    from django.test.simple import DjangoTestRunner as TestRunner
 
 
 class _TestInfo(object):
@@ -263,7 +267,7 @@ class _XMLTestResult(_TextTestResult):
                 report_file.close()
 
 
-class XMLTestRunner(DjangoTestRunner):
+class XMLTestRunner(TestRunner):
     """
     A test result class that can express test results in a XML report.
     """
