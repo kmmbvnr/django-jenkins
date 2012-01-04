@@ -11,11 +11,7 @@ class Task(BaseTask):
         make_option("--sloccount-with-migrations",
                     action="store_true", default=False,
                     dest="sloccount_with_migrations",
-                    help="Don't count migrations sloc."),
-        make_option("--sloccount-show",
-                    action="store_false", default=True,
-                    dest="sloccount_file_output",
-                    help="Output sloccount results to console")]
+                    help="Don't count migrations sloc.")]
     
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
