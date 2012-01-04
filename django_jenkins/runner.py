@@ -10,7 +10,8 @@ from cStringIO import StringIO
 from unittest import _TextTestResult, TestResult
 from xml.dom.minidom import Document
 from django.conf import settings
-from django.test.simple import DjangoTestSuiteRunner
+from django.test import TestCase
+from django.test.simple import DjangoTestSuiteRunner, reorder_suite
 from django_jenkins import signals
 try:
     from django.test.simple import TextTestRunner as TestRunner
@@ -332,7 +333,7 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
     def build_suite(self, test_labels, **kwargs):
         suite = unittest.TestSuite()
         signals.build_suite.send(sender=self, suite=suite)
-        return suite
+        return reorder_suite(suite, (TestCase,))
 
     def run_tests(self, test_labels, extra_tests=None, **kwargs):
         self.setup_test_environment()
