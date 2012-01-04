@@ -86,15 +86,13 @@ Creates pylint compatible report for jenkins.
 
 You should have pyflakes python package installed to run this tasks
 
-### `django_jenkins.tasks.windmill_tests`
-
-Discover windmill tests from app/wmtests.py files.
-Each tests should be inherited from `django_jenkins.tasks.windmill_tests.WindmillTestCase`
-
-You should have windmill python package installed to run this tasks
-
 Changelog
 -------
+django-jenkins 0.12.0 2011-01-XX
+
+   * Django 1.3 in requirements
+   * Windmill support was removed (django 1.4 have better impl)
+
 django-jenkins 0.11.1 2010-06-15
 
    * Do not produce file reports for jtest command by default
