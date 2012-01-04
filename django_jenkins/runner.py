@@ -346,7 +346,7 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
             return self.suite_result(suite, result)
         else:
             self.teardown_test_environment()
-            return True
+            return 0
 
     def run_suite(self, suite, **kwargs):
         signals.before_suite_run.send(sender=self)
