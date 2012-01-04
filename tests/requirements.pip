@@ -4,6 +4,7 @@ coverage>=3.4
 windmill
 pyflakes
 pep8
+lettuce
 
 # development only
 ipdb

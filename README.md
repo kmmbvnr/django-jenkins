@@ -92,6 +92,12 @@ Creates sloccount plugin compatible report for jenkins.
 You should have sloccount program installed to run this tasks
 
 
+### `django_jenkins.tasks.lettuce_tests`
+
+Discover lettuce tests from app/feature directories.
+
+You should have the lettuce python package installed to run these tasks
+
 Changelog
 -------
 django-jenkins 0.12.0 2012-01-XX
