@@ -67,10 +67,17 @@ Discovers standard django test suite from test.py files
 
 ### `django_jenkins.tasks.run_jslint`
 
-Runs jslint tools over `app/static/*/*.js` files. 
+Runs jslint tools over `app/static/*/*.js` files.
 Creates pylint compatible report for jenkins
 
 You should have `rhino` javascript interpreter installed for jslint
+
+### `django_jenkins.tasks.run_csslint`
+
+Runs jslint tools over `app/static/*/*.css` files.
+Creates csslint report for jenkins
+
+You should have `rhino` javascript interpreter installed for csslint
 
 ### `django_jenkins.tasks.run_pep8`
 
@@ -106,6 +113,8 @@ django-jenkins 0.12.0 2012-01-XX
    * Windmill support was removed (django 1.4 have better impl)
    * Ignore south migrations by default
    * Added sloccount task
+   * Added lettuce testing task
+   * Added csslint task
 
 django-jenkins 0.11.1 2010-06-15
 

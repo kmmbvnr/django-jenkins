@@ -34,11 +34,13 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_pep8',
     'django_jenkins.tasks.run_pyflakes',
     'django_jenkins.tasks.run_jslint',
+    'django_jenkins.tasks.run_csslint',    
     'django_jenkins.tasks.run_sloccount',    
     'django_jenkins.tasks.lettuce_tests',
 )
 
 JSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/js/test.js')]
+CSSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/css/test.css')]
 
 # python > 2.4
 if sys.version_info[1] > 4:

@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name = 'django-jenkins',
-    version = '0.11.1',
+    version = '0.12.0',
     author = 'Mikhail Podgurskiy',
     author_email = 'kmmbvnr@gmail.com',
     description = 'Plug and play continuous integration with django and jenkins',
@@ -28,7 +28,7 @@ setup(
         'pylint>=0.23',
     ],
     packages = ['django_jenkins', 'django_jenkins.management', 'django_jenkins.tasks', 'django_jenkins.management.commands'],
-    package_data={'django_jenkins': ['tasks/pylint.rc', 'tasks/jslint_runner.js']},
+    package_data={'django_jenkins': ['tasks/pylint.rc', 'tasks/jslint_runner.js', 'tasks/jslint/jslint.js', 'tasks/csslint/release/csslint-rhino.js']},
     zip_safe = False,
     include_package_data = True
 )
