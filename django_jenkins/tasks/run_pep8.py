@@ -10,7 +10,7 @@ from django_jenkins.tasks import BaseTask, get_apps_locations
 
 class Task(BaseTask):
     option_list = [make_option("--pep8-exclude",
-                               dest="pep8-exclude", default=pep8.DEFAULT_EXCLUDE,
+                               dest="pep8-exclude", default=pep8.DEFAULT_EXCLUDE + ",migrations",
                                help="exclude files or directories which match these "
                                "comma separated patterns (default: %s)" %
                                pep8.DEFAULT_EXCLUDE),

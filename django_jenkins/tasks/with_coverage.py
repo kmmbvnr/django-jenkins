@@ -21,6 +21,10 @@ class Task(BaseTask):
                                action="store_false", default=True,
                                dest="coverage_measure_branch",
                                help="Don't measure branch coverage."),
+                   make_option("--coverage-with-migrations",
+                               action="store_true", default=False,
+                               dest="coverage_with_migrations",
+                               help="Don't measure migrations coverage."),
                    make_option("--coverage-exclude", action="append",
                                default=[], dest="coverage_excludes",
                                help="Module name to exclude")]
@@ -29,6 +33,7 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
         self.test_apps = get_apps_under_test(test_labels, options['test_all'])
         self.output_dir = options['output_dir']
+        self.with_migrations = options['coverage_with_migrations']
         self.html_dir = options['coverage_html_report_dir']
 
         self.exclude_locations = []
@@ -57,10 +62,13 @@ class Task(BaseTask):
             self.coverage.html_report(morfs=morfs, directory=self.html_dir)
 
     def want_file(self, filename):
+        if not self.with_migrations and '/migrations/' in filename:
+             return False
         for location in self.exclude_locations:
             if filename.startswith(location):
                 return False
-            return True
+
+        return True
 
     @staticmethod
     def default_config_path():

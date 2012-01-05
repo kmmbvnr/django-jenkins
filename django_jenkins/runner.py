@@ -10,8 +10,13 @@ from cStringIO import StringIO
 from unittest import _TextTestResult, TestResult
 from xml.dom.minidom import Document
 from django.conf import settings
-from django.test.simple import DjangoTestSuiteRunner, DjangoTestRunner
+from django.test import TestCase
+from django.test.simple import DjangoTestSuiteRunner, reorder_suite
 from django_jenkins import signals
+try:
+    from django.test.simple import TextTestRunner as TestRunner
+except ImportError:
+    from django.test.simple import DjangoTestRunner as TestRunner
 
 
 class _TestInfo(object):
@@ -263,7 +268,7 @@ class _XMLTestResult(_TextTestResult):
                 report_file.close()
 
 
-class XMLTestRunner(DjangoTestRunner):
+class XMLTestRunner(TestRunner):
     """
     A test result class that can express test results in a XML report.
     """
@@ -328,7 +333,7 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
     def build_suite(self, test_labels, **kwargs):
         suite = unittest.TestSuite()
         signals.build_suite.send(sender=self, suite=suite)
-        return suite
+        return reorder_suite(suite, (TestCase,))
 
     def run_tests(self, test_labels, extra_tests=None, **kwargs):
         self.setup_test_environment()
@@ -341,7 +346,7 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
             return self.suite_result(suite, result)
         else:
             self.teardown_test_environment()
-            return True
+            return 0
 
     def run_suite(self, suite, **kwargs):
         signals.before_suite_run.send(sender=self)

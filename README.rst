@@ -84,7 +84,14 @@ Here is the list of tasks prebuild with django-jenkins
   Runs jslint tools over ``<app>/static/*/*.js`` files.
   Creates Pylint compatible report for Jenkins
 
-  You should have rhino_ javascript interpreter installed for jslint
+  You should have the rhino_ javascript interpreter installed for jslint
+
+- ``django_jenkins.tasks.run_csslint``
+
+  Runs CSS lint tools over `app/static/*/*.css` files.
+  Creates CSS Lint compatible report for Jenkins
+
+  You should have the rhino_ javascript interpreter installed for csslint
 
 .. _rhino: http://www.mozilla.org/rhino/
 
@@ -106,18 +113,35 @@ Here is the list of tasks prebuild with django-jenkins
 
 .. _Pyflakes: http://pypi.python.org/pypi/pyflakes
 
-- ``django_jenkins.tasks.windmill_tests``
+- ``django_jenkins.tasks.run_sloccount``
 
-  Discover Windmill_ tests from ``<app>/wmtests.py`` files.
-  Each tests should be inherited from
-  ``django_jenkins.tasks.windmill_tests.WindmillTestCase``
+  Runs SLOCCount_ tool over selected Django apps.
+  Creates sloccount plugin compatible report for Jenkins.
 
-  You should have windmill python package installed to run this tasks
+  You should have the SLOCCount program installed to run this task
 
-.. _Windmill: http://www.getwindmill.com/
+.. _SLOCCount: http://www.dwheeler.com/sloccount/
+
+- ``django_jenkins.tasks.lettuce_tests``
+
+  Discover Lettuce tests from app/feature directories.
+
+  You should have the Lettuce_ Python package installed to run this task
+
+.. _Lettuce: http://lettuce.it/
 
 Changelog
 ---------
+
+0.12.0 2012-01-XX
+~~~~~~~~~~~~~~~~~
+
+* Django 1.3 in requirements
+* Windmill support was removed (Django 1.4 has a better implementation)
+* Ignore South migrations by default
+* Added SLOCCount task
+* Added Lettuce testing task
+* Added CSS Lint task
 
 0.11.1 2010-06-15
 ~~~~~~~~~~~~~~~~~
