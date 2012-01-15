@@ -133,7 +133,7 @@ Here is the list of tasks prebuild with django-jenkins
 Changelog
 ---------
 
-0.12.0 2012-01-XX
+0.12.0 2012-01-15
 ~~~~~~~~~~~~~~~~~
 
 * Django 1.3 in requirements
