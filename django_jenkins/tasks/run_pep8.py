@@ -46,9 +46,8 @@ class Task(BaseTask):
             code = text[:4]
             if pep8.ignore_code(code):
                 return
-            message = re.sub(r'([WE]\d+)', r'[\1] PEP8:', text)
             sourceline = instance.line_offset + line_number
-            self.output.write('%s:%s: %s\n' % (instance.filename, sourceline, message))
+            self.output.write('%s:%s: %s\n' % (instance.filename, sourceline, text))
         pep8.Checker.report_error = report_error
 
         for location in locations:

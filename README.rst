@@ -142,7 +142,8 @@ Changelog
 * Added SLOCCount task
 * Added Lettuce testing task
 * Added CSS Lint task
-* Jslint task now outputs to jslint.xml in xml format
+* Used xml output format for jslint
+* Used native pep8 output format
 
 0.11.1 2010-06-15
 ~~~~~~~~~~~~~~~~~
