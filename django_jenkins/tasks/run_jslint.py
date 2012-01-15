@@ -20,7 +20,8 @@ class Task(BaseTask):
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
         self.test_all = options['test_all']
-
+        self.to_file = options.get('jslint_file_output', True)
+        
         root_dir = os.path.normpath(os.path.dirname(__file__))
 
         self.intepreter = options['jslint_interpreter'] or \
@@ -30,22 +31,32 @@ class Task(BaseTask):
         if not self.implementation:
             self.implementation = os.path.join(root_dir, 'jslint', 'jslint.js')
 
-        if options.get('jslint_file_output', True):
+        if self.to_file:
             output_dir = options['output_dir']
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-            self.output = open(os.path.join(output_dir, 'jslint.report'), 'w')
+            self.output = open(os.path.join(output_dir, 'jslint.xml'), 'w')
         else:
             self.output = sys.stdout
 
         self.runner = os.path.join(root_dir, 'jslint_runner.js')
         self.exclude = options['jslint_exclude']
 
-    def teardown_test_environment(self, **kwargs):    
+    def teardown_test_environment(self, **kwargs):
+        fmt = 'text'
+        if self.to_file:
+            fmt = 'xml'
+
+        if self.to_file:
+            self.output.write('<?xml version=\"1.0\" encoding=\"utf-8\"?><jslint>')
+
         for path in self.static_files_iterator():
             jslint_output = check_output(
-                [self.intepreter, self.runner, self.implementation, relpath(path)])
+                [self.intepreter, self.runner, self.implementation, relpath(path), fmt])
             self.output.write(jslint_output)
+
+        if self.to_file:
+            self.output.write('</jslint>');
 
     def static_files_iterator(self):
         locations = get_apps_locations(self.test_labels, self.test_all)

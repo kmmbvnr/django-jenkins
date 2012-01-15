@@ -115,6 +115,7 @@ django-jenkins 0.12.0 2012-01-XX
    * Added sloccount task
    * Added lettuce testing task
    * Added csslint task
+   * Jslint task now outputs to jslint.xml in xml format
 
 django-jenkins 0.11.1 2010-06-15
 
