@@ -8,6 +8,7 @@ lettuce
 
 # development only
 ipdb
-ipython
+ipython==0.10
+
 
 
