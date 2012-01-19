@@ -47,7 +47,7 @@ class TaskListCommand(BaseCommand):
         super(TaskListCommand, self).__init__()
         self.tasks_cls = [import_module(module_name).Task for module_name in self.get_task_list()]
 
-    def handle(self, *test_labels, **options):
+    def initialize(self, *test_labels, **options):
         # instantiate tasks
         self.tasks = [task_cls(test_labels, options) for task_cls in self.tasks_cls]
 
@@ -58,16 +58,18 @@ class TaskListCommand(BaseCommand):
                 if signal_handler:
                     signal.connect(signal_handler)
 
-        # run
+        # setup test runner
         test_runner_cls = get_runner()
-        test_runner = test_runner_cls(
+        self.test_runner = test_runner_cls(
             output_dir=options['output_dir'],
             interactive=options['interactive'],
             debug=options['debug'],
             verbosity=int(options.get('verbosity', 1)),
             with_reports=options.get('with_reports', True))
 
-        if test_runner.run_tests(test_labels):
+    def handle(self, *test_labels, **options):
+        self.initialize(*test_labels, **options)
+        if self.test_runner.run_tests(test_labels):
             sys.exit(1)
 
     def get_task_list(self):

@@ -340,10 +340,10 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
         suite = self.build_suite(test_labels, extra_tests=extra_tests)
         if suite.countTestCases():
             old_config = self.setup_databases()
-            result = self.run_suite(suite)
+            self.result = self.run_suite(suite)
             self.teardown_databases(old_config)
             self.teardown_test_environment()
-            return self.suite_result(suite, result)
+            return self.suite_result(suite, self.result)
         else:
             self.teardown_test_environment()
             return 0

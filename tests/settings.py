@@ -28,6 +28,8 @@ DATABASES = {
         }
 }
 
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+
 JENKINS_TASKS = (
     'django_jenkins.tasks.with_coverage',
     'django_jenkins.tasks.django_tests',
