@@ -1,4 +1,5 @@
 # -*- coding: utf-8; mode: django -*-
+import math
 from pygooglechart import Axis, SimpleLineChart
 from django.shortcuts import render
 from django_jenkins.standalone.storage import Storage
@@ -24,12 +25,13 @@ def index(request):
         # axis
         max_tests = max([s+f+e for s,f,e in zip(successes,failures,errors)])
         step = round(max_tests/10, 1-len(str(max_tests/10)))
-        tests_chart.set_axis_labels(Axis.LEFT, xrange(0, step*11, step))
+        total_steps = math.ceil(1.0 * max_tests/step)
+        tests_chart.set_axis_labels(Axis.LEFT, xrange(0, step*(total_steps+1), step))
         tests_chart.set_axis_labels(Axis.BOTTOM, xrange(1, last_build_id+1))
         tests_chart.set_grid(0, step/2, 5, 5)
 
         # First value - allowed maximum
-        tests_chart.add_data([step*10] * 2)
+        tests_chart.add_data([step*total_steps] * 2)
         # All tests, failures and errors, errors
         tests_chart.add_data([s+f+e for s,f,e in zip(successes,failures,errors)])
         tests_chart.add_data([f+e for f,e in zip(failures,errors)])
