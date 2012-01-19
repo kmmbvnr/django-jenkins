@@ -133,7 +133,7 @@ Here is the list of tasks prebuild with django-jenkins
 Changelog
 ---------
 
-0.12.0 2012-01-XX
+0.12.0 2012-01-15
 ~~~~~~~~~~~~~~~~~
 
 * Django 1.3 in requirements
@@ -142,6 +142,8 @@ Changelog
 * Added SLOCCount task
 * Added Lettuce testing task
 * Added CSS Lint task
+* Used xml output format for jslint
+* Used native pep8 output format
 
 0.11.1 2010-06-15
 ~~~~~~~~~~~~~~~~~
