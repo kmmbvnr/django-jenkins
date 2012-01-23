@@ -62,7 +62,7 @@ class Task(BaseTask):
         locations = get_apps_locations(self.test_labels, self.test_all)
 
         def in_tested_locations(path):
-            for location in locations:
+            for location in list(locations) + list(settings.STATICFILES_DIRS):
                 if path.startswith(location):
                     return True
             return False
