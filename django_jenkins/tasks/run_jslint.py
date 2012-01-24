@@ -13,6 +13,10 @@ class Task(BaseTask):
                    make_option("--jslint-implementation",
                                dest="jslint_implementation",
                                help="Full path to jslint.js, by default used build-in"),
+                   make_option("--jslint-with-staticdirs",
+                               dest="jslint_with-staticdirs",
+                               default=False, action="store_true",
+                               help="Check js files located in STATIC_DIRS settings"),
                    make_option("--jslint-exclude",
                                dest="jslint_exclude", default="",
                                help="Exclude patterns")]
@@ -21,7 +25,8 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
         self.test_all = options['test_all']
         self.to_file = options.get('jslint_file_output', True)
-        
+        self.with_static_dirs = options.get('jslint_with-staticdirs', False)
+    
         root_dir = os.path.normpath(os.path.dirname(__file__))
 
         self.intepreter = options['jslint_interpreter'] or \
@@ -62,15 +67,19 @@ class Task(BaseTask):
         locations = get_apps_locations(self.test_labels, self.test_all)
 
         def in_tested_locations(path):
-            for location in list(locations) + list(settings.STATICFILES_DIRS):
+            for location in list(locations):
                 if path.startswith(location):
                     return True
+            if self.with_static_dirs:
+                for location in list(settings.STATICFILES_DIRS):
+                    if path.startswith(location):
+                        return True
             return False
         
         if hasattr(settings, 'JSLINT_CHECKED_FILES'):
             for path in settings.JSLINT_CHECKED_FILES:
                 yield path
-                    
+
         if 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
             # use django.contrib.staticfiles
             from django.contrib.staticfiles import finders

@@ -14,6 +14,10 @@ class Task(BaseTask):
                    make_option("--csslint-implementation",
                                dest="csslint_implementation",
                                help="Full path to csslint-IMPL.js, by default used build-in"),
+                   make_option("--csslint-with-staticdirs",
+                               dest="csslint_with-staticdirs",
+                               default=False, action="store_true",
+                               help="Check css files located in STATIC_DIRS settings"),
                    make_option("--csslint-exclude",
                                dest="csslint_exclude", default="",
                                help="Exclude patterns")]
@@ -22,6 +26,7 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
         self.test_all = options['test_all']
         self.to_file = options.get('csslint_file_output', True)
+        self.with_static_dirs = options.get('csslint_with-staticdirs', False)
         root_dir = os.path.normpath(os.path.dirname(__file__))
 
         self.intepreter = options['csslint_interpreter'] or \
@@ -58,19 +63,23 @@ class Task(BaseTask):
             for location in locations:
                 if path.startswith(location):
                     return True
+            if self.with_static_dirs:
+                for location in list(settings.STATICFILES_DIRS):
+                    if path.startswith(location):
+                        return True
             return False
-        
+
         if hasattr(settings, 'CSSLINT_CHECKED_FILES'):
             for path in settings.CSSLINT_CHECKED_FILES:
                 yield path
-                    
+
         if 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
             # use django.contrib.staticfiles
             from django.contrib.staticfiles import finders
 
             for finder in finders.get_finders():
                 for path, storage in finder.list(self.exclude):
-                    path = os.path.join(storage.location, path)                
+                    path = os.path.join(storage.location, path)
                     if path.endswith('.css') and in_tested_locations(path):
                         yield path
         else:
