@@ -15,8 +15,7 @@ class Task(BaseTask):
     
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
-
-        self.locations = get_apps_locations(self.test_labels, options['test_all'])   
+        self.test_all = options['test_all']
         self.with_migrations = options['sloccount_with_migrations']
 
         if options.get('sloccount_file_output', True):
@@ -29,8 +28,11 @@ class Task(BaseTask):
         
                                   
     def teardown_test_environment(self, **kwargs):
+        locations = get_apps_locations(self.test_labels, self.test_all)  
+
         report_output = check_output(
-            ['sloccount', "--duplicates", "--wide", "--details"] + self.locations)
+            ['sloccount', "--duplicates", "--wide", "--details"] + locations)
+
         if self.with_migrations:
             self.output.write(report_output)
         else:
