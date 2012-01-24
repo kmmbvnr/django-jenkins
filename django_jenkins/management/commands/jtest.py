@@ -18,6 +18,7 @@ class Command(TaskListCommand):
         tasks = ['django_jenkins.tasks.django_tests']
         if 'django_jenkins.tasks.lettuce_tests' in enabled_tasks:
             tasks.append('django_jenkins.tasks.lettuce_tests')
-
+        if 'django_jenkins.tasks.with_local_celery' in enabled_tasks:
+            tasks.append('django_jenkins.tasks.with_local_celery')
         return tasks
 
