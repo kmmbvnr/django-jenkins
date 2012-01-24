@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from optparse import make_option
+from django.conf import settings
 from django_jenkins.management.commands import TaskListCommand
 
 
@@ -12,4 +13,11 @@ class Command(TaskListCommand):
     )
 
     def get_task_list(self):
-        return ('django_jenkins.tasks.django_tests',)
+        enabled_tasks = getattr(settings, 'JENKINS_TASKS', ())
+
+        tasks = ['django_jenkins.tasks.django_tests']
+        if 'django_jenkins.tasks.lettuce_tests' in enabled_tasks:
+            tasks.append('django_jenkins.tasks.lettuce_tests')
+
+        return tasks
+
