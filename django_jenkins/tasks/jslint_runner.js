@@ -33,7 +33,7 @@ function escapeSpecialCharacters(str) {
     if (!str || str.constructor !== String) {
         return "";
     }
-    return str.replace(/\"/g, "'").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return str.replace(/\"/g, "'").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/&/g, "&amp;");
 }
 
 /*
