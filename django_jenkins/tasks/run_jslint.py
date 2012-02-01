@@ -14,9 +14,13 @@ class Task(BaseTask):
                                dest="jslint_implementation",
                                help="Full path to jslint.js, by default used build-in"),
                    make_option("--jslint-with-staticdirs",
-                               dest="jslint_with-staticdirs",
+                               dest="jslint-with-staticdirs",
                                default=False, action="store_true",
                                help="Check js files located in STATIC_DIRS settings"),
+                   make_option("--jslint-with-minjs",
+                               dest="jslint_with-minjs",
+                               default=False, action="store_true",
+                               help="Do not ignore .min.js files"),
                    make_option("--jslint-exclude",
                                dest="jslint_exclude", default="",
                                help="Exclude patterns")]
@@ -25,8 +29,9 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
         self.test_all = options['test_all']
         self.to_file = options.get('jslint_file_output', True)
-        self.with_static_dirs = options.get('jslint_with-staticdirs', False)
-    
+        self.with_static_dirs = options.get('jslint-with-staticdirs', False)
+        self.jslint_with_minjs = options.get('jslint_with-minjs', False)
+
         root_dir = os.path.normpath(os.path.dirname(__file__))
 
         self.intepreter = options['jslint_interpreter'] or \
@@ -67,6 +72,9 @@ class Task(BaseTask):
         locations = get_apps_locations(self.test_labels, self.test_all)
 
         def in_tested_locations(path):
+            if not self.jslint_with_minjs and path.endswith('.min.js'):
+                return False
+
             for location in list(locations):
                 if path.startswith(location):
                     return True
