@@ -18,6 +18,10 @@ class Task(BaseTask):
                                dest="csslint_with-staticdirs",
                                default=False, action="store_true",
                                help="Check css files located in STATIC_DIRS settings"),
+                   make_option("--csslint-with-mincss",
+                               dest="csslint_with_mincss",
+                               default=False, action="store_true",
+                               help="Do not ignore .min.css files"),
                    make_option("--csslint-exclude",
                                dest="csslint_exclude", default="",
                                help="Exclude patterns")]
@@ -27,6 +31,7 @@ class Task(BaseTask):
         self.test_all = options['test_all']
         self.to_file = options.get('csslint_file_output', True)
         self.with_static_dirs = options.get('csslint_with-staticdirs', False)
+        self.csslint_with_minjs = options.get('csslint_with_mincss', False)
         root_dir = os.path.normpath(os.path.dirname(__file__))
 
         self.intepreter = options['csslint_interpreter'] or \
@@ -60,6 +65,9 @@ class Task(BaseTask):
         locations = get_apps_locations(self.test_labels, self.test_all)
 
         def in_tested_locations(path):
+            if not self.csslint_with_minjs and path.endswith('.min.css'):
+                return False
+
             for location in locations:
                 if path.startswith(location):
                     return True
