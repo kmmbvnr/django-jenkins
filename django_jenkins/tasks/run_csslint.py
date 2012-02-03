@@ -58,8 +58,11 @@ class Task(BaseTask):
         else:
             fmt = 'text'
 
-        csslint_output = check_output([self.intepreter, self.implementation, '--format=%s' % fmt] + files)
-        self.output.write(csslint_output)
+        if files:
+            csslint_output = check_output([self.intepreter, self.implementation, '--format=%s' % fmt] + files)
+            self.output.write(csslint_output)
+        elif self.to_file:
+            self.output.write('<csslint></csslint')
 
     def static_files_iterator(self):
         locations = get_apps_locations(self.test_labels, self.test_all)
