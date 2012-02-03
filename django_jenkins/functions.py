@@ -2,6 +2,15 @@
 import os.path
 import subprocess
 
+class CalledProcessError(subprocess.CalledProcessError):
+    def __init__(self, returncode, cmd, output=None):
+        self.output = output
+        super(CalledProcessError, self).__init__(returncode, cmd)
+
+    def __str__(self):
+        return "Command '%s' returned non-zero exit status %d\nOutput:\n%s" % (self.cmd, self.returncode, self.output)
+
+
 def relpath(path, start=os.path.curdir):
     """
     Return a relative version of a path
@@ -37,7 +46,6 @@ def check_output(*popenargs, **kwargs):
         if cmd is None:
             cmd = popenargs[0]
 
-        exception = subprocess.CalledProcessError(retcode, cmd)
-        exception.output = output
+        exception = CalledProcessError(retcode, cmd, output=output)
         raise exception
     return output
