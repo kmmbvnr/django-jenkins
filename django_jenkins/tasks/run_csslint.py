@@ -1,9 +1,10 @@
 # -*- coding: utf-8; mode: django -*-
 import os
+import subprocess
 import sys
 from optparse import make_option
 from django.conf import settings
-from django_jenkins.functions import check_output, relpath
+from django_jenkins.functions import relpath, CalledProcessError
 from django_jenkins.tasks import BaseTask, get_apps_locations
 
 
@@ -59,8 +60,15 @@ class Task(BaseTask):
             fmt = 'text'
 
         if files:
-            csslint_output = check_output([self.intepreter, self.implementation, '--format=%s' % fmt] + files)
-            self.output.write(csslint_output)
+            cmd = [self.intepreter, self.implementation, '--format=%s' % fmt] + files
+
+            process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+            output, err = process.communicate()
+            retcode = process.poll()
+            if retcode not in [0, 1]: # normal csslint return codes
+                raise CalledProcessError(retcode, cmd, output=output + '\n' + err)
+
+            self.output.write(output)
         elif self.to_file:
             self.output.write('<csslint></csslint')
 
