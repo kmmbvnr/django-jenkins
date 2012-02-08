@@ -6,24 +6,30 @@ from django.conf import settings
 from django_jenkins.functions import check_output, relpath
 from django_jenkins.tasks import BaseTask, get_apps_locations
 
+
 class Task(BaseTask):
-    option_list = [make_option("--jslint-interpreter",
-                               dest="jslint_interpreter",
-                               help="Javascript interpreter for running jslint"),
-                   make_option("--jslint-implementation",
-                               dest="jslint_implementation",
-                               help="Full path to jslint.js, by default used build-in"),
-                   make_option("--jslint-with-staticdirs",
-                               dest="jslint-with-staticdirs",
-                               default=False, action="store_true",
-                               help="Check js files located in STATIC_DIRS settings"),
-                   make_option("--jslint-with-minjs",
-                               dest="jslint_with-minjs",
-                               default=False, action="store_true",
-                               help="Do not ignore .min.js files"),
-                   make_option("--jslint-exclude",
-                               dest="jslint_exclude", default="",
-                               help="Exclude patterns")]
+    option_list = [
+        make_option("--jslint-interpreter",
+                    dest="jslint_interpreter",
+                    help="Javascript interpreter for running jslint"),
+        make_option("--jslint-implementation",
+                    dest="jslint_implementation",
+                    help="Full path to jslint.js, by default used build-in"),
+        make_option("--jslint-with-staticdirs",
+                    dest="jslint-with-staticdirs",
+                    default=False, action="store_true",
+                    help="Check js files located in STATIC_DIRS settings"),
+        make_option("--jslint-with-minjs",
+                    dest="jslint_with-minjs",
+                    default=False, action="store_true",
+                    help="Do not ignore .min.js files"),
+        make_option("--jslint-exclude",
+                    dest="jslint_exclude", default="",
+                    help="Exclude patterns"),
+        make_option("--jslint-config",
+                    dest="jslint_config", default="",
+                    help="jslint configuration file (json)")
+    ]
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
@@ -51,6 +57,7 @@ class Task(BaseTask):
 
         self.runner = os.path.join(root_dir, 'jslint_runner.js')
         self.exclude = options['jslint_exclude']
+        self.config = options['jslint_config']
 
     def teardown_test_environment(self, **kwargs):
         fmt = 'text'
@@ -58,20 +65,26 @@ class Task(BaseTask):
             fmt = 'xml'
 
         if self.to_file:
-            self.output.write('<?xml version=\"1.0\" encoding=\"utf-8\"?><jslint>')
+            self.output.write(
+                '<?xml version=\"1.0\" encoding=\"utf-8\"?><jslint>'
+            )
 
         for path in self.static_files_iterator():
             jslint_output = check_output(
-                [self.intepreter, self.runner, self.implementation, relpath(path), fmt])
+                [self.intepreter, self.runner, self.implementation,
+                 relpath(path), fmt, self.config])
             self.output.write(jslint_output)
 
         if self.to_file:
-            self.output.write('</jslint>');
+            self.output.write('</jslint>')
 
     def static_files_iterator(self):
         locations = get_apps_locations(self.test_labels, self.test_all)
 
         def in_tested_locations(path):
+            if self.exclude and path.find(self.exclude) >= 0:
+                return False
+
             if not self.jslint_with_minjs and path.endswith('.min.js'):
                 return False
 
@@ -83,7 +96,7 @@ class Task(BaseTask):
                     if path.startswith(location):
                         return True
             return False
-        
+
         if hasattr(settings, 'JSLINT_CHECKED_FILES'):
             for path in settings.JSLINT_CHECKED_FILES:
                 yield path
@@ -93,15 +106,18 @@ class Task(BaseTask):
             from django.contrib.staticfiles import finders
 
             for finder in finders.get_finders():
-                for path, storage in finder.list(self.exclude):
-                    path = os.path.join(storage.location, path)                
+                for path, storage in finder.list([]):
+                    path = os.path.join(storage.location, path)
                     if path.endswith('.js') and in_tested_locations(path):
                         yield path
         else:
             # scan apps directories for static folders
             for location in locations:
-                for dirpath, dirnames, filenames in os.walk(os.path.join(location, 'static')):
+                for dirpath, dirnames, filenames in os.walk(
+                        os.path.join(location, 'static')):
                     for filename in filenames:
-                        if filename.endswith('.js') and in_tested_locations(os.path.join(dirpath, filename)):
+                        if filename.endswith('.js') and \
+                            in_tested_locations(
+                                os.path.join(dirpath, filename)):
                             yield os.path.join(dirpath, filename)
 
