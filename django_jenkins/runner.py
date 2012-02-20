@@ -112,16 +112,19 @@ class _XMLTestResult(_TextTestResult):
 
     def addSuccess(self, test):
         "Called when a test executes successfully."
+        signals.test_add_success.send(sender=self, test=test)
         self._prepare_callback(_TestInfo(self, test), \
             self.successes, 'OK', '.')
 
     def addFailure(self, test, err):
         "Called when a test method fails."
+        signals.test_add_failure.send(sender=self, test=test, err=err)
         self._prepare_callback(_TestInfo(self, test, _TestInfo.FAILURE, err), \
             self.failures, 'FAIL', 'F')
 
     def addError(self, test, err):
         "Called when a test method raises an error."
+        signals.test_add_error.send(sender=self, test=test, err=err)
         self._prepare_callback(_TestInfo(self, test, _TestInfo.ERROR, err), \
             self.errors, 'ERROR', 'E')
 
