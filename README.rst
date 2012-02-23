@@ -31,7 +31,8 @@ Configure Jenkins to run the following command::
 This will create reports/ directory with junit xml, Coverage and Pylint
 reports.
 
-For more details see the tutorial: https://sites.google.com/site/kmmbvnr/home/django-jenkins-tutorial
+For more details see the generic tutorial: https://sites.google.com/site/kmmbvnr/home/django-jenkins-tutorial
+or tutorial for running django-jenkins on ShiningPanda CI https://docs.shiningpanda.com/tutorials/multi-databases/project.html
 
 Settings
 --------
