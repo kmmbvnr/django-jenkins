@@ -10,8 +10,9 @@ read = lambda filepath: codecs.open(filepath, 'r', 'utf-8').read()
 
 class build_with_submodules(build):
     def run(self):
-        check_call(['git', 'submodule', 'init'])
-        check_call(['git', 'submodule', 'update'])
+        if path.exists('.git'):
+            check_call(['git', 'submodule', 'init'])
+            check_call(['git', 'submodule', 'update'])
         build.run(self)
 
 setup(
