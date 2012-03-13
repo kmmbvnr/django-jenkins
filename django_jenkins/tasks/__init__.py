@@ -52,6 +52,6 @@ def get_apps_locations(test_labels, all_apps=False):
     """
     Returns list of paths to tested apps
     """
-    return [os.path.dirname(import_module(app_name).__file__) \
+    return [os.path.dirname(os.path.normpath(import_module(app_name).__file__)) \
             for app_name in get_apps_under_test(test_labels, all_apps)]
 
