@@ -50,7 +50,7 @@ class Task(BaseTask):
             self.output = sys.stdout
 
         self.runner = os.path.join(root_dir, 'jslint_runner.js')
-        self.exclude = options['jslint_exclude']
+        self.exclude = options['jslint_exclude'].split(',')
 
     def teardown_test_environment(self, **kwargs):
         fmt = 'text'

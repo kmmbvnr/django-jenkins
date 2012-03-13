@@ -50,7 +50,7 @@ class Task(BaseTask):
         else:
             self.output = sys.stdout
 
-        self.exclude = options['csslint_exclude']
+        self.exclude = options['csslint_exclude'].split(',')
 
     def teardown_test_environment(self, **kwargs):
         files = [relpath(path) for path in self.static_files_iterator()]
