@@ -4,7 +4,7 @@ import subprocess
 import sys
 from optparse import make_option
 from django.conf import settings
-from django_jenkins.functions import relpath, CalledProcessError
+from django_jenkins.functions import relpath, CalledProcessError, find_first_existing_executable
 from django_jenkins.tasks import BaseTask, get_apps_locations
 
 
@@ -36,12 +36,23 @@ class Task(BaseTask):
         root_dir = os.path.normpath(os.path.dirname(__file__))
 
         self.intepreter = options['csslint_interpreter'] or \
-                          getattr(settings, 'CSSLINT_INTERPRETER', 'rhino')
+                          getattr(settings, 'CSSLINT_INTERPRETER', None)
+        if not self.intepreter:
+            self.intepreter = find_first_existing_executable(
+                [('nodejs', '--help'), ('rhino', '--help')])
+            if not self.intepreter:
+                raise ValueError('No sutable js interpreter found. Please install nodejs or rhino')
 
         self.implementation = options['csslint_implementation']
         if not self.implementation:
-            self.implementation = os.path.join(root_dir, 'csslint', 'release', 'csslint-rhino.js')
-
+            runner = os.path.basename(self.intepreter)
+            if 'rhino' in runner:
+                self.implementation = os.path.join(root_dir, 'csslint', 'release', 'csslint-rhino.js')
+            elif 'nodejs' in runner:
+                self.implementation = os.path.join(root_dir, 'csslint', 'release', 'csslint-node.js')
+            else:
+                raise ValueError('No sutable css lint runner found for %s' % self.interpreter)
+                
         if self.to_file:
             output_dir = options['output_dir']
             if not os.path.exists(output_dir):

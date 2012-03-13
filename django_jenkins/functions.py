@@ -19,13 +19,13 @@ def relpath(path, start=os.path.curdir):
     """
     if not path:
         raise ValueError("no path specified")
-    
+
     start_list = os.path.abspath(start).split(os.path.sep)
     path_list = os.path.abspath(path).split(os.path.sep)
-    
+
     # Work out how much of the filepath is shared by start and path.
     i = len(os.path.commonprefix([start_list, path_list]))
-    
+
     rel_list = [os.path.pardir] * (len(start_list) - i) + path_list[i:]
     if not rel_list:
         return os.path.curdir
@@ -34,7 +34,7 @@ def relpath(path, start=os.path.curdir):
 
 def check_output(*popenargs, **kwargs):
     """
-    Backport from Python2.7 
+    Backport from Python2.7
     """
     if 'stdout' in kwargs:
         raise ValueError('stdout argument not allowed, it will be overridden.')
@@ -48,3 +48,19 @@ def check_output(*popenargs, **kwargs):
 
         raise CalledProcessError(retcode, cmd, output=output + '\n' + err)
     return output
+
+
+def find_first_existing_executable(exe_list):
+    """
+    Accepts list of [('executable_file_path', 'options')],
+    Returns first working executable_file_path
+    """
+    for filepath, opts in exe_list:
+        try:
+            proc = subprocess.Popen([filepath, opts], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            proc.communicate()
+        except OSError:
+            pass
+        else:
+            return filepath
+

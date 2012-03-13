@@ -3,7 +3,7 @@ import os
 import sys
 from optparse import make_option
 from django.conf import settings
-from django_jenkins.functions import check_output, relpath
+from django_jenkins.functions import check_output, relpath, find_first_existing_executable
 from django_jenkins.tasks import BaseTask, get_apps_locations
 
 class Task(BaseTask):
@@ -35,7 +35,12 @@ class Task(BaseTask):
         root_dir = os.path.normpath(os.path.dirname(__file__))
 
         self.intepreter = options['jslint_interpreter'] or \
-                          getattr(settings, 'JSLINT_INTERPRETER', 'rhino')
+                          getattr(settings, 'JSLINT_INTERPRETER', None)
+        if not self.intepreter:
+            self.intepreter = find_first_existing_executable(
+                [('nodejs', '--help'), ('rhino', '--help')])
+            if not self.intepreter:
+                raise ValueError('No sutable js interpreter found. Please install nodejs or rhino')
 
         self.implementation = options['jslint_implementation']
         if not self.implementation:

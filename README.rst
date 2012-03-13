@@ -85,16 +85,17 @@ Here is the list of tasks prebuild with django-jenkins
   Runs jslint tools over ``<app>/static/*/*.js`` files.
   Creates Pylint compatible report for Jenkins
 
-  You should have the rhino_ javascript interpreter installed for jslint
+  You should have the rhino_ or nodejs_ javascript interpreter installed for jslint
 
 - ``django_jenkins.tasks.run_csslint``
 
   Runs CSS lint tools over `app/static/*/*.css` files.
   Creates CSS Lint compatible report for Jenkins
 
-  You should have the rhino_ javascript interpreter installed for csslint
+  You should have the rhino_ or nodejs_ javascript interpreter installed for csslint
 
 .. _rhino: http://www.mozilla.org/rhino/
+.. _nodejs http://nodejs.org/
 
 - ``django_jenkins.tasks.run_pep8``
 
