@@ -16,7 +16,7 @@ Or by downloading the source and running::
 
 Or, for the latest git version::
 
-    $ pip install -e git://github.com/kmmbvnr/django-jenkins.git#egg=django-jenkins
+    $ pip install -e git+git://github.com/kmmbvnr/django-jenkins.git#egg=django-jenkins
 
 .. _PyPI: http://pypi.python.org/
 
