@@ -7,6 +7,7 @@ from distutils.command.build import build
 
 read = lambda filepath: codecs.open(filepath, 'r', 'utf-8').read()
 
+
 class build_with_submodules(build):
     def run(self):
         check_call(['git', 'submodule', 'init'])
@@ -42,6 +43,4 @@ setup(
     ],
     packages = ['django_jenkins', 'django_jenkins.management', 'django_jenkins.tasks', 'django_jenkins.management.commands'],
     package_data={'django_jenkins': ['tasks/pylint.rc', 'tasks/jslint_runner.js', 'tasks/jslint/jslint.js', 'tasks/csslint/release/csslint-rhino.js']},
-    zip_safe = False,
-    include_package_data = True
 )
