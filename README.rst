@@ -95,7 +95,7 @@ Here is the list of tasks prebuild with django-jenkins
   You should have the rhino_ or nodejs_ javascript interpreter installed for csslint
 
 .. _rhino: http://www.mozilla.org/rhino/
-.. _nodejs http://nodejs.org/
+.. _nodejs: http://nodejs.org/
 
 - ``django_jenkins.tasks.run_pep8``
 
