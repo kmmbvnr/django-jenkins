@@ -132,8 +132,21 @@ Here is the list of tasks prebuild with django-jenkins
 
 .. _Lettuce: http://lettuce.it/
 
+- ``django_jenkins.tasks.with_local_celery``
+
+  Replacement for ``djcelery.tests.runners.CeleryTestSuiteRunner``
+  Change settings for run _Celery tasks locally.
+
+.. _Celery: http://ask.github.com/django-celery/
+
 Changelog
 ---------
+0.12.1 2012-03-15
+~~~~~~~~~~~~~~~~~
+* Added Celery task
+* Add nodejs support for jslint and csslint tasks
+* Improve js and css files selection
+* Bug fixes
 
 0.12.0 2012-01-15
 ~~~~~~~~~~~~~~~~~

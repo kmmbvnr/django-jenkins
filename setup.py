@@ -18,7 +18,7 @@ class build_with_submodules(build):
 setup(
     name = 'django-jenkins',
     cmdclass={"build": build_with_submodules},
-    version = '0.12.0',
+    version = '0.12.1',
     author = 'Mikhail Podgurskiy',
     author_email = 'kmmbvnr@gmail.com',
     description = 'Plug and play continuous integration with django and jenkins',
