@@ -34,12 +34,12 @@ class Task(BaseTask):
 
         root_dir = os.path.normpath(os.path.dirname(__file__))
 
-        self.intepreter = options['jslint_interpreter'] or \
+        self.interpreter = options['jslint_interpreter'] or \
                           getattr(settings, 'JSLINT_INTERPRETER', None)
-        if not self.intepreter:
-            self.intepreter = find_first_existing_executable(
+        if not self.interpreter:
+            self.interpreter = find_first_existing_executable(
                 [('nodejs', '--help'), ('rhino', '--help')])
-            if not self.intepreter:
+            if not self.interpreter:
                 raise ValueError('No sutable js interpreter found. Please install nodejs or rhino')
 
         self.implementation = options['jslint_implementation']
@@ -67,7 +67,7 @@ class Task(BaseTask):
 
         for path in self.static_files_iterator():
             jslint_output = check_output(
-                [self.intepreter, self.runner, self.implementation, relpath(path), fmt])
+                [self.interpreter, self.runner, self.implementation, relpath(path), fmt])
             self.output.write(jslint_output)
 
         if self.to_file:
