@@ -135,7 +135,7 @@ Here is the list of tasks prebuild with django-jenkins
 - ``django_jenkins.tasks.with_local_celery``
 
   Replacement for ``djcelery.tests.runners.CeleryTestSuiteRunner``
-  Change settings for run _Celery tasks locally.
+  Change settings for run Celery_ tasks locally.
 
 .. _Celery: http://ask.github.com/django-celery/
 
