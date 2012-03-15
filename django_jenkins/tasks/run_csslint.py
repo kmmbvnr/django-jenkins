@@ -35,17 +35,17 @@ class Task(BaseTask):
         self.csslint_with_minjs = options.get('csslint_with_mincss', False)
         root_dir = os.path.normpath(os.path.dirname(__file__))
 
-        self.intepreter = options['csslint_interpreter'] or \
+        self.interpreter = options['csslint_interpreter'] or \
                           getattr(settings, 'CSSLINT_INTERPRETER', None)
-        if not self.intepreter:
-            self.intepreter = find_first_existing_executable(
+        if not self.interpreter:
+            self.interpreter = find_first_existing_executable(
                 [('nodejs', '--help'), ('rhino', '--help')])
-            if not self.intepreter:
+            if not self.interpreter:
                 raise ValueError('No sutable js interpreter found. Please install nodejs or rhino')
 
         self.implementation = options['csslint_implementation']
         if not self.implementation:
-            runner = os.path.basename(self.intepreter)
+            runner = os.path.basename(self.interpreter)
             if 'rhino' in runner:
                 self.implementation = os.path.join(root_dir, 'csslint', 'release', 'csslint-rhino.js')
             elif 'nodejs' in runner:
@@ -71,7 +71,7 @@ class Task(BaseTask):
             fmt = 'text'
 
         if files:
-            cmd = [self.intepreter, self.implementation, '--format=%s' % fmt] + files
+            cmd = [self.interpreter, self.implementation, '--format=%s' % fmt] + files
 
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
             output, err = process.communicate()
