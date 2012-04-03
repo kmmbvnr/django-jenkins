@@ -201,7 +201,13 @@ Contributing
 Issues should be reported on the Github Issues_ page. Pull requests are
 welcome.
 
-To run the test suite, do the following::
+Running the test suite
+~~~~~~~~~~~~~~~~~~~~~~
+
+First install ``rhino`` and ``sloccount`` (these are not Python packages and
+should be installed using your system's package manager).
+
+Then from within a fresh clone of the repository::
 
     $ git submodule init
     $ git submodule update
