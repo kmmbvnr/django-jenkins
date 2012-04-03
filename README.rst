@@ -195,6 +195,21 @@ Changelog
 
 * Initial public release
 
+Contributing
+------------
+
+Issues should be reported on the Github Issues_ page. Pull requests are
+welcome.
+
+To run the test suite, do the following::
+
+    $ cd tests/
+    $ virtualenv --distribute .env
+    $ source .env/bin/activate
+    $ pip install -r requirements.pip
+    $ python manage.py jenkins
+
+.. _Issues: https://github.com/kmmbvnr/django-jenkins
 
 Authors
 -------
