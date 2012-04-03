@@ -203,6 +203,8 @@ welcome.
 
 To run the test suite, do the following::
 
+    $ git submodule init
+    $ git submodule update
     $ cd tests/
     $ virtualenv --distribute .env
     $ source .env/bin/activate
