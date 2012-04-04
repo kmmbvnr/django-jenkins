@@ -39,7 +39,7 @@ class Task(BaseTask):
                           getattr(settings, 'CSSLINT_INTERPRETER', None)
         if not self.interpreter:
             self.interpreter = find_first_existing_executable(
-                [('nodejs', '--help'), ('rhino', '--help')])
+                [('node', '--help'), ('rhino', '--help')])
             if not self.interpreter:
                 raise ValueError('No sutable js interpreter found. Please install nodejs or rhino')
 
@@ -48,7 +48,7 @@ class Task(BaseTask):
             runner = os.path.basename(self.interpreter)
             if 'rhino' in runner:
                 self.implementation = os.path.join(root_dir, 'csslint', 'release', 'csslint-rhino.js')
-            elif 'nodejs' in runner:
+            elif 'node' in runner:
                 self.implementation = os.path.join(root_dir, 'csslint', 'release', 'csslint-node.js')
             else:
                 raise ValueError('No sutable css lint runner found for %s' % self.interpreter)

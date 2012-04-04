@@ -38,7 +38,7 @@ class Task(BaseTask):
                           getattr(settings, 'JSLINT_INTERPRETER', None)
         if not self.interpreter:
             self.interpreter = find_first_existing_executable(
-                [('nodejs', '--help'), ('rhino', '--help')])
+                [('node', '--help'), ('rhino', '--help')])
             if not self.interpreter:
                 raise ValueError('No sutable js interpreter found. Please install nodejs or rhino')
 
