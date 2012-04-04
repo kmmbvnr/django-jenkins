@@ -4,8 +4,8 @@ import subprocess
 
 class CalledProcessError(subprocess.CalledProcessError):
     def __init__(self, returncode, cmd, output=None):
-        self.output = output
         super(CalledProcessError, self).__init__(returncode, cmd)
+        self.output = output
 
     def __str__(self):
         return "Command '%s' returned non-zero exit status %d\nOutput:\n%s" % (self.cmd, self.returncode, self.output)
@@ -36,16 +36,15 @@ def check_output(*popenargs, **kwargs):
     """
     Backport from Python2.7
     """
-    if 'stdout' in kwargs:
-        raise ValueError('stdout argument not allowed, it will be overridden.')
-    process = subprocess.Popen(stdout=subprocess.PIPE, *popenargs, **kwargs)
+    if 'stdout' in kwargs or 'stderr' in kwargs:
+        raise ValueError('stdout or stderr argument not allowed, it will be overridden.')
+    process = subprocess.Popen(stdout=subprocess.PIPE, stderr=subprocess.PIPE, *popenargs, **kwargs)
     output, err = process.communicate()
     retcode = process.poll()
     if retcode:
         cmd = kwargs.get("args")
         if cmd is None:
             cmd = popenargs[0]
-
         raise CalledProcessError(retcode, cmd, output=output + '\n' + err)
     return output
 
