@@ -195,6 +195,29 @@ Changelog
 
 * Initial public release
 
+Contributing
+------------
+
+Issues should be reported on the Github Issues_ page. Pull requests are
+welcome.
+
+Running the test suite
+~~~~~~~~~~~~~~~~~~~~~~
+
+First install ``rhino`` and ``sloccount`` (these are not Python packages and
+should be installed using your system's package manager).
+
+Then from within a fresh clone of the repository::
+
+    $ git submodule init
+    $ git submodule update
+    $ cd tests/
+    $ virtualenv --distribute .env
+    $ source .env/bin/activate
+    $ pip install -r requirements.pip
+    $ python manage.py jenkins
+
+.. _Issues: https://github.com/kmmbvnr/django-jenkins
 
 Authors
 -------
