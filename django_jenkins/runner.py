@@ -14,7 +14,7 @@ from django.test import TestCase
 from django.test.simple import DjangoTestSuiteRunner, reorder_suite
 from django_jenkins import signals
 try:
-    from django.test.simple import TextTestRunner as TestRunner
+    from django.utils.unittest import TextTestRunner as TestRunner
 except ImportError:
     from django.test.simple import DjangoTestRunner as TestRunner
 
