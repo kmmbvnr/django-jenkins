@@ -2,6 +2,7 @@
 import os.path
 import subprocess
 
+
 class CalledProcessError(subprocess.CalledProcessError):
     def __init__(self, returncode, cmd, output=None):
         super(CalledProcessError, self).__init__(returncode, cmd)
