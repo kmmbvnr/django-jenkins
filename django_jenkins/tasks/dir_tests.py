@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Discover from tests from all test*.py files from app subdirectories
+Discover tests from all test*.py files in app subdirectories
 """
 import os
 from django.conf import settings
