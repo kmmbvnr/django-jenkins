@@ -25,10 +25,18 @@ class Command(TaskListCommand):
     def get_task_list(self):
         enabled_tasks = getattr(settings, 'JENKINS_TASKS', ())
 
-        tasks = ['django_jenkins.tasks.django_tests']
+        tasks = []
+
+        if 'django_jenkins.tasks.dir_tests' in enabled_tasks:
+            tasks.append('django_jenkins.tasks.dir_tests')            
+        else:
+            tasks.append('django_jenkins.tasks.django_tests')
+
         if 'django_jenkins.tasks.lettuce_tests' in enabled_tasks:
             tasks.append('django_jenkins.tasks.lettuce_tests')
+
         if 'django_jenkins.tasks.with_local_celery' in enabled_tasks:
             tasks.append('django_jenkins.tasks.with_local_celery')
+
         return tasks
 

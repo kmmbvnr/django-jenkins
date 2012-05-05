@@ -41,4 +41,3 @@ class Task(BaseTask):
             for app in get_apps():
                 suite.addTest(build_suite(app))
 
-
