@@ -78,7 +78,7 @@ class XMLTestResult(TextTestResult):
         """
         self.currentTestInfo.result = TestInfo.RESULT.FAILURE
         self.currentTestInfo.err = err
-        super(XMLTestResult, self).addFailure(err)
+        super(XMLTestResult, self).addFailure(test, err)
 
     def addSuccess(self, test):
         """
