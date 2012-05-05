@@ -33,19 +33,19 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
         self.test_apps = get_apps_under_test(test_labels, options['test_all'])
         self.output_dir = options['output_dir']
-        self.with_migrations = options['coverage_with_migrations']
+        self.with_migrations = options.get('coverage_with_migrations', False)
         self.html_dir = options['coverage_html_report_dir']
 
         self.exclude_locations = []
-        for modname in options['coverage_excludes']:
+        for modname in options.get('coverage_excludes', []):
             try:
                 self.exclude_locations.append(os.path.dirname(import_module(modname).__file__))
             except ImportError:
                 pass
 
-        self.coverage = coverage(branch=options['coverage_measure_branch'],
+        self.coverage = coverage(branch=options.get('coverage_measure_branch', True),
                                  source=self.test_apps,
-                                 config_file=options['coverage_rcfile'] or Task.default_config_path())
+                                 config_file=options.get('coverage_rcfile') or Task.default_config_path())
 
     def setup_test_environment(self, **kwargs):
         self.coverage.start()
@@ -56,6 +56,8 @@ class Task(BaseTask):
         morfs = [filename for filename in self.coverage.data.measured_files() \
                  if self.want_file(filename)]
 
+        if not os.path.exists(self.output_dir):
+            os.makedirs(self.output_dir)
         self.coverage.xml_report(morfs=morfs, outfile=os.path.join(self.output_dir, 'coverage.xml'))
 
         if self.html_dir:

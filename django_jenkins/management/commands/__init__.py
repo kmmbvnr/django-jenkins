@@ -49,7 +49,7 @@ class TaskListCommand(BaseCommand):
 
     def handle(self, *test_labels, **options):
         # instantiate tasks
-        self.tasks = [task_cls(test_labels, options) for task_cls in self.tasks_cls]
+        self.tasks = self.get_tasks(*test_labels, **options)
 
         # subscribe
         for signal_name, signal in inspect.getmembers(signals):
@@ -69,6 +69,12 @@ class TaskListCommand(BaseCommand):
 
         if test_runner.run_tests(test_labels):
             sys.exit(1)
+
+    def get_tasks(self, *test_labels, **options):
+        """
+        Instantiate all task instances
+        """
+        return [task_cls(test_labels, options) for task_cls in self.tasks_cls]
 
     def get_task_list(self):
         """
