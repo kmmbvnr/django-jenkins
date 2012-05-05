@@ -70,6 +70,7 @@ class XMLTestResult(TextTestResult):
         self.currentTestInfo.result = TestInfo.RESULT.ERROR
         self.currentTestInfo.err = err
         super(XMLTestResult, self).addError(test, err)
+        signals.test_error.send(sender=self, test=test, err=err)
 
     def addFailure(self, test, err):
         """
@@ -79,12 +80,15 @@ class XMLTestResult(TextTestResult):
         self.currentTestInfo.result = TestInfo.RESULT.FAILURE
         self.currentTestInfo.err = err
         super(XMLTestResult, self).addFailure(test, err)
+        signals.test_failure.send(sender=self, test=test, err=err)
 
     def addSuccess(self, test):
         """
         Called when a test has completed successfully
         """
         self.currentTestInfo.result = TestInfo.RESULT.SUCCESS
+        super(XMLTestResult, self).addSuccess(test)
+        signals.test_success.send(sender=self, test=test)
 
     def addSkip(self, test, reason):
         """
@@ -101,6 +105,7 @@ class XMLTestResult(TextTestResult):
         self.currentTestInfo.result = TestInfo.RESULT.EXPECTED_FAILURE
         self.currentTestInfo.err = err
         super(XMLTestResult, self).addExpectedFailure(test, err)
+        signals.test_expected_failure.send(sender=self, test=test, err=err)
 
     def addUnexpectedSuccess(self, test):
         """
@@ -108,6 +113,7 @@ class XMLTestResult(TextTestResult):
         """
         self.currentTestInfo.result = TestInfo.RESULT.UNEXPECTED_SUCCESS
         super(XMLTestResult, self).addUnexpectedSuccess(test)
+        signals.test_unexpected_success.send(sender=self, test=test)
 
     def test_method_name(self, test):
         """
