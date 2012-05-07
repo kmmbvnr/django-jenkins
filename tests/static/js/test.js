@@ -1,6 +1,7 @@
 function toggle() {
+    "use strict";
     var unused, x = true;
-     if (x) {
+    if (x && y) {
         x = false;
     }
 }

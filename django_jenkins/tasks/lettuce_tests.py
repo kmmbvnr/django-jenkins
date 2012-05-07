@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from os import path
+import os
 from optparse import make_option
 from django.conf import settings
 from django_jenkins.tasks import BaseTask
@@ -7,6 +7,7 @@ from unittest import TestCase
 from lettuce.django import harvest_lettuces
 from lettuce import Runner
 from lettuce import registry
+
 
 class Task(BaseTask):
     option_list = [
@@ -37,17 +38,21 @@ class Task(BaseTask):
 
     def build_suite(self, suite, **kwargs):
         paths = harvest_lettuces(self.test_labels)
+
+        if not os.path.exists(self.output_dir):
+            os.makedirs(self.output_dir)
+
         for app_path, app_module in paths:
             runner = Runner(app_path,
                             enable_xunit=True,
-                            xunit_filename=path.join(self.output_dir, 'lettuce.xml'))
+                            xunit_filename=os.path.join(self.output_dir, 'lettuce.xml'))
 
             suite.addTest(LettuceTestCase(runner, app_module))
 
         return suite
 
-class LettuceTestCase(TestCase):
 
+class LettuceTestCase(TestCase):
     def __init__(self, runner, app_module, *args, **kwargs):
         super(LettuceTestCase, self).__init__(*args, **kwargs)
         self.runner = runner

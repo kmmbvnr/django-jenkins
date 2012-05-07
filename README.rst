@@ -16,7 +16,7 @@ Or by downloading the source and running::
 
 Or, for the latest git version::
 
-    $ pip install -e git://github.com/kmmbvnr/django-jenkins.git#egg=django-jenkins
+    $ pip install git+git://github.com/kmmbvnr/django-jenkins.git
 
 .. _PyPI: http://pypi.python.org/
 
@@ -31,14 +31,15 @@ Configure Jenkins to run the following command::
 This will create reports/ directory with junit xml, Coverage and Pylint
 reports.
 
-For more details see the tutorial: http://sites.google.com/site/kmmbvnr/home/django-hudson-tutorial
+For more details see the generic tutorial: https://sites.google.com/site/kmmbvnr/home/django-jenkins-tutorial
+or tutorial for running django-jenkins on ShiningPanda CI https://docs.shiningpanda.com/tutorials/multi-databases/project.html
 
 Settings
 --------
 
 - ``PROJECT_APPS``
 
-  if presents, it is supposed to be a white list of apps for Jenkins run.
+  if presents, it is supposed to be a list/tuple of django apps for Jenkins to run.
   Tests, reports and coverage are generated only for the apps from this list.
   You should specify --all option to ignore this settings.
 
@@ -84,16 +85,17 @@ Here is the list of tasks prebuild with django-jenkins
   Runs jslint tools over ``<app>/static/*/*.js`` files.
   Creates Pylint compatible report for Jenkins
 
-  You should have the rhino_ javascript interpreter installed for jslint
+  You should have the rhino_ or nodejs_ javascript interpreter installed for jslint
 
 - ``django_jenkins.tasks.run_csslint``
 
   Runs CSS lint tools over `app/static/*/*.css` files.
   Creates CSS Lint compatible report for Jenkins
 
-  You should have the rhino_ javascript interpreter installed for csslint
+  You should have the rhino_ or nodejs_ javascript interpreter installed for csslint
 
 .. _rhino: http://www.mozilla.org/rhino/
+.. _nodejs: http://nodejs.org/
 
 - ``django_jenkins.tasks.run_pep8``
 
@@ -130,8 +132,21 @@ Here is the list of tasks prebuild with django-jenkins
 
 .. _Lettuce: http://lettuce.it/
 
+- ``django_jenkins.tasks.with_local_celery``
+
+  Replacement for ``djcelery.tests.runners.CeleryTestSuiteRunner``
+  Change settings for run Celery_ tasks locally.
+
+.. _Celery: http://ask.github.com/django-celery/
+
 Changelog
 ---------
+0.12.1 2012-03-15
+~~~~~~~~~~~~~~~~~
+* Added Celery task
+* Add nodejs support for jslint and csslint tasks
+* Improve js and css files selection
+* Bug fixes
 
 0.12.0 2012-01-15
 ~~~~~~~~~~~~~~~~~

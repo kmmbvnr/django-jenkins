@@ -3,7 +3,7 @@ import os
 import sys
 from optparse import make_option
 from django.conf import settings
-from django_jenkins.functions import check_output, relpath
+from django_jenkins.functions import check_output, relpath, find_first_existing_executable
 from django_jenkins.tasks import BaseTask, get_apps_locations
 
 class Task(BaseTask):
@@ -13,6 +13,14 @@ class Task(BaseTask):
                    make_option("--jslint-implementation",
                                dest="jslint_implementation",
                                help="Full path to jslint.js, by default used build-in"),
+                   make_option("--jslint-with-staticdirs",
+                               dest="jslint-with-staticdirs",
+                               default=False, action="store_true",
+                               help="Check js files located in STATIC_DIRS settings"),
+                   make_option("--jslint-with-minjs",
+                               dest="jslint_with-minjs",
+                               default=False, action="store_true",
+                               help="Do not ignore .min.js files"),
                    make_option("--jslint-exclude",
                                dest="jslint_exclude", default="",
                                help="Exclude patterns")]
@@ -21,11 +29,18 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
         self.test_all = options['test_all']
         self.to_file = options.get('jslint_file_output', True)
-        
+        self.with_static_dirs = options.get('jslint-with-staticdirs', False)
+        self.jslint_with_minjs = options.get('jslint_with-minjs', False)
+
         root_dir = os.path.normpath(os.path.dirname(__file__))
 
-        self.intepreter = options['jslint_interpreter'] or \
-                          getattr(settings, 'JSLINT_INTERPRETER', 'rhino')
+        self.interpreter = options['jslint_interpreter'] or \
+                          getattr(settings, 'JSLINT_INTERPRETER', None)
+        if not self.interpreter:
+            self.interpreter = find_first_existing_executable(
+                [('node', '--help'), ('rhino', '--help')])
+            if not self.interpreter:
+                raise ValueError('No sutable js interpreter found. Please install nodejs or rhino')
 
         self.implementation = options['jslint_implementation']
         if not self.implementation:
@@ -40,7 +55,7 @@ class Task(BaseTask):
             self.output = sys.stdout
 
         self.runner = os.path.join(root_dir, 'jslint_runner.js')
-        self.exclude = options['jslint_exclude']
+        self.exclude = options['jslint_exclude'].split(',')
 
     def teardown_test_environment(self, **kwargs):
         fmt = 'text'
@@ -52,7 +67,7 @@ class Task(BaseTask):
 
         for path in self.static_files_iterator():
             jslint_output = check_output(
-                [self.intepreter, self.runner, self.implementation, relpath(path), fmt])
+                [self.interpreter, self.runner, self.implementation, relpath(path), fmt])
             self.output.write(jslint_output)
 
         if self.to_file:
@@ -62,15 +77,22 @@ class Task(BaseTask):
         locations = get_apps_locations(self.test_labels, self.test_all)
 
         def in_tested_locations(path):
-            for location in locations:
+            if not self.jslint_with_minjs and path.endswith('.min.js'):
+                return False
+
+            for location in list(locations):
                 if path.startswith(location):
                     return True
+            if self.with_static_dirs:
+                for location in list(settings.STATICFILES_DIRS):
+                    if path.startswith(location):
+                        return True
             return False
         
         if hasattr(settings, 'JSLINT_CHECKED_FILES'):
             for path in settings.JSLINT_CHECKED_FILES:
                 yield path
-                    
+
         if 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
             # use django.contrib.staticfiles
             from django.contrib.staticfiles import finders

@@ -14,6 +14,7 @@ PROJECT_APPS = (
     'django.contrib.sessions', # just to ensure that dotted apps test works
     'django_jenkins',
     'test_app',
+    'test_app_dirs',
 )
 
 INSTALLED_APPS = (
@@ -33,6 +34,7 @@ MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 JENKINS_TASKS = (
     'django_jenkins.tasks.with_coverage',
     'django_jenkins.tasks.django_tests',
+    'django_jenkins.tasks.dir_tests',
     'django_jenkins.tasks.run_pep8',
     'django_jenkins.tasks.run_pyflakes',
     'django_jenkins.tasks.run_jslint',

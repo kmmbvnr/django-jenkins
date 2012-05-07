@@ -5,15 +5,38 @@
      JSLINT: true
      readFile: true
      print: true
+     process: true
+     require: true
+     global: true
  */
 
-var jslint = arguments[0];
-var filename = arguments[1];
-var format = arguments[2];
+if (typeof process !== 'undefined') {
+    var fs = require('fs');
 
-load(jslint);
+    var jslint =  process.argv[2];
+    var filename = process.argv[3];
+    var format = process.argv[4];
+    var fileContent = fs.readFileSync(filename, 'utf8');
 
-JSLINT(readFile(filename), {
+    /* Loading jslint */
+    var vm = require('vm');
+    var jslintSrc = fs.readFileSync(jslint, 'utf8');
+    vm.runInThisContext(jslintSrc);
+    var JSLINT = global.JSLINT;
+    delete global.JSLINT;    
+
+    var print = console.log;
+} else {
+    var jslint = arguments[0];
+    var filename = arguments[1];
+    var format = arguments[2];
+    var fileContent = readFile(filename);
+
+    load(jslint);
+}
+
+
+JSLINT(fileContent, {
     white: true,
     onevar: true,
     undef: true,
@@ -33,7 +56,7 @@ function escapeSpecialCharacters(str) {
     if (!str || str.constructor !== String) {
         return "";
     }
-    return str.replace(/\"/g, "'").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return str.replace(/\"/g, "'").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/&/g, "&amp;");
 }
 
 /*
