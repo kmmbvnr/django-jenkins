@@ -8,6 +8,7 @@ class BaseTask(object):
     """
     Base interface for ci tasks
     """
+    view = None
     option_list = []
 
     def __init__(self, test_labels, options):

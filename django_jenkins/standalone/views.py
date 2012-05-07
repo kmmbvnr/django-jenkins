@@ -22,6 +22,7 @@ def index(request):
 
 
         tests_chart = SimpleLineChart(400, 250)
+        tests_chart.BASE_URL = 'http://chart.googleapis.com/chart?'
         # axis
         max_tests = max([s+f+e for s,f,e in zip(successes,failures,errors)])
         step = round(max_tests/10, 1-len(str(max_tests/10)))
