@@ -39,6 +39,7 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_csslint',    
     'django_jenkins.tasks.run_sloccount',    
     'django_jenkins.tasks.lettuce_tests',
+    'django_jenkins.tasks.with_local_celery',
 )
 
 JSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/js/test.js')]

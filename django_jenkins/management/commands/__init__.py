@@ -52,7 +52,7 @@ class TaskListCommand(BaseCommand):
         self.tasks = self.get_tasks(*test_labels, **options)
 
         # subscribe
-        for signal_name, signal in inspect.getmembers(signals):
+        for signal_name, signal in inspect.getmembers(signals, predicate=lambda obj: obj):
             for task in self.tasks:
                 signal_handler = getattr(task, signal_name, None)
                 if signal_handler:
