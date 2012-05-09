@@ -11,7 +11,7 @@ from django_jenkins.tasks import BaseTask
 
 
 class Task(BaseTask):
-    view = 'django_jenkins.standalone.taskviews.TestView'
+    view = 'django_jenkins.standalone.taskviews.tests_view'
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)

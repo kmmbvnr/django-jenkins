@@ -20,6 +20,8 @@ def build_suite(app):
 
 
 class Task(BaseTask):
+    view = 'django_jenkins.standalone.taskviews.tests_view'
+
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
         if not self.test_labels:

@@ -10,6 +10,8 @@ from lettuce import registry
 
 
 class Task(BaseTask):
+    view = 'django_jenkins.standalone.taskviews.tests_view'
+
     option_list = [
         make_option("--lettuce-server",
                dest="lettuce-server",
