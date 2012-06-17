@@ -2,7 +2,7 @@ django>=1.2
 pylint>=0.23
 coverage>=3.4
 pyflakes
-pep8
+pep8==1.2
 lettuce
 
 # development only
