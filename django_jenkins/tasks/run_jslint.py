@@ -40,7 +40,7 @@ class Task(BaseTask):
             self.interpreter = find_first_existing_executable(
                 [('node', '--help'), ('rhino', '--help')])
             if not self.interpreter:
-                raise ValueError('No sutable js interpreter found. Please install nodejs or rhino')
+                raise ValueError('No suitable js interpreter found. Please install nodejs or rhino')
 
         self.implementation = options['jslint_implementation']
         if not self.implementation:
