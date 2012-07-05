@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import inspect
 import sys
 from optparse import make_option, OptionGroup
@@ -41,6 +42,11 @@ class TaskListCommand(BaseCommand):
             help='Do not intercept stdout and stderr, friendly for console debuggers'),
         make_option('--output-dir', dest='output_dir', default="reports",
             help='Report files directory'),
+        make_option('--liveserver',
+            action='store', dest='liveserver', default=None,
+            help='Overrides the default address where the live server (used '
+                 'with LiveServerTestCase) is expected to run from. The '
+                 'default value is localhost:8081.')
     )
 
     def __init__(self):
@@ -48,6 +54,11 @@ class TaskListCommand(BaseCommand):
         self.tasks_cls = [import_module(module_name).Task for module_name in self.get_task_list()]
 
     def handle(self, *test_labels, **options):
+        # options
+        if options.get('liveserver') is not None:
+            os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = options['liveserver']
+            del options['liveserver']
+
         # instantiate tasks
         self.tasks = self.get_tasks(*test_labels, **options)
 

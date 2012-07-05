@@ -1,5 +1,6 @@
 # -*- coding: utf-8; mode: django -*-
 import os
+import traceback
 from datetime import datetime
 from itertools import groupby
 from xml.sax.saxutils import XMLGenerator
@@ -9,6 +10,10 @@ from django.test.simple import DjangoTestSuiteRunner, reorder_suite
 from django.utils.unittest import TestSuite, TestCase, TextTestResult, TextTestRunner
 from django_jenkins import signals
 from django_jenkins.functions import total_seconds
+
+
+STDOUT_LINE = '\nStdout:\n%s'
+STDERR_LINE = '\nStderr:\n%s'
 
 
 class TestInfo(object):
@@ -114,6 +119,34 @@ class XMLTestResult(TextTestResult):
         self.currentTestInfo.result = TestInfo.RESULT.UNEXPECTED_SUCCESS
         super(XMLTestResult, self).addUnexpectedSuccess(test)
         signals.test_unexpected_success.send(sender=self, test=test)
+
+    def _exc_info_to_string(self, err, test):
+        """
+        Converts a sys.exc_info()-style tuple of values into a string.
+        """
+        exctype, value, tb = err
+        # Skip test runner traceback levels
+        while tb and self._is_relevant_tb_level(tb):
+            tb = tb.tb_next
+        if exctype is test.failureException:
+            # Skip assert*() traceback levels
+            length = self._count_relevant_tb_levels(tb)
+            msgLines = traceback.format_exception(exctype, value, tb, length)
+        else:
+            msgLines = traceback.format_exception(exctype, value, tb)
+
+        if self.buffer:
+            output = self._stdout_buffer.getvalue()
+            error = self._stderr_buffer.getvalue()
+            if output:
+                if not output.endswith('\n'):
+                    output += '\n'
+                msgLines.append(STDOUT_LINE % output)
+            if error:
+                if not error.endswith('\n'):
+                    error += '\n'
+                msgLines.append(STDERR_LINE % error)
+        return ''.join(msgLines)
 
     def test_method_name(self, test):
         """

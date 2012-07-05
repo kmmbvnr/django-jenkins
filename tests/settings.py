@@ -7,7 +7,8 @@ TEMPLATE_DEBUG=DEBUG
 ROOT_URLCONF = 'test_app.urls'
 
 TEMPLATE_LOADERS = (
-    'django.template.loaders.app_directories.load_template_source',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
 )
 
 PROJECT_APPS = (
@@ -48,3 +49,25 @@ CSSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/css/test.css')]
 # python > 2.4
 if sys.version_info[1] > 4:
     JENKINS_TASKS += ('django_jenkins.tasks.run_pylint',)
+
+
+STATIC_URL = '/media/'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console':{
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}
