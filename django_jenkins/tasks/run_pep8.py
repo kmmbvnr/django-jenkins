@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import re
 import os
 import sys
 import pep8
@@ -45,18 +44,19 @@ class Task(BaseTask):
 
     def teardown_test_environment(self, **kwargs):
         locations = get_apps_locations(self.test_labels, self.test_all)
-        pep8.process_options(self.pep8_options + locations)
 
-        # run pep8 tool with captured output
-        def report_error(instance, line_number, offset, text, check):
-            code = text[:4]
-            if pep8.ignore_code(code):
-                return
-            sourceline = instance.line_offset + line_number
-            self.output.write('%s:%s:%s: %s\n' % (instance.filename, sourceline, offset+1, text))
-        pep8.Checker.report_error = report_error
+        class JenkinsReport(pep8.BaseReport):
+            def error(instance, line_number, offset, text, check):
+                code = super(JenkinsReport, instance).error(line_number, offset, text, check)
+
+                if not code:
+                    return
+                sourceline = instance.line_offset + line_number
+                self.output.write('%s:%s:%s: %s\n' % (instance.filename, sourceline, offset+1, text))
+    
+        pep8style = pep8.StyleGuide(parse_argv=False, config_file=False, reporter=JenkinsReport)
 
         for location in locations:
-            pep8.input_dir(relpath(location), runner=pep8.input_file)
-
+            pep8style.input_dir(relpath(location))
+        
         self.output.close()

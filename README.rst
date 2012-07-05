@@ -102,7 +102,7 @@ Here is the list of tasks prebuild with django-jenkins
   Runs pep8 tool over selected Django apps.
   Creates Pylint compatible report for Jenkins
 
-  You should have pep8_ python package installed to run this tasks
+  You should have pep8_ python package (>=1.3) installed to run this task
 
 .. _pep8: http://pypi.python.org/pypi/pep8
 
@@ -111,7 +111,7 @@ Here is the list of tasks prebuild with django-jenkins
   Runs Pyflakes tool over selected Django apps.
   Creates Pylint compatible report for Jenkins.
 
-  You should have Pyflakes_ python package installed to run this tasks
+  You should have Pyflakes_ python package installed to run this task
 
 .. _Pyflakes: http://pypi.python.org/pypi/pyflakes
 
