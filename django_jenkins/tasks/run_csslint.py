@@ -49,7 +49,7 @@ class Task(BaseTask):
             if 'rhino' in runner:
                 self.implementation = os.path.join(root_dir, 'csslint', 'release', 'csslint-rhino.js')
             elif 'node' in runner:
-                self.implementation = os.path.join(root_dir, 'csslint', 'release', 'csslint-node.js')
+                self.implementation = os.path.join(root_dir, 'csslint', 'release', 'npm', 'cli.js')
             else:
                 raise ValueError('No sutable css lint runner found for %s' % self.interpreter)
                 
