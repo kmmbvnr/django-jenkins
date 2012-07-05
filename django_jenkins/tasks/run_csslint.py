@@ -81,7 +81,7 @@ class Task(BaseTask):
 
             self.output.write(output)
         elif self.to_file:
-            self.output.write('<csslint></csslint')
+            self.output.write('<?xml version="1.0" encoding="utf-8"?><lint></lint>')
 
     def static_files_iterator(self):
         locations = get_apps_locations(self.test_labels, self.test_all)
