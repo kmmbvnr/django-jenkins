@@ -3,5 +3,4 @@
 .coverage
 *.pyc
 reports
-
-
+*.egg-info/
