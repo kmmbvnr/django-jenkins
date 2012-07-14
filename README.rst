@@ -80,6 +80,10 @@ Here is the list of tasks prebuild with django-jenkins
 
   Discovers standard Django test suite from test.py files
 
+- ``django_jenkins.tasks.dir_tests``
+
+  Discover tests from all test*.py files in app subdirectories
+
 - ``django_jenkins.tasks.run_jslint``
 
   Runs jslint tools over ``<app>/static/*/*.js`` files.
@@ -141,6 +145,16 @@ Here is the list of tasks prebuild with django-jenkins
 
 Changelog
 ---------
+
+0.13.0 2012-07-15
+~~~~~~~~~~~~~~~~~
+* unittest2 compatibility
+* **WARNING:** Junit test data now stored in one junit.xml file
+* Support for pep8 1.3
+* New in-directory test discovery task
+* Added --liveserver option
+* Fixes in jslint and csslint tasks
+
 0.12.1 2012-03-15
 ~~~~~~~~~~~~~~~~~
 * Added Celery task
@@ -200,11 +214,25 @@ Authors
 -------
 Mikhail Podgurskiy <kmmbvnr@gmail.com>
 
-Special thanks, for all github forks authors.
+Contributors:
 
-XML Reporting Code from unittest-xml-reporting_ project:
+* Chris Heisel (https://github.com/cmheisel)
+* Andrey Fedoseev (https://github.com/andreyfedoseev)
+* Jannis Leidel (https://github.com/jezdez)
+* Luciano Pacheco (https://github.com/lucmult)
+* Julien Lirochon (https://github.com/jlirochon)
+* Olivier Girardot (https://github.com/ssaboum)
+* Victor Safronovich (https://github.com/suvit)
+* Bradley Ayers (https://github.com/bradleyayers)
+* Jonas Obrist (https://github.com/ojii)
+* John Paulett (https://github.com/johnpaulett)
+* Michael Ellingen (https://github.com/mvantellingen)
+* Domen Kožar (https://github.com/iElectric)
+* Simon Panay (https://github.com/simonpanay)
+* Tom Mortimer-Jones (https://github.com/morty)
+* Philip Kimmey (https://github.com/philipkimmey)
+* Peter Baumgartner (https://github.com/ipmb)
 
-- Name: Daniel Fernandes Martins <daniel.tritone@gmail.com>
-- Company: Destaquenet Technology Solutions <http://www.destaquenet.com/>
+Special thanks, for all github forks authors not listed here 
+for for project extensions ideas and problem identifications.
 
-.. _unittest-xml-reporting: http://pypi.python.org/pypi/unittest-xml-reporting
