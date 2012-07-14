@@ -40,7 +40,7 @@ class Task(BaseTask):
         if options['pep8-ignore']:
             self.pep8_options['ignore'] = options['pep8-ignore'].split(',')
         if options['pep8-max-line-length']:
-            self.pep8_options['max-line-length'] = options['pep8-max-line-length']
+            self.pep8_options['max_line_length'] = options['pep8-max-line-length']
 
     def teardown_test_environment(self, **kwargs):
         locations = get_apps_locations(self.test_labels, self.test_all)
