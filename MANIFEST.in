@@ -6,4 +6,5 @@ include django_jenkins/tasks/jslint/jslint.js
 include django_jenkins/tasks/jslint_runner.js
 include django_jenkins/tasks/csslint/release/csslint-rhino.js
 include django_jenkins/tasks/csslint/release/npm/cli.js
+include django_jenkins/tasks/csslint/release/npm/lib/csslint-node.js
 recursive-include tests *
