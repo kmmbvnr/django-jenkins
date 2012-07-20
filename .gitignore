@@ -3,5 +3,6 @@
 .coverage
 *.pyc
 reports
+MANIFEST
 
 
