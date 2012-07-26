@@ -13,6 +13,9 @@ from django_jenkins.tasks import BaseTask, get_app_location
 
 def build_suite(app):
     discovery_root = get_app_location(app)
+    if os.path.isdir(os.path.join(discovery_root, 'tests')):
+         discovery_root = os.path.join(discovery_root, 'tests')
+
     top_level_dir = discovery_root
     for _ in range(0, app.__name__.count('.')):
         top_level_dir = os.path.dirname(top_level_dir)
