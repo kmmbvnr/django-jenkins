@@ -67,7 +67,7 @@ class Task(BaseTask):
 
         for path in self.static_files_iterator():
             jslint_output = check_output(
-                [self.interpreter, self.runner, self.implementation, relpath(path), fmt])
+                [self.interpreter, self.runner, self.implementation, path, fmt])
             self.output.write(jslint_output)
 
         if self.to_file:
