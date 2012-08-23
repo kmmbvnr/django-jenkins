@@ -30,7 +30,8 @@ Installation for Python 3
     $ pip install pep8
     $ # lettuce and celenium are not yet ported to python 3k
 
-Ant then, upgrade the pip and intall django-jenkins from git as described above.
+
+And then, upgrade the pip and intall django-jenkins from git as described above.
 
 .. _PyPI: http://pypi.python.org/
 
