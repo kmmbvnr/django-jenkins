@@ -20,7 +20,7 @@ For the latest git version, you need the latest pip installed first::
     $ pip install -e git+git://github.com/kmmbvnr/django-jenkins.git#egg=django-jenkins
 
 
-Installation for Python 3 
+Installation for Python 3::
 
     $ pip install git+https://github.com/django/django.git
     $ pip install hg+http://hg.logilab.org/pylint
