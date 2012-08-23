@@ -19,6 +19,20 @@ For the latest git version, you need the latest pip installed first::
     $ pip install git+https://github.com/pypa/pip.git
     $ pip install -e git+git://github.com/kmmbvnr/django-jenkins.git#egg=django-jenkins
 
+
+Installation for Python 3 
+
+    $ pip install git+https://github.com/django/django.git
+    $ pip install hg+http://hg.logilab.org/pylint
+    $ pip install coverage
+    $ # if required
+    $ pip install pyflakes3k
+    $ pip install pep8
+
+    $ # lettuce and celenium are not yet ported to python 3k
+
+Ant then, upgrade the pip and intall django-jenkins from git as described above.
+
 .. _PyPI: http://pypi.python.org/
 
 Usage
