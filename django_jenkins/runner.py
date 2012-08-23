@@ -11,6 +11,11 @@ from django.utils.unittest import TestSuite, TestCase, TextTestResult, TextTestR
 from django_jenkins import signals
 from django_jenkins.functions import total_seconds
 
+try:
+    from django.utils.encoding import smart_text
+except ImportError:
+    from django.utils.encoding import smart_unicode as smart_text
+
 
 STDOUT_LINE = '\nStdout:\n%s'
 STDERR_LINE = '\nStderr:\n%s'
@@ -31,7 +36,7 @@ class TestInfo(object):
     def __init__(self, **kwargs):
         for slot_name in self.__slots__:
             setattr(self, slot_name, None)
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
 
@@ -189,13 +194,13 @@ class XMLTestResult(TextTestResult):
 
                     if test_info.result == TestInfo.RESULT.ERROR:
                         document.startElement('error', AttributesImpl({
-                            'message' : unicode(test_info.err[1])
+                            'message' : smart_text(test_info.err[1])
                         }))
                         document.characters(self._exc_info_to_string(test_info.err, test_info.test_method))
                         document.endElement('error')
                     elif test_info.result == TestInfo.RESULT.FAILURE:
                         document.startElement('failure', AttributesImpl({
-                            'message' : unicode(test_info.err[1])
+                            'message' : smart_text(test_info.err[1])
                         }))
                         document.characters(self._exc_info_to_string(test_info.err, test_info.test_method))
                         document.endElement('failure')

@@ -5,6 +5,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 DEBUG=True
 TEMPLATE_DEBUG=DEBUG
 ROOT_URLCONF = 'test_app.urls'
+SECRET_KEY = 'nokey'
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -39,16 +40,22 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_jslint',
     'django_jenkins.tasks.run_csslint',    
     'django_jenkins.tasks.run_sloccount',    
-    'django_jenkins.tasks.lettuce_tests',
     'django_jenkins.tasks.with_local_celery',
 )
 
-JSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/js/test.js')]
-CSSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/css/test.css')]
 
 # python > 2.4
 if sys.version_info[1] > 4:
     JENKINS_TASKS += ('django_jenkins.tasks.run_pylint',)
+
+
+# not ported to python 3 libs
+if sys.version_info[0] < 3:
+    JENKINS_TASKS += ('django_jenkins.tasks.lettuce_tests',)
+
+
+JSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/js/test.js')]
+CSSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/css/test.css')]
 
 
 STATIC_URL = '/media/'

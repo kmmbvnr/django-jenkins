@@ -2,9 +2,9 @@
 import os
 import re
 import sys
+from io import StringIO
 from optparse import make_option
 from pyflakes.scripts import pyflakes
-from cStringIO import StringIO
 from django_jenkins.functions import relpath
 from django_jenkins.tasks import BaseTask, get_apps_locations
 
