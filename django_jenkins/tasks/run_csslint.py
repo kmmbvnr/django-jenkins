@@ -69,7 +69,7 @@ class Task(BaseTask):
             fmt = 'lint-xml'
         else:
             fmt = 'text'
-
+            
         if files:
             cmd = [self.interpreter, self.implementation, '--format=%s' % fmt] + files
 
@@ -79,7 +79,7 @@ class Task(BaseTask):
             if retcode not in [0, 1]: # normal csslint return codes
                 raise CalledProcessError(retcode, cmd, output=output + '\n' + err)
 
-            self.output.write(output)
+            self.output.write(output.decode('utf-8'))
         elif self.to_file:
             self.output.write('<?xml version="1.0" encoding="utf-8"?><lint></lint>')
 
