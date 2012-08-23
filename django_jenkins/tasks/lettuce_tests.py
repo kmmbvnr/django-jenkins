@@ -3,7 +3,7 @@ import os
 from optparse import make_option
 from django.conf import settings
 from django_jenkins.tasks import BaseTask
-from unittest import TestCase
+from django.test import LiveServerTestCase
 from lettuce.django import harvest_lettuces
 from lettuce import Runner
 from lettuce import registry
@@ -52,7 +52,7 @@ class Task(BaseTask):
         return suite
 
 
-class LettuceTestCase(TestCase):
+class LettuceTestCase(LiveServerTestCase):
     def __init__(self, runner, app_module, *args, **kwargs):
         super(LettuceTestCase, self).__init__(*args, **kwargs)
         self.runner = runner
