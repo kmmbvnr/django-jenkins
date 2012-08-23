@@ -32,9 +32,10 @@ class Task(BaseTask):
 
         report_output = check_output(
             ['sloccount', "--duplicates", "--wide", "--details"] + locations)
+        report_output = report_output.decode('utf-8')
 
         if self.with_migrations:
-            self.output.write(report_output)
+            self.output.write(report_output.decode('utf-8'))
         else:
             for line in report_output.splitlines():
                 if '/migrations/' in line:
