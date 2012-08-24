@@ -6,10 +6,6 @@ from optparse import make_option
 from django.conf import settings
 from django_jenkins.tasks import BaseTask, get_apps_under_test
 
-
-if sys.version_info[1] < 5:
-    raise AssertionError('pylint task require python>=2.5 version')
-
 from pylint import lint
 from pylint.reporters.text import ParseableTextReporter
 
