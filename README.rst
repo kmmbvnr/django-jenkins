@@ -28,7 +28,7 @@ Installation for Python 3::
     $ # if required
     $ pip install pyflakes3k
     $ pip install pep8
-    $ # lettuce and celenium are not yet ported to python 3k
+    $ # lettuce and selenium are not yet ported to python 3k
 
 
 And then, upgrade the pip and install django-jenkins from git as described above.
