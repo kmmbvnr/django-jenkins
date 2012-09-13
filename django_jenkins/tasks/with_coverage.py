@@ -14,9 +14,9 @@ class Task(BaseTask):
                                default="",
                                help="Specify configuration file."),
                    make_option("--coverage-html-report",
-                              dest="coverage_html_report_dir",
-                              default="",
-                              help="Directory to which HTML coverage report should be written. If not specified, no report is generated."),
+                               dest="coverage_html_report_dir",
+                               default="",
+                               help="Directory to which HTML coverage report should be written. If not specified, no report is generated."),
                    make_option("--coverage-no-branch-measure",
                                action="store_false", default=True,
                                dest="coverage_measure_branch",
@@ -33,17 +33,22 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
         self.test_apps = get_apps_under_test(test_labels, options['test_all'])
         self.output_dir = options['output_dir']
-        self.with_migrations = options.get('coverage_with_migrations', False)
-        self.html_dir = options['coverage_html_report_dir']
+        self.with_migrations = options.get('coverage_with_migrations',
+                                           getattr(settings, 'COVERAGE_WITH_MIGRATIONS', False))
+        self.html_dir = options.get('coverage_html_report_dir',
+                                    getattr(settings, 'COVERAGE_HTML_REPORT', ''))
+        self.branch = options.get('coverage_measure_branch',
+                                  getattr(settings, 'COVERAGE_MEASURE_BRANCH', True))
 
         self.exclude_locations = []
-        for modname in options.get('coverage_excludes', []):
+        for modname in options.get('coverage_excludes',
+                                   getattr(settings, 'COVERAGE_EXCLUDES', [])):
             try:
                 self.exclude_locations.append(os.path.dirname(import_module(modname).__file__))
             except ImportError:
                 pass
 
-        self.coverage = coverage(branch=options.get('coverage_measure_branch', True),
+        self.coverage = coverage(branch=self.branch,
                                  source=self.test_apps,
                                  config_file=options.get('coverage_rcfile') or Task.default_config_path())
 
@@ -53,7 +58,7 @@ class Task(BaseTask):
     def teardown_test_environment(self, **kwargs):
         self.coverage.stop()
 
-        morfs = [filename for filename in self.coverage.data.measured_files() \
+        morfs = [filename for filename in self.coverage.data.measured_files()
                  if self.want_file(filename)]
 
         if not os.path.exists(self.output_dir):
@@ -65,7 +70,7 @@ class Task(BaseTask):
 
     def want_file(self, filename):
         if not self.with_migrations and '/migrations/' in filename:
-             return False
+            return False
         for location in self.exclude_locations:
             if filename.startswith(location):
                 return False
