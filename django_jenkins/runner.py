@@ -176,7 +176,10 @@ class XMLTestResult(TextTestResult):
         """
         self.buffer = False
 
-        with open(os.path.join(output_dir, 'junit.xml'), 'w') as output:            
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        with open(os.path.join(output_dir, 'junit.xml'), 'w') as output:
             document = XMLGenerator(output, 'utf-8')
             document.startDocument()
             document.startElement('testsuites', AttributesImpl({}))
@@ -261,7 +264,10 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
 
     def run_suite(self, suite, **kwargs):
         signals.before_suite_run.send(sender=self)
-        result = TextTestRunner(buffer=True, resultclass=XMLTestResult).run(suite)
+        result = TextTestRunner(buffer=True,
+                resultclass=XMLTestResult,
+                verbosity=self.verbosity
+                ).run(suite)
         if self.with_reports:
             result.dump_xml(self.output_dir)
         signals.after_suite_run.send(sender=self)
