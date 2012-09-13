@@ -10,7 +10,7 @@ class Command(TaskListCommand):
     args = '[appname ...]'
     option_list = TaskListCommand.option_list + (
         make_option('--with-reports', action='store_true', dest='with_reports', default=False,
-            help='Create xunit reports files'),
+                    help='Create xunit reports files'),
         make_option("--coverage-html-report",
                     dest="coverage_html_report_dir",
                     default="",
@@ -18,7 +18,8 @@ class Command(TaskListCommand):
     )
 
     def get_tasks(self, *test_labels, **options):
-        if options.get('coverage_html_report_dir', False):
+        if options.get('coverage_html_report_dir',
+                       getattr(settings, 'COVERAGE_HTML_REPORT', False)):
             self.tasks_cls.append(import_module('django_jenkins.tasks.with_coverage').Task)
         return [task_cls(test_labels, options) for task_cls in self.tasks_cls]
 
@@ -28,7 +29,7 @@ class Command(TaskListCommand):
         tasks = []
 
         if 'django_jenkins.tasks.dir_tests' in enabled_tasks:
-            tasks.append('django_jenkins.tasks.dir_tests')            
+            tasks.append('django_jenkins.tasks.dir_tests')
         else:
             tasks.append('django_jenkins.tasks.django_tests')
 
@@ -39,4 +40,3 @@ class Command(TaskListCommand):
             tasks.append('django_jenkins.tasks.with_local_celery')
 
         return tasks
-
