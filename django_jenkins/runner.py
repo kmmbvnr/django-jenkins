@@ -176,6 +176,9 @@ class XMLTestResult(TextTestResult):
         """
         self.buffer = False
 
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
         with open(os.path.join(output_dir, 'junit.xml'), 'w') as output:
             document = XMLGenerator(output, 'utf-8')
             document.startDocument()
