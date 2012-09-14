@@ -84,12 +84,16 @@ Here is the list of tasks prebuild with django-jenkins
 - ``django_jenkins.tasks.run_pylint``
 
   Runs Pylint_ over selected Django apps.
+  
+  Task-specific settings: ``PYLINT_RCFILE``
 
 .. _Pylint: http://www.logilab.org/project/pylint
 
 - ``django_jenkins.tasks.with_coverage``
 
-  Produces XML coverage report for Jenkins
+  Produces `XML coverage report <http://nedbatchelder.com/code/coverage/sample_html/>`__ for Jenkins
+  
+  Task-specific settings: ``COVERAGE_RCFILE``, ``COVERAGE_REPORT_HTML_OUTPUT_DIR``, ``COVERAGE_MEASURE_BRANCH``, ``COVERAGE_EXCLUDES``, ``COVERAGE_WITH_MIGRATIONS``
 
 - ``django_jenkins.tasks.django_tests``
 
@@ -105,6 +109,8 @@ Here is the list of tasks prebuild with django-jenkins
   Creates Pylint compatible report for Jenkins
 
   You should have the rhino_ or nodejs_ javascript interpreter installed for jslint
+  
+  Task-specific settings: ``JSLINT_INTERPRETER``, ``JSLINT_CHECKED_FILES``
 
 - ``django_jenkins.tasks.run_csslint``
 
@@ -112,6 +118,8 @@ Here is the list of tasks prebuild with django-jenkins
   Creates CSS Lint compatible report for Jenkins
 
   You should have the rhino_ or nodejs_ javascript interpreter installed for csslint
+  
+  Task-specific settings: ``CSSLINT_INTERPRETER``, ``CSSLINT_CHECKED_FILES``
 
 .. _rhino: http://www.mozilla.org/rhino/
 .. _nodejs: http://nodejs.org/
@@ -146,9 +154,13 @@ Here is the list of tasks prebuild with django-jenkins
 - ``django_jenkins.tasks.run_graphmodels``
 
   Graphs an overview of the models of the selected Django apps.
-  Creates ``models.png`` graphic.
+  Creates ``models.png`` graphic (`example <https://code.djangoproject.com/wiki/DjangoGraphviz#Examples>`__).
 
   You should have django-extensions_ and pygraphviz_ installed to run this task.
+  
+  Task-specific settings:
+
+  - ``GRAPH_MODELS``: A dictionary of settings for graph_models, most corresponding to the command-line options (with 'graphmodels\_' removed): ``fail_without_error``, ``disable_fields``, ``group_models``, ``all_applications``, ``outputfile``, ``layout``, ``verbose_names``, ``language``, ``exclude_columns``, ``exclude_models``, ``inheritance``
 
 .. _django-extensions: http://pypi.python.org/pypi/django-extensions
 .. _pygraphviz: http://pypi.python.org/pypi/pygraphviz/
