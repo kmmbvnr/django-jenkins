@@ -54,9 +54,9 @@ Settings
 
 - ``PROJECT_APPS``
 
-  if presents, it is supposed to be a list/tuple of django apps for Jenkins to run.
-  Tests, reports and coverage are generated only for the apps from this list.
-  You should specify --all option to ignore this settings.
+  If present, it is supposed to be a list/tuple of django apps for Jenkins to run.
+  Tests, reports, and coverage are generated only for the apps from this list.
+  You should specify --all option to ignore this setting.
 
 - ``JENKINS_TASKS``
 
@@ -121,7 +121,7 @@ Here is the list of tasks prebuild with django-jenkins
   Runs pep8 tool over selected Django apps.
   Creates Pylint compatible report for Jenkins
 
-  You should have pep8_ python package (>=1.3) installed to run this task
+  You should have pep8_ python package (>=1.3) installed to run this task.
 
 .. _pep8: http://pypi.python.org/pypi/pep8
 
@@ -130,7 +130,7 @@ Here is the list of tasks prebuild with django-jenkins
   Runs Pyflakes tool over selected Django apps.
   Creates Pylint compatible report for Jenkins.
 
-  You should have Pyflakes_ python package installed to run this task
+  You should have Pyflakes_ python package installed to run this task.
 
 .. _Pyflakes: http://pypi.python.org/pypi/pyflakes
 
@@ -139,15 +139,25 @@ Here is the list of tasks prebuild with django-jenkins
   Runs SLOCCount_ tool over selected Django apps.
   Creates sloccount plugin compatible report for Jenkins.
 
-  You should have the SLOCCount program installed to run this task
+  You should have the SLOCCount program installed to run this task.
 
 .. _SLOCCount: http://www.dwheeler.com/sloccount/
+
+- ``django_jenkins.tasks.run_graphmodels``
+
+  Graphs an overview of the models of the selected Django apps.
+  Creates ``models.png`` graphic.
+
+  You should have django-extensions_ and pygraphviz_ installed to run this task.
+
+.. _django-extensions: http://pypi.python.org/pypi/django-extensions
+.. _pygraphviz: http://pypi.python.org/pypi/pygraphviz/
 
 - ``django_jenkins.tasks.lettuce_tests``
 
   Discover Lettuce tests from app/feature directories.
 
-  You should have the Lettuce_ Python package installed to run this task
+  You should have the Lettuce_ Python package installed to run this task.
 
 .. _Lettuce: http://lettuce.it/
 
@@ -247,6 +257,7 @@ Contributors:
 * Tom Mortimer-Jones (https://github.com/morty)
 * Philip Kimmey (https://github.com/philipkimmey)
 * Peter Baumgartner (https://github.com/ipmb)
+* Kris Kumler (https://github.com/kkumler)
 
 Special thanks, for all github forks authors not listed here 
 for for project extensions ideas and problem identifications.
