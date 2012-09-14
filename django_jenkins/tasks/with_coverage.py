@@ -36,7 +36,7 @@ class Task(BaseTask):
         self.with_migrations = options.get('coverage_with_migrations',
                                            getattr(settings, 'COVERAGE_WITH_MIGRATIONS', False))
         self.html_dir = options.get('coverage_html_report_dir',
-                                    getattr(settings, 'COVERAGE_HTML_REPORT', ''))
+                                    getattr(settings, 'COVERAGE_REPORT_HTML_OUTPUT_DIR', ''))
         self.branch = options.get('coverage_measure_branch',
                                   getattr(settings, 'COVERAGE_MEASURE_BRANCH', True))
 
