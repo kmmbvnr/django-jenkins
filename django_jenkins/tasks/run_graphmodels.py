@@ -62,16 +62,11 @@ class Task(BaseTask):
 
         # Merge in possibles settings file options, if the option is unset (None)
         fromfile = getattr(settings, 'GRAPH_MODELS', {})
-        fromfile.update({k: v for k, v in self.options.iteritems() if v})
+        fromfile.update(dict((k, v) for k, v in self.options.iteritems() if v))
         self.options.update(fromfile)
 
         if self.options['test_all']:
             self.options['all_applications'] = True
-
-        # Get the list of PROJECT_APPS if nothing specified any we don't want everything
-        if len(test_labels) < 1 and not self.options['all_applications']:
-            under = get_apps_under_test(self.test_labels, self.options['all_applications'])
-            self.test_labels = [label.split('.')[-1] for label in under]
 
         # Place the file in the correct place
         output_dir = self.options['output_dir']
@@ -81,5 +76,11 @@ class Task(BaseTask):
 
         if not self.checkdeps():
             return
+
+    def teardown_test_environment(self, **kwargs):
+        # Get the list of PROJECT_APPS if nothing specified any we don't want everything
+        if len(self.test_labels) < 1 and not self.options['all_applications']:
+            under = get_apps_under_test(self.test_labels, self.options['all_applications'])
+            self.test_labels = [label.split('.')[-1] for label in under]
 
         call_command('graph_models', *self.test_labels, **self.options)
