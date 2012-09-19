@@ -2,6 +2,7 @@
 import os
 import subprocess
 import sys
+import fnmatch
 from optparse import make_option
 from django.conf import settings
 from django_jenkins.functions import CalledProcessError, find_first_existing_executable
@@ -98,6 +99,12 @@ class Task(BaseTask):
                     if path.startswith(location):
                         return True
             return False
+            
+        def is_excluded(path):
+            for pattern in self.exclude:
+                if fnmatch.fnmatchcase(path, pattern):
+                    return True
+            return False
 
         if hasattr(settings, 'CSSLINT_CHECKED_FILES'):
             for path in settings.CSSLINT_CHECKED_FILES:
@@ -117,6 +124,7 @@ class Task(BaseTask):
             for location in locations:
                 for dirpath, dirnames, filenames in os.walk(os.path.join(location, 'static')):
                     for filename in filenames:
-                        if filename.endswith('.css') and in_tested_locations(os.path.join(dirpath, filename)):
-                            yield os.path.join(dirpath, filename)
+                        path = os.path.join(dirpath, filename)
+                        if filename.endswith('.css') and in_tested_locations(path) and not is_excluded(path):
+                            yield path
 
