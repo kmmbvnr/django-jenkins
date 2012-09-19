@@ -24,7 +24,10 @@ class Task(BaseTask):
                                help="Do not ignore .min.js files"),
                    make_option("--jshint-exclude",
                                dest="jshint_exclude", default="",
-                               help="Exclude patterns")]
+                               help="Exclude patterns"),
+                   make_option("--jshint-config",
+                               dest="jshint_config", default="{ browser: true }",
+                               help="JSHINT options see http://www.jshint.com/docs/")]                               
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
@@ -57,6 +60,7 @@ class Task(BaseTask):
 
         self.runner = os.path.join(root_dir, 'jshint_runner.js')
         self.exclude = options['jshint_exclude'].split(',')
+        self.config = options['jshint_config']
 
     def teardown_test_environment(self, **kwargs):
         fmt = 'text'
@@ -68,7 +72,7 @@ class Task(BaseTask):
 
         for path in self.static_files_iterator():
             jshint_output = check_output(
-                [self.interpreter, self.runner, self.implementation, path, fmt])
+                [self.interpreter, self.runner, self.implementation, path, fmt, self.config])
             self.output.write(jshint_output.decode('utf-8'))
 
         if self.to_file:

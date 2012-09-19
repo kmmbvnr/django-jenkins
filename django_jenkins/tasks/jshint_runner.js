@@ -16,6 +16,7 @@ if (typeof process !== 'undefined') {
     var jshint =  process.argv[2];
     var filename = process.argv[3];
     var format = process.argv[4];
+    var config = eval('(' + process.argv[5] + ')');
     var fileContent = fs.readFileSync(filename, 'utf8');
 
     /* Loading jshint */
@@ -30,26 +31,13 @@ if (typeof process !== 'undefined') {
     var jshint = arguments[0];
     var filename = arguments[1];
     var format = arguments[2];
+    var config = eval('(' + arguments[3] + ')');
     var fileContent = readFile(filename);
 
     load(jshint);
 }
 
-
-JSHINT(fileContent, {
-    white: true,
-    onevar: true,
-    undef: true,
-    newcap: true,
-    nomen: true,
-    regexp: true,
-    plusplus: true,
-    bitwise: true,
-    devel: true,
-    maxerr: 50,
-    browser: true,
-    indent: 4
-});
+JSHINT(fileContent, config);
 var report = JSHINT.data();
 
 function escapeSpecialCharacters(str) {
