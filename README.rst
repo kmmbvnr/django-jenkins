@@ -103,14 +103,14 @@ Here is the list of tasks prebuild with django-jenkins
 
   Discover tests from all test*.py files in app subdirectories
 
-- ``django_jenkins.tasks.run_jslint``
+- ``django_jenkins.tasks.run_jshint``
 
-  Runs jslint tools over ``<app>/static/*/*.js`` files.
+  Runs jshint tools over ``<app>/static/*/*.js`` files.
   Creates Pylint compatible report for Jenkins
 
-  You should have the rhino_ or nodejs_ javascript interpreter installed for jslint
+  You should have the rhino_ or nodejs_ javascript interpreter installed for jshint
   
-  Task-specific settings: ``JSLINT_INTERPRETER``, ``JSLINT_CHECKED_FILES``
+  Task-specific settings: ``JSHINT_INTERPRETER``, ``JSHINT_CHECKED_FILES``
 
 - ``django_jenkins.tasks.run_csslint``
 

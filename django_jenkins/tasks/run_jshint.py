@@ -7,55 +7,55 @@ from django_jenkins.functions import check_output, find_first_existing_executabl
 from django_jenkins.tasks import BaseTask, get_apps_locations
 
 class Task(BaseTask):
-    option_list = [make_option("--jslint-interpreter",
-                               dest="jslint_interpreter",
-                               help="Javascript interpreter for running jslint"),
-                   make_option("--jslint-implementation",
-                               dest="jslint_implementation",
-                               help="Full path to jslint.js, by default used build-in"),
-                   make_option("--jslint-with-staticdirs",
-                               dest="jslint-with-staticdirs",
+    option_list = [make_option("--jshint-interpreter",
+                               dest="jshint_interpreter",
+                               help="Javascript interpreter for running jshint"),
+                   make_option("--jshint-implementation",
+                               dest="jshint_implementation",
+                               help="Full path to jshint.js, by default used build-in"),
+                   make_option("--jshint-with-staticdirs",
+                               dest="jshint-with-staticdirs",
                                default=False, action="store_true",
                                help="Check js files located in STATIC_DIRS settings"),
-                   make_option("--jslint-with-minjs",
-                               dest="jslint_with-minjs",
+                   make_option("--jshint-with-minjs",
+                               dest="jshint_with-minjs",
                                default=False, action="store_true",
                                help="Do not ignore .min.js files"),
-                   make_option("--jslint-exclude",
-                               dest="jslint_exclude", default="",
+                   make_option("--jshint-exclude",
+                               dest="jshint_exclude", default="",
                                help="Exclude patterns")]
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
         self.test_all = options['test_all']
-        self.to_file = options.get('jslint_file_output', True)
-        self.with_static_dirs = options.get('jslint-with-staticdirs', False)
-        self.jslint_with_minjs = options.get('jslint_with-minjs', False)
+        self.to_file = options.get('jshint_file_output', True)
+        self.with_static_dirs = options.get('jshint-with-staticdirs', False)
+        self.jshint_with_minjs = options.get('jshint_with-minjs', False)
 
         root_dir = os.path.normpath(os.path.dirname(__file__))
 
-        self.interpreter = options['jslint_interpreter'] or \
-                          getattr(settings, 'JSLINT_INTERPRETER', None)
+        self.interpreter = options['jshint_interpreter'] or \
+                          getattr(settings, 'JSHINT_INTERPRETER', None)
         if not self.interpreter:
             self.interpreter = find_first_existing_executable(
                 [('node', '--help'), ('rhino', '--help')])
             if not self.interpreter:
                 raise ValueError('No suitable js interpreter found. Please install nodejs or rhino')
 
-        self.implementation = options['jslint_implementation']
+        self.implementation = options['jshint_implementation']
         if not self.implementation:
-            self.implementation = os.path.join(root_dir, 'jslint', 'jslint.js')
+            self.implementation = os.path.join(root_dir, 'jshint', 'jshint.js')
 
         if self.to_file:
             output_dir = options['output_dir']
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-            self.output = open(os.path.join(output_dir, 'jslint.xml'), 'w')
+            self.output = open(os.path.join(output_dir, 'jshint.xml'), 'w')
         else:
             self.output = sys.stdout
 
-        self.runner = os.path.join(root_dir, 'jslint_runner.js')
-        self.exclude = options['jslint_exclude'].split(',')
+        self.runner = os.path.join(root_dir, 'jshint_runner.js')
+        self.exclude = options['jshint_exclude'].split(',')
 
     def teardown_test_environment(self, **kwargs):
         fmt = 'text'
@@ -66,10 +66,9 @@ class Task(BaseTask):
             self.output.write('<?xml version=\"1.0\" encoding=\"utf-8\"?><jslint>')
 
         for path in self.static_files_iterator():
-            jslint_output = check_output(
+            jshint_output = check_output(
                 [self.interpreter, self.runner, self.implementation, path, fmt])
-
-            self.output.write(jslint_output.decode('utf-8'))
+            self.output.write(jshint_output.decode('utf-8'))
 
         if self.to_file:
             self.output.write('</jslint>');
@@ -78,7 +77,7 @@ class Task(BaseTask):
         locations = get_apps_locations(self.test_labels, self.test_all)
 
         def in_tested_locations(path):
-            if not self.jslint_with_minjs and path.endswith('.min.js'):
+            if not self.jshint_with_minjs and path.endswith('.min.js'):
                 return False
 
             for location in list(locations):
@@ -90,8 +89,8 @@ class Task(BaseTask):
                         return True
             return False
         
-        if hasattr(settings, 'JSLINT_CHECKED_FILES'):
-            for path in settings.JSLINT_CHECKED_FILES:
+        if hasattr(settings, 'JSHINT_CHECKED_FILES'):
+            for path in settings.JSHINT_CHECKED_FILES:
                 yield path
 
         if 'django.contrib.staticfiles' in settings.INSTALLED_APPS:

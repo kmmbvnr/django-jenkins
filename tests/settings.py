@@ -37,7 +37,7 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.dir_tests',
     'django_jenkins.tasks.run_pep8',
     'django_jenkins.tasks.run_pyflakes',
-    'django_jenkins.tasks.run_jslint',
+    'django_jenkins.tasks.run_jshint',
     'django_jenkins.tasks.run_csslint',    
     'django_jenkins.tasks.run_sloccount',    
     'django_jenkins.tasks.with_local_celery',
@@ -54,7 +54,7 @@ if sys.version_info[0] < 3:
     JENKINS_TASKS += ('django_jenkins.tasks.lettuce_tests',)
 
 
-JSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/js/test.js')]
+JSHINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/js/test.js')]
 CSSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/css/test.css')]
 
 
