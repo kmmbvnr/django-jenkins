@@ -4,12 +4,12 @@ from django_jenkins.management.commands import TaskListCommand
 
 
 class Command(TaskListCommand):
-    help = "Run jslint over project apps"
+    help = "Run jshint over project apps"
     args = '[appname ...]'
     option_list = TaskListCommand.option_list + (
-        make_option('--jslint-file-output', action='store_true', dest='jslint_file_output', default=False,
-            help='Store jslint report in file'),
+        make_option('--jshint-file-output', action='store_true', dest='jshint_file_output', default=False,
+            help='Store jshint report in file'),
     )
 
     def get_task_list(self):
-        return ('django_jenkins.tasks.run_jslint',)
+        return ('django_jenkins.tasks.run_jshint',)

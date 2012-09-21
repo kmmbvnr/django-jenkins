@@ -17,7 +17,7 @@ setup(
     license = 'LGPL',
     platforms = ['Any'],
     keywords = ['pyunit', 'unittest', 'testrunner', 'hudson', 'jenkins', 
-                'django', 'pylint', 'pep8', 'pyflakes', 'csslint', 'jslint',
+                'django', 'pylint', 'pep8', 'pyflakes', 'csslint', 'jshint',
                 'coverage'],
     url = 'http://github.com/kmmbvnr/django-jenkins',
     classifiers = [
@@ -37,7 +37,7 @@ setup(
         'pylint>=0.23',
     ],
     packages = ['django_jenkins', 'django_jenkins.management', 'django_jenkins.tasks', 'django_jenkins.management.commands'],
-    package_data={'django_jenkins': ['tasks/pylint.rc', 'tasks/jslint_runner.js', 'tasks/jslint/jslint.js', 'tasks/csslint/release/csslint-rhino.js', 'tasks/csslint/release/npm/cli.js','tasks/csslint/release/npm/lib/csslint-node.js']},
+    package_data={'django_jenkins': ['tasks/pylint.rc', 'tasks/jshint_runner.js', 'tasks/jshint/jshint.js', 'tasks/csslint/release/csslint-rhino.js', 'tasks/csslint/release/npm/cli.js','tasks/csslint/release/npm/lib/csslint-node.js']},
     zip_safe = False,
     include_package_data = True
 )
