@@ -26,7 +26,10 @@ class Task(BaseTask):
                                help="Do not ignore .min.css files"),
                    make_option("--csslint-exclude",
                                dest="csslint_exclude", default="",
-                               help="Exclude patterns")]
+                               help="Exclude patterns"),
+                   make_option("--csslint-static-dir",
+                           dest="csslint_static-dir", default="static",
+                           help="Path to dir with css static files")]
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
@@ -63,6 +66,7 @@ class Task(BaseTask):
             self.output = sys.stdout
 
         self.exclude = options['csslint_exclude'].split(',')
+        self.static_dir = options.get('csslint_static-dir', 'static')
 
     def teardown_test_environment(self, **kwargs):
         files = [path for path in self.static_files_iterator()]
@@ -122,7 +126,7 @@ class Task(BaseTask):
         else:
             # scan apps directories for static folders
             for location in locations:
-                for dirpath, dirnames, filenames in os.walk(os.path.join(location, 'static')):
+                for dirpath, dirnames, filenames in os.walk(os.path.join(location, self.static_dir)):
                     for filename in filenames:
                         path = os.path.join(dirpath, filename)
                         if filename.endswith('.css') and in_tested_locations(path) and not is_excluded(path):

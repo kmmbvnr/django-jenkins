@@ -30,7 +30,7 @@ class Task(BaseTask):
                                help="JSHINT options see http://www.jshint.com/docs/"),
                    make_option("--jshint-static-dir",
                        dest="jshint_static-dir", default="static",
-                       help="Path to dir with static files")]
+                       help="Path to dir with js static files")]
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
