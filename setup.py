@@ -1,13 +1,24 @@
 #!/usr/bin/env python
+from distutils.command.build import build
+from subprocess import check_call
 import codecs
 from os import path
 from setuptools import setup
+
+
+class build_with_submodules(build):
+    def run(self):
+        if path.exists('.git'):
+            check_call(['git', 'submodule', 'init'])
+            check_call(['git', 'submodule', 'update'])
+        build.run(self)
 
 
 read = lambda filepath: codecs.open(filepath, 'r', 'utf-8').read()
 
 
 setup(
+    cmdclass={"build": build_with_submodules},
     name = 'django-jenkins',
     version = '0.13.0',
     author = 'Mikhail Podgurskiy',
