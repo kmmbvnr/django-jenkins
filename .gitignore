@@ -3,6 +3,7 @@
 .ve3?
 .coverage
 *.pyc
+.idea/
 reports
 MANIFEST
 
