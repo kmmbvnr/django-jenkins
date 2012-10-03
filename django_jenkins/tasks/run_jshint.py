@@ -79,7 +79,8 @@ class Task(BaseTask):
                 [self.interpreter, self.runner, self.implementation, path, fmt, self.config])
             try:
                 self.output.write(jshint_output.decode('utf-8'))
-            except UnicodeDecodeError('Unicode decode error in file %s. Trying to use default file encoding. \n' % path):
+            except UnicodeDecodeError:
+                sys.stderr.write('Unicode decode error in file %s. Trying to use default file encoding. \n' % path)
                 self.output.write(jshint_output)
         if self.to_file:
             self.output.write('</jslint>')
