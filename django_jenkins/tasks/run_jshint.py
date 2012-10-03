@@ -77,8 +77,10 @@ class Task(BaseTask):
         for path in self.static_files_iterator():
             jshint_output = check_output(
                 [self.interpreter, self.runner, self.implementation, path, fmt, self.config])
-            self.output.write(jshint_output.decode('utf-8'))
-
+            try:
+                self.output.write(jshint_output.decode('utf-8'))
+            except UnicodeDecodeError('Unicode decode error in file %s. Trying to use default file encoding. \n' % path):
+                self.output.write(jshint_output)
         if self.to_file:
             self.output.write('</jslint>')
 
