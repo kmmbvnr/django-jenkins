@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import codecs
 import fnmatch
 from optparse import make_option
 from django.conf import settings
@@ -54,7 +55,7 @@ class Task(BaseTask):
             output_dir = options['output_dir']
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-            self.output = open(os.path.join(output_dir, 'jshint.xml'), 'w')
+            self.output = codecs.open(os.path.join(output_dir, 'jshint.xml'), 'w', 'utf-8')
         else:
             self.output = sys.stdout
 
