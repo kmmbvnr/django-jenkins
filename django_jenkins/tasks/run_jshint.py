@@ -28,7 +28,10 @@ class Task(BaseTask):
                                help="Exclude patterns"),
                    make_option("--jshint-config",
                                dest="jshint_config", default="{ browser: true }",
-                               help="JSHINT options see http://www.jshint.com/docs/")]                               
+                               help="JSHINT options see http://www.jshint.com/docs/"),
+                   make_option("--jshint-static-dir",
+                       dest="jshint_static-dir", default="static",
+                       help="Path to dir with js static files")]
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
@@ -62,6 +65,7 @@ class Task(BaseTask):
         self.runner = os.path.join(root_dir, 'jshint_runner.js')
         self.exclude = options['jshint_exclude'].split(',')
         self.config = options['jshint_config']
+        self.static_dir = options.get('jshint_static-dir', 'static')
 
     def teardown_test_environment(self, **kwargs):
         fmt = 'text'
@@ -74,10 +78,13 @@ class Task(BaseTask):
         for path in self.static_files_iterator():
             jshint_output = check_output(
                 [self.interpreter, self.runner, self.implementation, path, fmt, self.config])
-            self.output.write(jshint_output.decode('utf-8'))
-
+            try:
+                self.output.write(jshint_output.decode('utf-8'))
+            except UnicodeEncodeError:
+                sys.stderr.write('Unicode encode error in file %s. Trying to use default file encoding. \n' % path)
+                self.output.write(jshint_output)
         if self.to_file:
-            self.output.write('</jslint>');
+            self.output.write('</jslint>')
 
     def static_files_iterator(self):
         locations = get_apps_locations(self.test_labels, self.test_all)
@@ -117,7 +124,7 @@ class Task(BaseTask):
         else:
             # scan apps directories for static folders
             for location in locations:
-                for dirpath, dirnames, filenames in os.walk(os.path.join(location, 'static')):
+                for dirpath, dirnames, filenames in os.walk(os.path.join(location, self.static_dir)):
                     for filename in filenames:
                         path = os.path.join(dirpath, filename)
                         if filename.endswith('.js') and in_tested_locations(path) and not is_excluded(path):
