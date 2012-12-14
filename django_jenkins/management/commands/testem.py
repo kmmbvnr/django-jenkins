@@ -6,9 +6,7 @@ from django_jenkins.management.commands import TaskListCommand
 class Command(TaskListCommand):
     help = "Run testem based on listed yml files"
     args = 'yml files path'
-    option_list = TaskListCommand.option_list + (
-        make_option('cl'),
-    )
+    option_list = TaskListCommand.option_list
 
     def get_task_list(self):
         return ('django_jenkins.tasks.run_testem',)

@@ -15,14 +15,13 @@ class Task(BaseTask):
 
         root_dir = os.path.normpath(os.path.dirname(__file__))
 
-        self.config = 'ci'
         self.tests = options['testem_tests']
 
     def teardown_test_environment(self, **kwargs):
 
         for test in self.tests:
             testem_output = check_output(
-                ['testem', self.config, test])
+                ['testem ci', self.config, test])
             self.output.write(testem.decode('utf-8'))
 
         if self.to_file:
