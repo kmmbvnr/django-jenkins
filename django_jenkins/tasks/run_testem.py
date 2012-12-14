@@ -12,17 +12,32 @@ class Task(BaseTask):
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
+        self.test_all = options['test_all']
 
-        root_dir = os.path.normpath(os.path.dirname(__file__))
+    def test_files_iterator(self):
+        locations = get_apps_locations(self.test_labels, self.test_all)
+ 
+        def in_tested_locations(path):
+            for location in list(locations):
+                if path.startswith(location):
+                    return True
+            return False
+ 
+         # scan apps directories for static folders
+        for location in locations:
+            for dirpath, dirnames, filenames in os.walk(os.path.join(location, 'testem')):
+                for filename in filenames:
+                    path = os.path.join(dirpath, filename)
+                    if filename.endswith('.yml') and in_tested_locations(path):
+                        yield path
 
-        self.tests = options['testem_tests']
 
     def teardown_test_environment(self, **kwargs):
 
-        for test in self.tests:
+        for test in self.test_files_iterator():
             testem_output = check_output(
-                ['testem ci', self.config, test])
-            self.output.write(testem.decode('utf-8'))
+                ['testem -f ci', test])
+            self.output.write(testem_output.decode('utf-8'))
 
         if self.to_file:
             self.output.write('</testem>');
