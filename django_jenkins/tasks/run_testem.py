@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
-import sys
-import codecs
-import fnmatch
-from optparse import make_option
-from django.conf import settings
-from django_jenkins.functions import check_output, find_first_existing_executable
+from django_jenkins.functions import check_output
 from django_jenkins.tasks import BaseTask, get_apps_locations
+
 
 class Task(BaseTask):
 
@@ -16,13 +12,13 @@ class Task(BaseTask):
 
     def test_files_iterator(self):
         locations = get_apps_locations(self.test_labels, self.test_all)
- 
+
         def in_tested_locations(path):
             for location in list(locations):
                 if path.startswith(location):
                     return True
             return False
- 
+
          # scan apps directories for static folders
         for location in locations:
             for dirpath, dirnames, filenames in os.walk(os.path.join(location, 'testem')):
@@ -32,13 +28,13 @@ class Task(BaseTask):
                     if filename.endswith('.yml') and in_tested_locations(path):
                         yield path
 
-
     def teardown_test_environment(self, **kwargs):
 
         for test in self.test_files_iterator():
-            testem_output = check_output(
-                ['testem -f ci', test])
-            self.output.write(testem_output.decode('utf-8'))
+            print test
+            # testem_output = check_output(
+            #     ['testem -f ci', test])
+            # self.output.write(testem_output.decode('utf-8'))
 
         if self.to_file:
-            self.output.write('</testem>');
+            self.output.write('</testem>')
