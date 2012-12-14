@@ -28,6 +28,7 @@ class Task(BaseTask):
             for dirpath, dirnames, filenames in os.walk(os.path.join(location, 'testem')):
                 for filename in filenames:
                     path = os.path.join(dirpath, filename)
+                    print path
                     if filename.endswith('.yml') and in_tested_locations(path):
                         yield path
 
