@@ -7,9 +7,9 @@ from django.test import LiveServerTestCase
 
 
 class SaintyChecks(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        raise Exception("Ups, should be disabled")
+    #@classmethod
+    #def setUpClass(cls):
+    #    raise Exception("Ups, should be disabled")
 
     def test_mailbox_stubs_not_broken(self):
         print("Testing mailbox django stubs")
