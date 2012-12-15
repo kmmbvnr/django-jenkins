@@ -3,19 +3,14 @@ import os
 import sys
 import codecs
 import fnmatch
+import subprocess
 from optparse import make_option
 from django.conf import settings
-from django_jenkins.functions import check_output, find_first_existing_executable
+from django_jenkins.functions import CalledProcessError
 from django_jenkins.tasks import BaseTask, get_apps_locations
 
 class Task(BaseTask):
-    option_list = [make_option("--jshint-interpreter",
-                               dest="jshint_interpreter",
-                               help="Javascript interpreter for running jshint"),
-                   make_option("--jshint-implementation",
-                               dest="jshint_implementation",
-                               help="Full path to jshint.js, by default used build-in"),
-                   make_option("--jshint-with-staticdirs",
+    option_list = [make_option("--jshint-with-staticdirs",
                                dest="jshint-with-staticdirs",
                                default=False, action="store_true",
                                help="Check js files located in STATIC_DIRS settings"),
@@ -25,10 +20,7 @@ class Task(BaseTask):
                                help="Do not ignore .min.js files"),
                    make_option("--jshint-exclude",
                                dest="jshint_exclude", default="",
-                               help="Exclude patterns"),
-                   make_option("--jshint-config",
-                               dest="jshint_config", default="{ browser: true }",
-                               help="JSHINT options see http://www.jshint.com/docs/")]                               
+                               help="Exclude patterns")]                               
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
@@ -36,20 +28,6 @@ class Task(BaseTask):
         self.to_file = options.get('jshint_file_output', True)
         self.with_static_dirs = options.get('jshint-with-staticdirs', False)
         self.jshint_with_minjs = options.get('jshint_with-minjs', False)
-
-        root_dir = os.path.normpath(os.path.dirname(__file__))
-
-        self.interpreter = options['jshint_interpreter'] or \
-                          getattr(settings, 'JSHINT_INTERPRETER', None)
-        if not self.interpreter:
-            self.interpreter = find_first_existing_executable(
-                [('node', '--help'), ('rhino', '--help')])
-            if not self.interpreter:
-                raise ValueError('No suitable js interpreter found. Please install nodejs or rhino')
-
-        self.implementation = options['jshint_implementation']
-        if not self.implementation:
-            self.implementation = os.path.join(root_dir, 'jshint', 'jshint.js')
 
         if self.to_file:
             output_dir = options['output_dir']
@@ -59,25 +37,24 @@ class Task(BaseTask):
         else:
             self.output = sys.stdout
 
-        self.runner = os.path.join(root_dir, 'jshint_runner.js')
         self.exclude = options['jshint_exclude'].split(',')
-        self.config = options['jshint_config']
 
     def teardown_test_environment(self, **kwargs):
-        fmt = 'text'
-        if self.to_file:
-            fmt = 'xml'
+        files = [path for path in self.static_files_iterator()]
 
+        cmd = ['jshint']
         if self.to_file:
-            self.output.write('<?xml version=\"1.0\" encoding=\"utf-8\"?><jslint>')
+            cmd += ['--jslint-reporter']
+        cmd += files
+        
+        process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        output, err = process.communicate()
+        retcode = process.poll()
+        if retcode not in [0, 1]: # normal csslint return codes
+            raise CalledProcessError(retcode, cmd, output=output + '\n' + err)
 
-        for path in self.static_files_iterator():
-            jshint_output = check_output(
-                [self.interpreter, self.runner, self.implementation, path, fmt, self.config])
-            self.output.write(jshint_output.decode('utf-8'))
+        self.output.write(output.decode('utf-8'))
 
-        if self.to_file:
-            self.output.write('</jslint>');
 
     def static_files_iterator(self):
         locations = get_apps_locations(self.test_labels, self.test_all)

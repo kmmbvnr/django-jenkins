@@ -1,6 +1,3 @@
 [submodule "django_jenkins/tasks/csslint"]
 	path = django_jenkins/tasks/csslint
 	url = https://github.com/stubbornella/csslint.git
-[submodule "django_jenkins/tasks/jshint"]
-	path = django_jenkins/tasks/jshint
-	url = https://github.com/jshint/jshint.git
