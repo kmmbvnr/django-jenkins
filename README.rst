@@ -180,7 +180,9 @@ Here is the list of tasks prebuild with django-jenkins
 
 Changelog
 ---------
+
 0.14.0 2012-12-15
+~~~~~~~~~~~~~~~~~
 * Python 3 (with django 1.5) support
 * JSHint no longer shipped with django-jenkins. Install it with ``npm install jshint -g``
 
