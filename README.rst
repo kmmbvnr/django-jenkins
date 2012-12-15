@@ -182,6 +182,9 @@ Here is the list of tasks prebuild with django-jenkins
 
 Changelog
 ---------
+0.14.0 2012-12-15
+* JSHint no longer shipped with django-jenkins. Install him with `npm install jshint -g`
+
 
 0.13.0 2012-07-15
 ~~~~~~~~~~~~~~~~~
