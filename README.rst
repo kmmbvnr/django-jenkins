@@ -108,10 +108,8 @@ Here is the list of tasks prebuild with django-jenkins
   Runs jshint tools over ``<app>/static/*/*.js`` files.
   Creates Pylint compatible report for Jenkins
 
-  You should have the rhino_ or nodejs_ javascript interpreter installed for jshint
+  You should have the jshint installed
   
-  Task-specific settings: ``JSHINT_INTERPRETER``, ``JSHINT_CHECKED_FILES``
-
 - ``django_jenkins.tasks.run_csslint``
 
   Runs CSS lint tools over `app/static/*/*.css` files.
@@ -183,7 +181,8 @@ Here is the list of tasks prebuild with django-jenkins
 Changelog
 ---------
 0.14.0 2012-12-15
-* JSHint no longer shipped with django-jenkins. Install him with `npm install jshint -g`
+* Python 3 (with django 1.5) support
+* JSHint no longer shipped with django-jenkins. Install it with ``npm install jshint -g``
 
 
 0.13.0 2012-07-15
