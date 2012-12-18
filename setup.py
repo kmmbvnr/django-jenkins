@@ -19,7 +19,7 @@ class build_with_submodules(build):
 setup(
     name = 'django-jenkins',
     cmdclass={"build": build_with_submodules},
-    version = '0.14.0.1',
+    version = '0.14.0.2',
     author = 'Mikhail Podgurskiy',
     author_email = 'kmmbvnr@gmail.com',
     description = 'Plug and play continuous integration with django and jenkins',
@@ -28,7 +28,7 @@ setup(
     platforms = ['Any'],
     keywords = ['pyunit', 'unittest', 'testrunner', 'hudson', 'jenkins', 
                 'django', 'pylint', 'pep8', 'pyflakes', 'csslint', 'jshint',
-                'coverage'],
+                'coverage', 'testem'],
     url = 'http://github.com/kmmbvnr/django-jenkins',
     classifiers = [
         'Development Status :: 4 - Beta',
