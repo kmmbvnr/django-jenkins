@@ -7,7 +7,8 @@ class Command(TaskListCommand):
     help = "Run pylint over project apps"
     args = '[appname ...]'
     option_list = TaskListCommand.option_list + (
-        make_option('--pylint-file-output', action='store_true', dest='pylint_file_output', default=False,
+        make_option('--pylint-file-output', action='store_true',
+                    dest='pylint_file_output', default=False,
             help='Store pylint report in file'),
     )
 

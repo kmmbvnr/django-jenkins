@@ -7,7 +7,8 @@ class Command(TaskListCommand):
     help = "Run csslint over project apps"
     args = '[appname ...]'
     option_list = TaskListCommand.option_list + (
-        make_option('--csslint-file-output', action='store_true', dest='csslint_file_output', default=False,
+        make_option('--csslint-file-output', action='store_true',
+                    dest='csslint_file_output', default=False,
             help='Store csslint report in file'),
     )
 

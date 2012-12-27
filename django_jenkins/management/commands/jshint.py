@@ -7,7 +7,8 @@ class Command(TaskListCommand):
     help = "Run jshint over project apps"
     args = '[appname ...]'
     option_list = TaskListCommand.option_list + (
-        make_option('--jshint-file-output', action='store_true', dest='jshint_file_output', default=False,
+        make_option('--jshint-file-output', action='store_true',
+                    dest='jshint_file_output', default=False,
             help='Store jshint report in file'),
     )
 

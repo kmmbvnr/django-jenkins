@@ -21,7 +21,8 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
         if not self.test_labels:
             if hasattr(settings, 'PROJECT_APPS') and not options['test_all']:
-                self.test_labels = [app_name.split('.')[-1] for app_name in settings.PROJECT_APPS]
+                self.test_labels = [app_name.split('.')[-1]
+                                        for app_name in settings.PROJECT_APPS]
 
         self.lettuce_server = options['lettuce-server']
         self.output_dir = options['output_dir']
@@ -45,7 +46,8 @@ class Task(BaseTask):
         for app_path, app_module in paths:
             runner = Runner(app_path,
                             enable_xunit=True,
-                            xunit_filename=os.path.join(self.output_dir, 'lettuce.xml'))
+                            xunit_filename=os.path.join(
+                                               self.output_dir, 'lettuce.xml'))
 
             suite.addTest(LettuceTestCase(runner, app_module))
 

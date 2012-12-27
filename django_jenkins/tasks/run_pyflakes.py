@@ -29,7 +29,8 @@ class Task(BaseTask):
             output_dir = options['output_dir']
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-            self.output = open(os.path.join(output_dir, 'pyflakes.report'), 'w')
+            self.output = open(os.path.join(output_dir,
+                                            'pyflakes.report'), 'w')
         else:
             self.output = sys.stdout
 
@@ -42,12 +43,15 @@ class Task(BaseTask):
         try:
             for location in locations:
                 if os.path.isdir(location):
-                    for dirpath, dirnames, filenames in os.walk(relpath(location)):
-                        if not self.with_migrations and 'migrations' in dirpath:
+                    for dirpath, dirnames, filenames in \
+                                        os.walk(relpath(location)):
+                        if not self.with_migrations and \
+                                'migrations' in dirpath:
                             continue
                         for filename in filenames:
                             if filename.endswith('.py'):
-                                pyflakes.checkPath(os.path.join(dirpath, filename))
+                                pyflakes.checkPath(os.path.join(dirpath,
+                                                                filename))
                 else:
                     pyflakes.checkPath(relpath(location))
         finally:
