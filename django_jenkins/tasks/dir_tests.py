@@ -14,13 +14,14 @@ from django_jenkins.tasks import BaseTask, get_app_location
 def build_suite(app):
     discovery_root = get_app_location(app)
     if os.path.isdir(os.path.join(discovery_root, 'tests')):
-         discovery_root = os.path.join(discovery_root, 'tests')
-         top_level_dir = discovery_root
+        discovery_root = os.path.join(discovery_root, 'tests')
+        top_level_dir = discovery_root
     else:
         top_level_dir = discovery_root
         for _ in range(0, app.__name__.count('.')):
             top_level_dir = os.path.dirname(top_level_dir)
-    return defaultTestLoader.discover(discovery_root, top_level_dir=top_level_dir)
+    return defaultTestLoader.discover(discovery_root,
+                                      top_level_dir=top_level_dir)
 
 
 class Task(BaseTask):
@@ -28,7 +29,8 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
         if not self.test_labels:
             if hasattr(settings, 'PROJECT_APPS') and not options['test_all']:
-                self.test_labels = [app_name.split('.')[-1] for app_name in settings.PROJECT_APPS]
+                self.test_labels = [app_name.split('.')[-1]
+                                        for app_name in settings.PROJECT_APPS]
 
     def build_suite(self, suite, **kwargs):
         if self.test_labels:
@@ -44,4 +46,3 @@ class Task(BaseTask):
         else:
             for app in get_apps():
                 suite.addTest(build_suite(app))
-

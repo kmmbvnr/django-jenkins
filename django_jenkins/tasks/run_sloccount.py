@@ -12,7 +12,7 @@ class Task(BaseTask):
                     action="store_true", default=False,
                     dest="sloccount_with_migrations",
                     help="Count migrations sloc.")]
-    
+
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
         self.test_all = options['test_all']
@@ -22,13 +22,13 @@ class Task(BaseTask):
             output_dir = options['output_dir']
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-            self.output = open(os.path.join(output_dir, 'sloccount.report'), 'w')
+            self.output = open(os.path.join(output_dir,
+                                            'sloccount.report'), 'w')
         else:
-            self.output = sys.stdout 
-        
-                                  
+            self.output = sys.stdout
+
     def teardown_test_environment(self, **kwargs):
-        locations = get_apps_locations(self.test_labels, self.test_all)  
+        locations = get_apps_locations(self.test_labels, self.test_all)
 
         report_output = check_output(
             ['sloccount', "--duplicates", "--wide", "--details"] + locations)
@@ -42,4 +42,3 @@ class Task(BaseTask):
                     continue
                 self.output.write(line)
                 self.output.write('\n')
-
