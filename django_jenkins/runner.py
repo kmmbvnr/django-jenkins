@@ -60,7 +60,8 @@ class XMLTestResult(TextTestResult):
         """
         Called when the given test is about to be run
         """
-        self.currentTestInfo = TestInfo(test_method=test, start_time=datetime.now())
+        self.currentTestInfo = TestInfo(test_method=test,
+                                        start_time=datetime.now())
         super(XMLTestResult, self).startTest(test)
 
     def stopTest(self, test):
@@ -185,32 +186,39 @@ class XMLTestResult(TextTestResult):
             document.startDocument()
             document.startElement('testsuites', AttributesImpl({}))
 
-            suites = groupby(self.testInfos, key=lambda test_info: self.test_case_name(test_info.test_method))
+            suites = groupby(self.testInfos,
+                             key=lambda test_info: self.test_case_name(
+                                                        test_info.test_method))
             for suite_name, suite in suites:
-                document.startElement('testsuite', AttributesImpl({'name' : suite_name}))
+                document.startElement('testsuite',
+                                      AttributesImpl({'name': suite_name}))
 
                 for test_info in suite:
                     document.startElement('testcase', AttributesImpl({
-                        'classname' : suite_name,
-                        'name' : self.test_method_name(test_info.test_method),
-                        'time' : '%3f' % total_seconds(test_info.end_time - test_info.start_time)
+                        'classname': suite_name,
+                        'name': self.test_method_name(test_info.test_method),
+                        'time': '%3f' % total_seconds(
+                                    test_info.end_time - test_info.start_time)
                     }))
 
                     if test_info.result == TestInfo.RESULT.ERROR:
                         document.startElement('error', AttributesImpl({
-                            'message' : smart_text(test_info.err[1])
+                            'message': smart_text(test_info.err[1])
                         }))
-                        document.characters(self._exc_info_to_string(test_info.err, test_info.test_method))
+                        document.characters(self._exc_info_to_string(
+                                        test_info.err, test_info.test_method))
                         document.endElement('error')
                     elif test_info.result == TestInfo.RESULT.FAILURE:
                         document.startElement('failure', AttributesImpl({
-                            'message' : smart_text(test_info.err[1])
+                            'message': smart_text(test_info.err[1])
                         }))
-                        document.characters(self._exc_info_to_string(test_info.err, test_info.test_method))
+                        document.characters(self._exc_info_to_string(
+                                        test_info.err, test_info.test_method))
                         document.endElement('failure')
-                    elif test_info.result == TestInfo.RESULT.UNEXPECTED_SUCCESS:
+                    elif test_info.result == \
+                                    TestInfo.RESULT.UNEXPECTED_SUCCESS:
                         document.startElement('error', AttributesImpl({
-                            'message' : 'Unexpected success'
+                            'message': 'Unexpected success'
                         }))
                         document.endElement('error')
                     elif test_info.result == TestInfo.RESULT.SKIPPED:
@@ -254,7 +262,9 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
 
     def setup_databases(self):
         if 'south' in settings.INSTALLED_APPS:
-            from south.management.commands import patch_for_test_db_setup  # pylint: disable=F0401
+            from south.management.commands import (
+                    patch_for_test_db_setup  # pylint: disable=F0401
+                    )
             patch_for_test_db_setup()
         return super(CITestSuiteRunner, self).setup_databases()
 

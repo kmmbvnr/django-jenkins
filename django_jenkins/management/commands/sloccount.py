@@ -7,7 +7,8 @@ class Command(TaskListCommand):
     help = "Run sloccount over project apps"
     args = '[appname ...]'
     option_list = TaskListCommand.option_list + (
-        make_option('--sloccount-file-output', action='store_true', dest='sloccount_file_output', default=False,
+        make_option('--sloccount-file-output', action='store_true',
+                    dest='sloccount_file_output', default=False,
             help='Store sloccount report in file'),
     )
 

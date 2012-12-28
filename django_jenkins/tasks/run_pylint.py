@@ -23,7 +23,8 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
 
         self.test_all = options['test_all']
-        self.config_path = options['pylint_rcfile'] or Task.default_config_path()
+        self.config_path = options['pylint_rcfile'] or \
+                                Task.default_config_path()
         self.errors_only = options['pylint_errors_only']
 
         if options.get('pylint_file_output', True):
@@ -40,7 +41,8 @@ class Task(BaseTask):
             args += ['--errors-only']
         args += get_apps_under_test(self.test_labels, self.test_all)
 
-        lint.Run(args, reporter=ParseableTextReporter(output=self.output), exit=False)
+        lint.Run(args, reporter=ParseableTextReporter(output=self.output),
+                                                      exit=False)
 
         return True
 
