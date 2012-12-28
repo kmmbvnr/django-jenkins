@@ -36,20 +36,21 @@ class Task(BaseTask):
         self.test_apps = get_apps_under_test(test_labels, options['test_all'])
         self.output_dir = options['output_dir']
         self.with_migrations = options.get('coverage_with_migrations',
-                                           getattr(settings,
-                                                   'COVERAGE_WITH_MIGRATIONS',
-                                                   False))
-        self.html_dir = options.get('coverage_html_report_dir',
                                     getattr(settings,
-                                            'COVERAGE_REPORT_HTML_OUTPUT_DIR',
-                                            ''))
+                                            'COVERAGE_WITH_MIGRATIONS', False))
+
+        self.html_dir = options.get('coverage_html_report_dir') or \
+                            getattr(settings,
+                                    'COVERAGE_REPORT_HTML_OUTPUT_DIR', '')
+
         self.branch = options.get('coverage_measure_branch',
                                   getattr(settings,
                                           'COVERAGE_MEASURE_BRANCH', True))
 
         self.exclude_locations = []
-        for modname in options.get('coverage_excludes',
-                                   getattr(settings, 'COVERAGE_EXCLUDES', [])):
+        modnames = options.get('coverage_excludes') or \
+                        getattr(settings, 'COVERAGE_EXCLUDES', [])
+        for modname in modnames:
             try:
                 self.exclude_locations.append(
                         os.path.dirname(
@@ -59,8 +60,15 @@ class Task(BaseTask):
             except ImportError:
                 pass
 
+        # Extra folders to exclude. Particularly useful to specify things like
+        # apps/company/migrations/*
+        self.exclude_locations.extend(
+                        getattr(settings, 'COVERAGE_EXCLUDES_FOLDERS', []))
+        #import ipdb; ipdb.set_trace()
+
         self.coverage = coverage(branch=self.branch,
                                  source=self.test_apps,
+                                 omit=self.exclude_locations,
                                  config_file=options.get('coverage_rcfile') or
                                                  Task.default_config_path())
 
