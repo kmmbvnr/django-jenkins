@@ -13,11 +13,21 @@ from django_jenkins.functions import relpath
 
 from StringIO import StringIO
 
+from optparse import make_option
+
 
 class Task(BaseTask):
     """
     Runs flake8 on python files.
     """
+    option_list = [
+        make_option(
+            '--max-complexity',
+            dest='max_complexity',
+            default='-1',
+            help='McCabe complexity treshold'
+        ),
+    ]
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
@@ -25,6 +35,8 @@ class Task(BaseTask):
         output_dir = options['output_dir']
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
+
+        self.max_complexity = int(options['max_complexity'])
 
         # We always write to a file. Can't think of a scenario
         # when jenkins would want to write the report to stdout.
@@ -54,9 +66,12 @@ class Task(BaseTask):
         sys.stdout = flake8_output
         warnings = 0
         for path in paths:
-            # We could pass ignore paths and max complexity there,
+            # We could pass ignore paths
             # but I need to figure out first how to do it
-            warnings += flake8.run.check_file(path)
+            warnings += flake8.run.check_file(
+                path,
+                complexity=self.max_complexity
+            )
 
         sys.stdout = old_stdout
 
