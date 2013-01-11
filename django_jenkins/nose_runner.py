@@ -98,12 +98,8 @@ class CINoseTestSuiteRunner(CITestSuiteRunner, BasicNoseRunner):
         return result
 
     def run_tests(self, test_labels, extra_tests=None):
-        self.setup_test_environment()
-        old_config = self.setup_databases()
         argv = sys.argv[:2]
         sys.argv, argv = argv, sys.argv
         result = BasicNoseRunner.run_tests(self, test_labels, extra_tests=None)
-        self.teardown_databases(old_config)
-        self.teardown_test_environment()
         sys.argv = argv
         return result
