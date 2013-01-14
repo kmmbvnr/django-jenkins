@@ -140,6 +140,15 @@ Here is the list of tasks prebuild with django-jenkins
 
 .. _Pyflakes: http://pypi.python.org/pypi/pyflakes
 
+- ``django_jenkins.tasks.run_flake8``
+
+  Runs flake8 tool over selected Django apps.
+  Creates Pylint compatible report for Jenkins.
+
+  You should have flake8_ python package installed to run this task.
+
+.. _flake8: http://pypi.python.org/pypi/flake8
+
 - ``django_jenkins.tasks.run_sloccount``
 
   Runs SLOCCount_ tool over selected Django apps.
