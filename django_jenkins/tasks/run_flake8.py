@@ -1,6 +1,8 @@
 import os
 import sys
 
+from io import BytesIO
+
 # Use pep8 from flake8 to avoid weird errors resulting from
 # version mismatch.
 from flake8 import pep8
@@ -10,8 +12,6 @@ from django_jenkins.tasks import (
     get_apps_locations
 )
 from django_jenkins.functions import relpath
-
-from StringIO import StringIO
 
 from optparse import make_option
 
@@ -32,21 +32,24 @@ class Task(BaseTask):
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
         self.test_all = options['test_all']
-        output_dir = options['output_dir']
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
 
         self.max_complexity = int(options['max_complexity'])
 
-        # We always write to a file. Can't think of a scenario
-        # when jenkins would want to write the report to stdout.
-        self.output = open(
-            os.path.join(
-                output_dir,
-                'flake8.report'
-            ),
-            'w'
-        )
+        if options.get('flake8_file_output', True):
+
+            output_dir = options['output_dir']
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+
+            self.output = open(
+                os.path.join(
+                    output_dir,
+                    'flake8.report'
+                ),
+                'w'
+            )
+        else:
+            self.output = sys.stdout
 
     def teardown_test_environment(self, **kwargs):
         # Local import to avoid intallation errors.
@@ -62,7 +65,7 @@ class Task(BaseTask):
             parse_argv=False,
             config_file=False
         )
-        old_stdout, flake8_output = sys.stdout, StringIO()
+        old_stdout, flake8_output = sys.stdout, BytesIO()
         sys.stdout = flake8_output
         warnings = 0
         for path in paths:
