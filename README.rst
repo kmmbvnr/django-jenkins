@@ -76,6 +76,11 @@ Settings
   and ``jtest`` commands. Class should be inherited from
   ``django_jenkins.runner.CITestSuiteRunner``
 
+  A runner has been added for people using nose in their project. This runner is using django_nose so you will need to have that installed if you want to use this runner.::
+
+    JENKINS_TEST_RUNNER='django_jenkins.nose_runner.CINoseTestSuiteRunner'
+
+  
 Tasks
 -----
 
