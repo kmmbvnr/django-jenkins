@@ -22,7 +22,10 @@ class Task(BaseTask):
                        help="Do not ignore .min.js files"),
            make_option("--jshint-exclude",
                        dest="jshint_exclude", default="",
-                       help="Exclude patterns")]
+                       help="Exclude patterns"),
+           make_option("--jshint-static-dirname",
+                       dest="jshint_static-dirname", default="static",
+                       help="Name of dir with js static files")]
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
@@ -41,6 +44,7 @@ class Task(BaseTask):
             self.output = sys.stdout
 
         self.exclude = options['jshint_exclude'].split(',')
+        self.static_dirname = options.get('jshint_static-dirname', 'static')
 
     def teardown_test_environment(self, **kwargs):
         files = [path for path in self.static_files_iterator()]
@@ -97,7 +101,7 @@ class Task(BaseTask):
             # scan apps directories for static folders
             for location in locations:
                 for dirpath, dirnames, filenames in \
-                        os.walk(os.path.join(location, 'static')):
+                        os.walk(os.path.join(location, self.static_dirname)):
                     for filename in filenames:
                         path = os.path.join(dirpath, filename)
                         if filename.endswith('.js') and \
