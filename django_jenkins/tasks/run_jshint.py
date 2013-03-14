@@ -53,7 +53,7 @@ class Task(BaseTask):
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
         output, err = process.communicate()
         retcode = process.poll()
-        if retcode not in [0, 1]:  # normal csslint return codes
+        if retcode not in [0, 2]:  # normal jshint return codes
             raise CalledProcessError(retcode, cmd, output=output + '\n' + err)
 
         self.output.write(output.decode('utf-8'))
