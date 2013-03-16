@@ -11,6 +11,6 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install --use-mirrors logilab-common==0.57 ; fi
   - if [[ $TRAVIS_PYTHON_VERSION == '3.2' ]]; then pip install --use-mirrors git+https://github.com/django/django.git  ; fi
   - if [[ $TRAVIS_PYTHON_VERSION == '3.2' ]]; then pip install --use-mirrors hg+http://hg.logilab.org/pylint ; fi
-  - pip install --use-mirrors -r requirements.txt
+  - pip install --use-mirrors -r tests/requirements.txt
 script: 
   - python tests/manage.py jenkins --pep8-max-line-length=150 --liveserver=localhost:8090-8100
