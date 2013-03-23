@@ -290,5 +290,5 @@ Contributors:
 * Kris Kumler (https://github.com/kkumler)
 
 Special thanks, for all github forks authors not listed here 
-for for project extensions ideas and problem identifications.
+for project extensions ideas and problem identifications.
 
