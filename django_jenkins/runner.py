@@ -143,13 +143,13 @@ class XMLTestResult(TextTestResult):
             msgLines = traceback.format_exception(exctype, value, tb)
 
         if self.buffer:
-            output = self._stdout_buffer.getvalue()
-            error = self._stderr_buffer.getvalue()
-            if output:
+            if self._stdout_buffer:
+                output = self._stdout_buffer.getvalue()
                 if not output.endswith('\n'):
                     output += '\n'
                 msgLines.append(STDOUT_LINE % output)
-            if error:
+            if self._stderr_buffer:
+                error = self._stderr_buffer.getvalue()
                 if not error.endswith('\n'):
                     error += '\n'
                 msgLines.append(STDERR_LINE % error)
