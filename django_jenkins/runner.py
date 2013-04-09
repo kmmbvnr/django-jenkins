@@ -145,14 +145,16 @@ class XMLTestResult(TextTestResult):
         if self.buffer:
             if self._stdout_buffer:
                 output = self._stdout_buffer.getvalue()
-                if not output.endswith('\n'):
-                    output += '\n'
-                msgLines.append(STDOUT_LINE % output)
+                if output:
+                    if not output.endswith('\n'):
+                        output += '\n'
+                    msgLines.append(STDOUT_LINE % output)
             if self._stderr_buffer:
                 error = self._stderr_buffer.getvalue()
-                if not error.endswith('\n'):
-                    error += '\n'
-                msgLines.append(STDERR_LINE % error)
+                if error:
+                    if not error.endswith('\n'):
+                        error += '\n'
+                    msgLines.append(STDERR_LINE % error)
         return ''.join(msgLines)
 
     def test_method_name(self, test):
