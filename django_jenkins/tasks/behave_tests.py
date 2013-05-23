@@ -9,6 +9,7 @@ from django.test import LiveServerTestCase
 
 import unittest
 import sys
+import string
 
 from os.path import dirname, abspath, join, isdir
 
@@ -26,67 +27,71 @@ def get_features(app_module):
     else:
         return None
 
-class DjangoBehaveTestCase(LiveServerTestCase):
-    def __init__(self, features_dir):
-        unittest.TestCase.__init__(self)
-        self.features_dir = features_dir
-        # sys.argv kludge
-        # need to understand how to do this better
-        # temporarily lose all the options etc
-        # else behave will complain
-        old_argv = sys.argv
-        sys.argv = old_argv[:2]
-        self.behave_config = Configuration()
-        sys.argv = old_argv
-        # end of sys.argv kludge
-        self.behave_config.paths = [features_dir]
-        self.behave_config.format = ['pretty']
+def testCaseFactory(name):
+    class DjangoBehaveTestCase(LiveServerTestCase):
+        def __init__(self, features_dir):
+            unittest.TestCase.__init__(self)
+            self.features_dir = features_dir
+            # sys.argv kludge
+            # need to understand how to do this better
+            # temporarily lose all the options etc
+            # else behave will complain
+            old_argv = sys.argv
+            sys.argv = old_argv[:2]
+            self.behave_config = Configuration()
+            sys.argv = old_argv
+            # end of sys.argv kludge
+            self.behave_config.paths = [features_dir]
+            self.behave_config.format = ['pretty']
 
-        self.behave_config.server_url = 'http://localhost:8081'
+            self.behave_config.server_url = 'http://localhost:8081'
 
-        # disable these in case you want to add set_trace in the tests you're developing
-        self.behave_config.stdout_capture = False
-        self.behave_config.stderr_capture = False
+            # disable these in case you want to add set_trace in the tests you're developing
+            self.behave_config.stdout_capture = False
+            self.behave_config.stderr_capture = False
 
-    def runTest(self, result=None):
-        # run behave on a single directory
-        print "run: features_dir=%s" % (self.features_dir)
+        def runTest(self, result=None):
+            # run behave on a single directory
+            print "run: features_dir=%s" % (self.features_dir)
 
-        # from behave/__main__.py
-        runner = Runner(self.behave_config)
-        try:
-            failed = runner.run()
-        except ParserError, e:
-            sys.exit(str(e))
-        except ConfigError, e:
-            sys.exit(str(e))
+            # from behave/__main__.py
+            runner = Runner(self.behave_config)
+            try:
+                failed = runner.run()
+            except ParserError, e:
+                sys.exit(str(e))
+            except ConfigError, e:
+                sys.exit(str(e))
 
-        if self.behave_config.show_snippets and runner.undefined:
-            msg = u"\nYou can implement step definitions for undefined steps with "
-            msg += u"these snippets:\n\n"
-            printed = set()
+            if self.behave_config.show_snippets and runner.undefined:
+                msg = u"\nYou can implement step definitions for undefined steps with "
+                msg += u"these snippets:\n\n"
+                printed = set()
 
-            if sys.version_info[0] == 3:
-                string_prefix = "('"
-            else:
-                string_prefix = u"(u'"
+                if sys.version_info[0] == 3:
+                    string_prefix = "('"
+                else:
+                    string_prefix = u"(u'"
 
-            for step in set(runner.undefined):
-                if step in printed:
-                    continue
-                printed.add(step)
+                for step in set(runner.undefined):
+                    if step in printed:
+                        continue
+                    printed.add(step)
 
-                msg += u"@" + step.step_type + string_prefix + step.name + u"')\n"
-                msg += u"def impl(context):\n"
-                msg += u"    assert False\n\n"
+                    msg += u"@" + step.step_type + string_prefix + step.name + u"')\n"
+                    msg += u"def impl(context):\n"
+                    msg += u"    assert False\n\n"
 
-            sys.stderr.write(escapes['undefined'] + msg + escapes['reset'])
-            sys.stderr.flush()
+                sys.stderr.write(escapes['undefined'] + msg + escapes['reset'])
+                sys.stderr.flush()
 
-        self.assertFalse(failed)
+            self.assertFalse(failed)
+
+    DjangoBehaveTestCase.__name__ = name
+    return DjangoBehaveTestCase
         
-def make_test_suite(features_dir):
-    return DjangoBehaveTestCase(features_dir=features_dir)
+def make_test_suite(features_dir, app_label):
+    return testCaseFactory(app_label)(features_dir=features_dir)
 
 class Task(BaseTask):
     def __init__(self, test_labels, options):
@@ -108,5 +113,5 @@ class Task(BaseTask):
             features_dir = get_features(app)
             if features_dir is not None:
                 # build a test suite for this directory
-                features_test_suite = make_test_suite(features_dir)
+                features_test_suite = make_test_suite(features_dir, label)
                 suite.addTest(features_test_suite)
