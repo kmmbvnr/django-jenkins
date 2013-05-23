@@ -99,7 +99,7 @@ class Task(BaseTask):
     def build_suite(self, suite, **kwargs):
         for label in self.test_labels:
             if '.' in label:
-                print "Ignoring label with dot in: " % label
+                print "Ignoring label with dot in: %s" % label
                 continue
             app = get_app(label)
             
