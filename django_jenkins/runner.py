@@ -6,11 +6,16 @@ from itertools import groupby
 from xml.sax.saxutils import XMLGenerator
 from xml.sax.xmlreader import AttributesImpl
 from django.conf import settings
-from django.test.simple import DjangoTestSuiteRunner, reorder_suite
+from django.test.simple import DjangoTestSuiteRunner
 from django.test.testcases import TestCase
 from django.utils.unittest import TestSuite, TextTestResult, TextTestRunner
 from django_jenkins import signals
 from django_jenkins.functions import total_seconds
+
+try:
+    from django.test.simple import reorder_suite
+except ImportError:
+    from django.test.runner import reorder_suite
 
 try:
     from django.utils.encoding import smart_text
