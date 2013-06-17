@@ -3,6 +3,7 @@ import os
 import subprocess
 import sys
 import fnmatch
+import codecs
 from optparse import make_option
 from django.conf import settings
 from django_jenkins.functions import (CalledProcessError,
@@ -64,7 +65,7 @@ class Task(BaseTask):
             output_dir = options['output_dir']
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-            self.output = open(os.path.join(output_dir, 'csslint.report'), 'w')
+            self.output = codecs.open(os.path.join(output_dir, 'csslint.report'), 'w', 'utf-8')
         else:
             self.output = sys.stdout
 
