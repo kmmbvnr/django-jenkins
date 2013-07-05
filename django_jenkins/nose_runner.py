@@ -84,7 +84,7 @@ class CINoseTestSuiteRunner(CITestSuiteRunner, BasicNoseRunner):
         cfg_files = all_config_files()
         manager = DefaultPluginManager()
         config = Config(env=os.environ, files=cfg_files, plugins=manager)
-        config.plugins.addPlugins(extraplugins=plugins_to_add)
+        config.plugins.addPlugins(plugins=plugins_to_add)
         text_test_runner = XMLTextNoseTestRunner(config=config, verbosity=self.verbosity)
         nose.core.TestProgram(argv=nose_argv,
                               exit=False,
