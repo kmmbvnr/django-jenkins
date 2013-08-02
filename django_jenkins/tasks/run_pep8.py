@@ -2,7 +2,10 @@
 import os
 import sys
 import pep8
+
 from optparse import make_option
+from django.conf import settings
+
 from django_jenkins.functions import relpath
 from django_jenkins.tasks import BaseTask, get_apps_locations
 
@@ -23,6 +26,8 @@ class Task(BaseTask):
                    dest="pep8-max-line-length", type='int',
                    help="set maximum allowed line length (default: %d)" %
                                                          pep8.MAX_LINE_LENGTH),
+       make_option("--pep8-rcfile", dest="pep8-rcfile",
+                   help="PEP8 configuration file"),
 
     ]
 
@@ -38,6 +43,7 @@ class Task(BaseTask):
         else:
             self.output = sys.stdout
 
+        self.pep8_rcfile = options['pep8-rcfile'] or Task.default_config_path()
         self.pep8_options = {'exclude': options['pep8-exclude'].split(',')}
         if options['pep8-select']:
             self.pep8_options['select'] = options['pep8-select'].split(',')
@@ -61,7 +67,7 @@ class Task(BaseTask):
                 self.output.write('%s:%s:%s: %s\n' %
                             (instance.filename, sourceline, offset + 1, text))
 
-        pep8style = pep8.StyleGuide(parse_argv=False, config_file=False,
+        pep8style = pep8.StyleGuide(parse_argv=False, config_file=self.pep8_rcfile,
                                     reporter=JenkinsReport,
                                     **self.pep8_options)
 
@@ -69,3 +75,8 @@ class Task(BaseTask):
             pep8style.input_dir(relpath(location))
 
         self.output.close()
+
+    @staticmethod
+    def default_config_path():
+        rcfile = getattr(settings, 'PEP8_RCFILE', 'pep8.rc')
+        return rcfile if os.path.exists(rcfile) else None
