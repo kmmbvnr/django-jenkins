@@ -80,7 +80,7 @@ Settings
 
     JENKINS_TEST_RUNNER='django_jenkins.nose_runner.CINoseTestSuiteRunner'
 
-  
+
 Tasks
 -----
 
@@ -89,7 +89,7 @@ Here is the list of tasks prebuild with django-jenkins
 - ``django_jenkins.tasks.run_pylint``
 
   Runs Pylint_ over selected Django apps.
-  
+
   Task-specific settings: ``PYLINT_RCFILE``
 
 .. _Pylint: http://www.logilab.org/project/pylint
@@ -97,7 +97,7 @@ Here is the list of tasks prebuild with django-jenkins
 - ``django_jenkins.tasks.with_coverage``
 
   Produces `XML coverage report <http://nedbatchelder.com/code/coverage/sample_html/>`__ for Jenkins
-  
+
   Task-specific settings: ``COVERAGE_RCFILE``, ``COVERAGE_REPORT_HTML_OUTPUT_DIR``, ``COVERAGE_MEASURE_BRANCH``, ``COVERAGE_EXCLUDES``, ``COVERAGE_WITH_MIGRATIONS``
 
 - ``django_jenkins.tasks.django_tests``
@@ -114,14 +114,14 @@ Here is the list of tasks prebuild with django-jenkins
   Creates Pylint compatible report for Jenkins
 
   You should have the jshint installed
-  
+
 - ``django_jenkins.tasks.run_csslint``
 
   Runs CSS lint tools over `app/static/*/*.css` files.
   Creates CSS Lint compatible report for Jenkins
 
   You should have the rhino_ or nodejs_ javascript interpreter installed for csslint
-  
+
   Task-specific settings: ``CSSLINT_INTERPRETER``, ``CSSLINT_CHECKED_FILES``
 
 .. _rhino: http://www.mozilla.org/rhino/
@@ -133,6 +133,8 @@ Here is the list of tasks prebuild with django-jenkins
   Creates Pylint compatible report for Jenkins
 
   You should have pep8_ python package (>=1.3) installed to run this task.
+
+  Task-specific settings: ``PEP8_RCFILE``
 
 .. _pep8: http://pypi.python.org/pypi/pep8
 
@@ -169,7 +171,7 @@ Here is the list of tasks prebuild with django-jenkins
   Creates ``models.png`` graphic (`example <https://code.djangoproject.com/wiki/DjangoGraphviz#Examples>`__).
 
   You should have django-extensions_ and pygraphviz_ installed to run this task.
-  
+
   Task-specific settings:
 
   - ``GRAPH_MODELS``: A dictionary of settings for graph_models, most corresponding to the command-line options (with 'graphmodels\_' removed): ``fail_without_error``, ``disable_fields``, ``group_models``, ``all_applications``, ``outputfile``, ``layout``, ``verbose_names``, ``language``, ``exclude_columns``, ``exclude_models``, ``inheritance``
@@ -289,6 +291,6 @@ Contributors:
 * Peter Baumgartner (https://github.com/ipmb)
 * Kris Kumler (https://github.com/kkumler)
 
-Special thanks, for all github forks authors not listed here 
+Special thanks, for all github forks authors not listed here
 for project extensions ideas and problem identifications.
 
