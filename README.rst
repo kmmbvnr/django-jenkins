@@ -290,6 +290,7 @@ Contributors:
 * Philip Kimmey (https://github.com/philipkimmey)
 * Peter Baumgartner (https://github.com/ipmb)
 * Kris Kumler (https://github.com/kkumler)
+* Axel Haustant (https://github.com/noirbizarre)
 
 Special thanks, for all github forks authors not listed here
 for project extensions ideas and problem identifications.
