@@ -3,7 +3,7 @@ django-jenkins
 
 Plug and play continuous integration with Django and Jenkins
 
-image:: https://requires.io/github/kmmbvnr/django-jenkins/requirements/?branch=master
+.. image:: https://requires.io/github/kmmbvnr/django-jenkins/requirements/?branch=master
 
 Installation
 ------------
