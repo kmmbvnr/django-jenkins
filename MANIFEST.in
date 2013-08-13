@@ -2,7 +2,4 @@ include LICENSE
 include README.rst
 include MANIFEST.in
 include django_jenkins/tasks/pylint.rc
-include django_jenkins/tasks/csslint/release/csslint-rhino.js
-include django_jenkins/tasks/csslint/release/npm/cli.js
-include django_jenkins/tasks/csslint/release/npm/lib/csslint-node.js
 recursive-include tests *
