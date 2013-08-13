@@ -199,6 +199,9 @@ Changelog
 
 0.14.1 2013-08-15
 ~~~~~~~~~~~~~~~~~
+* Django 1.6 compatibility
+* Flake8 support
+* Pep8 file configuration support
 * CSSLint no longer shipped with django-jenkins. Install it with ``npm install csslint -g``
 
 
