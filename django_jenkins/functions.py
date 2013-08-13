@@ -50,7 +50,7 @@ def check_output(*popenargs, **kwargs):
         cmd = kwargs.get("args")
         if cmd is None:
             cmd = popenargs[0]
-        raise CalledProcessError(retcode, cmd, output=output + '\n' + err)
+        raise CalledProcessError(retcode, cmd, output="%s\n%s" % (output, err))
     return output
 
 
