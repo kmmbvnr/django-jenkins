@@ -13,12 +13,6 @@ from django_jenkins.tasks import BaseTask, get_apps_locations
 
 class Task(BaseTask):
     option_list = [
-       make_option("--csslint-interpreter",
-                   dest="csslint_interpreter",
-              help="Javascript interpreter for running csslint"),
-       make_option("--csslint-implementation",
-                   dest="csslint_implementation",
-              help="Full path to csslint-IMPL.js, by default used build-in"),
        make_option("--csslint-with-staticdirs",
                    dest="csslint_with-staticdirs",
                    default=False, action="store_true",
@@ -37,29 +31,6 @@ class Task(BaseTask):
         self.to_file = options.get('csslint_file_output', True)
         self.with_static_dirs = options.get('csslint_with-staticdirs', False)
         self.csslint_with_minjs = options.get('csslint_with_mincss', False)
-        root_dir = os.path.normpath(os.path.dirname(__file__))
-
-        self.interpreter = options['csslint_interpreter'] or \
-                          getattr(settings, 'CSSLINT_INTERPRETER', None)
-        if not self.interpreter:
-            self.interpreter = find_first_existing_executable(
-                [('node', '--help'), ('rhino', '--help')])
-            if not self.interpreter:
-                raise ValueError('No sutable js interpreter found. '
-                                 'Please install nodejs or rhino')
-
-        self.implementation = options['csslint_implementation']
-        if not self.implementation:
-            runner = os.path.basename(self.interpreter)
-            if 'rhino' in runner:
-                self.implementation = os.path.join(root_dir, 'csslint',
-                                                 'release', 'csslint-rhino.js')
-            elif 'node' in runner:
-                self.implementation = os.path.join(root_dir, 'csslint',
-                                                    'release', 'npm', 'cli.js')
-            else:
-                raise ValueError('No sutable css lint runner found for %s'
-                                                            % self.interpreter)
 
         if self.to_file:
             output_dir = options['output_dir']
@@ -79,8 +50,7 @@ class Task(BaseTask):
             fmt = 'text'
 
         if files:
-            cmd = [self.interpreter,
-                   self.implementation, '--format=%s' % fmt] + files
+            cmd = ['csslint', '--format=%s' % fmt] + files
 
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
             output, err = process.communicate()

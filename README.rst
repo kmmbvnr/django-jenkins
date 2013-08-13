@@ -120,7 +120,7 @@ Here is the list of tasks prebuild with django-jenkins
   Runs CSS lint tools over `app/static/*/*.css` files.
   Creates CSS Lint compatible report for Jenkins
 
-  You should have the rhino_ or nodejs_ javascript interpreter installed for csslint
+  You should have the csslint installed
 
   Task-specific settings: ``CSSLINT_INTERPRETER``, ``CSSLINT_CHECKED_FILES``
 
@@ -196,6 +196,11 @@ Here is the list of tasks prebuild with django-jenkins
 
 Changelog
 ---------
+
+0.14.1 2013-08-15
+~~~~~~~~~~~~~~~~~
+* CSSLint no longer shipped with django-jenkins. Install it with ``npm install csslint -g``
+
 
 0.14.0 2012-12-15
 ~~~~~~~~~~~~~~~~~
