@@ -3,3 +3,5 @@ include README.rst
 include MANIFEST.in
 include django_jenkins/tasks/pylint.rc
 recursive-include tests *
+global-exclude __pycache__
+global-exclude *.pyc
