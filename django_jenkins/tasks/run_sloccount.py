@@ -38,7 +38,7 @@ class Task(BaseTask):
             self.output.write(report_output)
         else:
             for line in report_output.splitlines():
-                if (os.sep) + 'migrations' + os.sep) in line:
+                if (os.sep + 'migrations' + os.sep) in line:
                     continue
                 self.output.write(line)
                 self.output.write('\n')
