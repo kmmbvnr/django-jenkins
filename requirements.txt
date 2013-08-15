@@ -7,3 +7,4 @@ django_nose==1.2
 lettuce==0.2.18
 selenium==2.35.0
 flake8==2.0
+behave==1.2.3

@@ -197,6 +197,14 @@ Here is the list of tasks prebuild with django-jenkins
 
 .. _Celery: http://ask.github.com/django-celery/
 
+- ``django_jenkins.tasks.behave_tests``
+
+  Discover Behave tests from app/features directories.
+
+  You should have the Behave_ Python package installed to run this task.
+
+.. _Behave: http://pythonhosted.org/behave/
+
 Changelog
 ---------
 
