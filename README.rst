@@ -290,13 +290,12 @@ Contribution guide
 ~~~~~~~~~~~~~~~~~~
 
 * Set up local jenkins
-* Set up django-jenkins
+* Set up django-jenkins::
 
-..code:: shell
- npm install jshint
- npm install csslint
- PATH=$PATH:$WORKSPACE/node_modules/.bin
- tox -e $TOXENV
+    npm install jshint
+    npm install csslint
+    PATH=$PATH:$WORKSPACE/node_modules/.bin
+    tox -e $TOXENV
 
 * Modify the code
 * Fix pep8/pyflakes errors and minimize pylint's warninigs
