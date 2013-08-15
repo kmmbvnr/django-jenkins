@@ -91,7 +91,7 @@ class Task(BaseTask):
             self.coverage.html_report(morfs=morfs, directory=self.html_dir)
 
     def want_file(self, filename):
-        if not self.with_migrations and '/migrations/' in filename:
+        if not self.with_migrations and (os.sep + 'migrations' + os.sep) in filename:
             return False
         for location in self.exclude_locations:
             if filename.startswith(location):
