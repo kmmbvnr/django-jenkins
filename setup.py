@@ -34,9 +34,9 @@ setup(
         'Topic :: Software Development :: Testing'
     ],
     install_requires=[
-        'Django>=1.3',
-        'coverage>=3.4',
-        'pylint>=0.23',
+        'Django>=1.4',
+        'coverage>=3.6',
+        'pylint>=1.0',
     ],
     packages = ['django_jenkins', 'django_jenkins.management', 'django_jenkins.tasks', 'django_jenkins.management.commands'],
     package_data={'django_jenkins': ['tasks/pylint.rc']},
