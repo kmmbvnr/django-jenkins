@@ -46,7 +46,7 @@ class Task(BaseTask):
                     for dirpath, dirnames, filenames in \
                                         os.walk(relpath(location)):
                         if not self.with_migrations and \
-                                'migrations' in dirpath:
+                                (os.sep + 'migrations' + os.sep) in dirpath:
                             continue
                         for filename in filenames:
                             if filename.endswith('.py'):
