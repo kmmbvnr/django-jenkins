@@ -77,7 +77,7 @@ class Task(BaseTask):
 
     def teardown_test_environment(self, **kwargs):
         self.coverage.stop()
-
+        self.coverage._harvest_data()
         morfs = [filename for filename in self.coverage.data.measured_files()
                  if self.want_file(filename)]
 

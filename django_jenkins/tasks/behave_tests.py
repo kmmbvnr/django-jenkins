@@ -1,20 +1,15 @@
 """
 Build suite with behave tests
 """
-from django.test.simple import build_suite
+import unittest
+import sys
+
+from os.path import dirname, abspath, join, isdir
 from django.db.models import get_app
 from django.conf import settings
 from django_jenkins.tasks import BaseTask
 from django.test import LiveServerTestCase
-
-import unittest
-import sys
-import string
-
-from os.path import dirname, abspath, join, isdir
-
-import behave
-from behave.configuration import Configuration, ConfigError
+from behave import configuration
 from behave.runner import Runner
 from behave.parser import ParserError
 from behave.formatter.ansi_escapes import escapes
@@ -38,7 +33,7 @@ def testCaseFactory(name):
             # else behave will complain
             old_argv = sys.argv
             sys.argv = old_argv[:2]
-            self.behave_config = Configuration()
+            self.behave_config = configuration.Configuration()
             sys.argv = old_argv
             # end of sys.argv kludge
             self.behave_config.paths = [features_dir]
@@ -60,7 +55,7 @@ def testCaseFactory(name):
                 failed = runner.run()
             except ParserError as e:
                 sys.exit(str(e))
-            except ConfigError as e:
+            except configuration.ConfigError as e:
                 sys.exit(str(e))
 
             if self.behave_config.show_snippets and runner.undefined:
