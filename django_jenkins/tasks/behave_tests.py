@@ -10,9 +10,7 @@ from django.db.models import get_app
 from django.conf import settings
 from django_jenkins.tasks import BaseTask
 from django.test import LiveServerTestCase
-from behave.runner import Runner
-from behave.parser import ParserError
-from behave.formatter.ansi_escapes import escapes
+
 
 def get_features(app_module):
     app_dir = dirname(app_module.__file__)
@@ -50,10 +48,10 @@ def testCaseFactory(name):
             print("run: features_dir=%s" % (self.features_dir))
 
             # from behave/__main__.py
-            runner = Runner(self.behave_config)
+            runner = behave.runner.Runner(self.behave_config)
             try:
                 failed = runner.run()
-            except ParserError as e:
+            except behave.parser.ParserError as e:            
                 sys.exit(str(e))
             except behave.configuration.ConfigError as e:
                 sys.exit(str(e))
@@ -77,7 +75,7 @@ def testCaseFactory(name):
                     msg += u"def impl(context):\n"
                     msg += u"    assert False\n\n"
 
-                sys.stderr.write(escapes['undefined'] + msg + escapes['reset'])
+                sys.stderr.write(behave.formatter.ansi_escapes.escapes['undefined'] + msg + behave.formatter.ansi_escapes.escapes['reset'])
                 sys.stderr.flush()
 
             self.assertFalse(failed)
