@@ -35,10 +35,10 @@ class Task(BaseTask):
         report_output = report_output.decode('utf-8')
 
         if self.with_migrations:
-            self.output.write(report_output.decode('utf-8'))
+            self.output.write(report_output)
         else:
             for line in report_output.splitlines():
-                if '/migrations/' in line:
+                if (os.sep) + 'migrations' + os.sep) in line:
                     continue
                 self.output.write(line)
                 self.output.write('\n')
