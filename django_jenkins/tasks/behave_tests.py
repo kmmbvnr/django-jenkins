@@ -52,15 +52,15 @@ def testCaseFactory(name):
 
         def runTest(self, result=None):
             # run behave on a single directory
-            print "run: features_dir=%s" % (self.features_dir)
+            print("run: features_dir=%s" % (self.features_dir))
 
             # from behave/__main__.py
             runner = Runner(self.behave_config)
             try:
                 failed = runner.run()
-            except ParserError, e:
+            except ParserError as e:
                 sys.exit(str(e))
-            except ConfigError, e:
+            except ConfigError as e:
                 sys.exit(str(e))
 
             if self.behave_config.show_snippets and runner.undefined:
@@ -104,7 +104,7 @@ class Task(BaseTask):
     def build_suite(self, suite, **kwargs):
         for label in self.test_labels:
             if '.' in label:
-                print "Ignoring label with dot in: %s" % label
+                print("Ignoring label with dot in: %s" % label)
                 continue
             app = get_app(label)
             
