@@ -297,7 +297,9 @@ Contribution guide
     PATH=$PATH:$WORKSPACE/node_modules/.bin
     tox -e $TOXENV
 
+* Ensure that everythig works
 * Modify the code
+* Ensure that everythig works again
 * Fix pep8/pyflakes errors and minimize pylint's warninigs
 * Pull request!
 
