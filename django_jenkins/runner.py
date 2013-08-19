@@ -160,7 +160,7 @@ class XMLTestResult(TextTestResult):
                     if not error.endswith('\n'):
                         error += '\n'
                     msgLines.append(STDERR_LINE % error)
-        return ''.join(msgLines)
+        return ''.join(map(smart_text, msgLines))
 
     def test_method_name(self, test):
         """

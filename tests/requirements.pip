@@ -6,6 +6,7 @@ pep8>=1.3
 lettuce
 selenium
 flake8
+django-nose
 
 # development only
 ipdb
