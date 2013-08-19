@@ -3,6 +3,11 @@ import os
 import sys
 import pep8
 
+try:
+    from configparser import RawConfigParser
+except ImportError:
+    from ConfigParser import RawConfigParser
+
 from optparse import make_option
 from django.conf import settings
 
@@ -44,7 +49,13 @@ class Task(BaseTask):
             self.output = sys.stdout
 
         self.pep8_rcfile = options['pep8-rcfile'] or Task.default_config_path()
-        self.pep8_options = {'exclude': options['pep8-exclude'].split(',')}
+
+        rcfile = RawConfigParser()
+        rcfile.read(self.pep8_rcfile)
+
+        self.pep8_options = {}
+        if self.pep8_rcfile is None or not rcfile.has_option('pep8','exclude'):
+            self.pep8_options['exclude'] = options['pep8-exclude'].split(',')
         if options['pep8-select']:
             self.pep8_options['select'] = options['pep8-select'].split(',')
         if options['pep8-ignore']:
