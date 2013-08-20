@@ -36,8 +36,8 @@ class TestInfo(object):
         UNEXPECTED_SUCCESS = 4
         SKIPPED = 5
 
-    __slots__ = ('test_method', 'start_time', 'end_time',
-                 'err', 'stdout', 'stderr', 'result', 'reason')
+    __slots__ = ('method_name', 'case_name', 'failureException', 'start_time',
+                 'end_time', 'err', 'stdout', 'stderr', 'result', 'reason')
 
     def __init__(self, **kwargs):
         for slot_name in self.__slots__:
@@ -65,8 +65,11 @@ class XMLTestResult(TextTestResult):
         """
         Called when the given test is about to be run
         """
-        self.currentTestInfo = TestInfo(test_method=test,
-                                        start_time=datetime.now())
+        self.currentTestInfo = TestInfo(
+            method_name=self.test_method_name(test),
+            case_name=self.test_case_name(test),
+            failureException=test.failureException, start_time=datetime.now()
+        )
         super(XMLTestResult, self).startTest(test)
 
     def stopTest(self, test):
@@ -194,8 +197,7 @@ class XMLTestResult(TextTestResult):
             document.startElement('testsuites', AttributesImpl({}))
 
             suites = groupby(self.testInfos,
-                             key=lambda test_info: self.test_case_name(
-                                                        test_info.test_method))
+                             key=lambda test_info: test_info.case_name)
             for suite_name, suite in suites:
                 document.startElement('testsuite',
                                       AttributesImpl({'name': suite_name}))
@@ -203,7 +205,7 @@ class XMLTestResult(TextTestResult):
                 for test_info in suite:
                     document.startElement('testcase', AttributesImpl({
                         'classname': suite_name,
-                        'name': self.test_method_name(test_info.test_method),
+                        'name': test_info.method_name,
                         'time': '%3f' % total_seconds(
                                     test_info.end_time - test_info.start_time)
                     }))
@@ -213,14 +215,14 @@ class XMLTestResult(TextTestResult):
                             'message': smart_text(test_info.err[1])
                         }))
                         document.characters(self._exc_info_to_string(
-                                        test_info.err, test_info.test_method))
+                                        test_info.err, test_info))
                         document.endElement('error')
                     elif test_info.result == TestInfo.RESULT.FAILURE:
                         document.startElement('failure', AttributesImpl({
                             'message': smart_text(test_info.err[1])
                         }))
                         document.characters(self._exc_info_to_string(
-                                        test_info.err, test_info.test_method))
+                                        test_info.err, test_info))
                         document.endElement('failure')
                     elif test_info.result == \
                                     TestInfo.RESULT.UNEXPECTED_SUCCESS:
