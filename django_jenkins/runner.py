@@ -5,9 +5,9 @@ from datetime import datetime
 from itertools import groupby
 from xml.sax.saxutils import XMLGenerator
 from xml.sax.xmlreader import AttributesImpl
-from django.conf import settings
-from django.test.simple import DjangoTestSuiteRunner
+from django.conf import global_settings, settings
 from django.test.testcases import TestCase
+from django.test.utils import get_runner
 from django.utils.unittest import TestSuite, TextTestResult, TextTestRunner
 from django_jenkins import signals
 from django_jenkins.functions import total_seconds
@@ -250,7 +250,7 @@ class XMLTestResult(TextTestResult):
             document.endDocument()
 
 
-class CITestSuiteRunner(DjangoTestSuiteRunner):
+class CITestSuiteRunner(get_runner(global_settings)):
     """
     Continuous integration test runner
     """
