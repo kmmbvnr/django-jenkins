@@ -3,7 +3,6 @@ pylint==1.0.0
 coverage==3.6
 pyflakes==0.7.3
 pep8==1.4.6
-django_nose==1.2
 lettuce==0.2.19
 selenium==2.35.0
 flake8==2.0

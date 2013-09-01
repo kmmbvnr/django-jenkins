@@ -20,26 +20,15 @@ Or by downloading the source and running::
 
     $ python setup.py install
 
-For the latest git version, you need the latest pip installed first::
+Latest git version::
 
-    $ pip install git+https://github.com/pypa/pip.git
     $ pip install -e git+git://github.com/kmmbvnr/django-jenkins.git#egg=django-jenkins
-
 
 Installation for Python 3::
 
-    $ pip install git+https://github.com/django/django.git
-    $ pip install hg+http://hg.logilab.org/pylint
-    $ pip install coverage
-    $ # if required
-    $ pip install pyflakes3k
-    $ pip install pep8
-    $ # lettuce and selenium are not yet ported to python 3k
+    Works out of the box
+    Note that lettuce itself is not yet ported to python 3
 
-
-And then, upgrade the pip and install django-jenkins from git as described above.
-
-.. _PyPI: http://pypi.python.org/
 
 Usage
 -----
@@ -81,10 +70,6 @@ Settings
   The name of the class to use for starting the test suite for ``jenkins``
   and ``jtest`` commands. Class should be inherited from
   ``django_jenkins.runner.CITestSuiteRunner``
-
-  A runner has been added for people using nose in their project. This runner is using django_nose so you will need to have that installed if you want to use this runner.::
-
-    JENKINS_TEST_RUNNER='django_jenkins.nose_runner.CINoseTestSuiteRunner'
 
 
 Tasks
@@ -128,10 +113,8 @@ Here is the list of tasks prebuild with django-jenkins
 
   You should have the csslint installed
 
-  Task-specific settings: ``CSSLINT_INTERPRETER``, ``CSSLINT_CHECKED_FILES``
+  Task-specific settings: ``CSSLINT_CHECKED_FILES``
 
-.. _rhino: http://www.mozilla.org/rhino/
-.. _nodejs: http://nodejs.org/
 
 - ``django_jenkins.tasks.run_pep8``
 
