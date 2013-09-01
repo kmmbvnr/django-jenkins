@@ -28,7 +28,6 @@ class Task(BaseTask):
                                                          pep8.MAX_LINE_LENGTH),
        make_option("--pep8-rcfile", dest="pep8-rcfile",
                    help="PEP8 configuration file"),
-
     ]
 
     def __init__(self, test_labels, options):

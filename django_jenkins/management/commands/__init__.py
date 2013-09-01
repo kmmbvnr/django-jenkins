@@ -118,7 +118,8 @@ class TaskListCommand(BaseCommand):
 
             if task_cls.option_list:
                 for option in task_cls.option_list:
-                    option_group.add_option(option)
+                    if option._long_opts and not parser.has_option(option._long_opts[0]):
+                        option_group.add_option(option)
                 parser.add_option_group(option_group)
 
         return parser
