@@ -5,9 +5,22 @@ import time
 
 from xml.etree import ElementTree as ET
 from django.conf import settings
-from django.test.simple import DjangoTestSuiteRunner
 from django.test.testcases import TestCase
-from django.utils.unittest import TestSuite, TextTestResult, TextTestRunner
+from django.utils.unittest import TextTestResult, TextTestRunner
+
+try:
+    # Django 1.6
+    from django.test.runner import DiscoverRunner
+except ImportError:
+    # Fallback to third-party app on Django 1.5
+    try:
+        from discover_runner.runner import DiscoverRunner
+    except ImportError:
+        import warnings
+        warnings.warn(
+            "Directory-only tests are ignored. Install django-discover-runner to enable it",
+            UserWarning)
+        from django.test.simple import DjangoTestSuiteRunner as DiscoverRunner
 
 try:
     from django.test.simple import reorder_suite
@@ -119,7 +132,7 @@ class EXMLTestResult(TextTestResult):
         output.write(os.path.join(output_dir, 'junit.xml'), encoding="utf-8")
 
 
-class CITestSuiteRunner(DjangoTestSuiteRunner):
+class CITestSuiteRunner(DiscoverRunner):
     """
     Continuous integration test runner
     """
@@ -145,9 +158,9 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
         return super(CITestSuiteRunner, self).setup_databases()
 
     def build_suite(self, test_labels, extra_tests=None, **kwargs):
-        suite = TestSuite()
+        suite = super(CITestSuiteRunner, self).build_suite(test_labels, extra_tests=None, **kwargs)
         signals.build_suite.send(sender=self, suite=suite)
-        return reorder_suite(suite, (TestCase,))
+        return reorder_suite(suite, getattr(self, 'reorder_by', (TestCase,)))
 
     def run_suite(self, suite, **kwargs):
         signals.before_suite_run.send(sender=self)
@@ -158,3 +171,4 @@ class CITestSuiteRunner(DjangoTestSuiteRunner):
             result.dump_xml(self.output_dir)
         signals.after_suite_run.send(sender=self)
         return result
+
