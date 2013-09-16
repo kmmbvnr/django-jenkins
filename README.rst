@@ -62,7 +62,6 @@ Settings
     JENKINS_TASKS = (
         'django_jenkins.tasks.run_pylint',
         'django_jenkins.tasks.with_coverage',
-        'django_jenkins.tasks.django_tests',
     )
 
 - ``JENKINS_TEST_RUNNER``
@@ -90,14 +89,6 @@ Here is the list of tasks prebuild with django-jenkins
   Produces `XML coverage report <http://nedbatchelder.com/code/coverage/sample_html/>`__ for Jenkins
 
   Task-specific settings: ``COVERAGE_RCFILE``, ``COVERAGE_REPORT_HTML_OUTPUT_DIR``, ``COVERAGE_MEASURE_BRANCH``, ``COVERAGE_EXCLUDES``, ``COVERAGE_WITH_MIGRATIONS``, ``COVERAGE_EXCLUDES_FOLDERS``
-
-- ``django_jenkins.tasks.django_tests``
-
-  Discovers standard Django test suite from test.py files
-
-- ``django_jenkins.tasks.dir_tests``
-
-  Discover tests from all test*.py files in app subdirectories
 
 - ``django_jenkins.tasks.run_jshint``
 
@@ -193,6 +184,10 @@ Here is the list of tasks prebuild with django-jenkins
 
 Changelog
 ---------
+
+GIT Version
+~~~~~~~~~~~
+* django_tests and dir_tests test dicovery tasks are replaced by directory discover test runner build-in in django 1.6
 
 0.14.1 2013-08-15
 ~~~~~~~~~~~~~~~~~

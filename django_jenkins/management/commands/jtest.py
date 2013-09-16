@@ -30,11 +30,6 @@ class Command(TaskListCommand):
 
         tasks = []
 
-        if 'django_jenkins.tasks.dir_tests' in enabled_tasks:
-            tasks.append('django_jenkins.tasks.dir_tests')
-        else:
-            tasks.append('django_jenkins.tasks.django_tests')
-
         if 'django_jenkins.tasks.lettuce_tests' in enabled_tasks:
             tasks.append('django_jenkins.tasks.lettuce_tests')
 
