@@ -16,17 +16,20 @@ class Task(BaseTask):
        make_option("--csslint-with-staticdirs",
                    dest="csslint_with-staticdirs",
                    default=False, action="store_true",
-              help="Check css files located in STATIC_DIRS settings"),
+                   help="Check css files located in STATIC_DIRS settings"),
        make_option("--csslint-with-mincss",
                    dest="csslint_with_mincss",
                    default=False, action="store_true",
                    help="Do not ignore .min.css files"),
        make_option("--csslint-exclude",
                    dest="csslint_exclude", default="",
-              help="Exclude patterns"),
+                   help="Exclude patterns"),
        make_option("--csslint-static-dirname",
                    dest="csslint_static-dirname", default="static",
-                   help="Name of dir with css static files")]
+                   help="Name of dir with css static files"),
+       make_option("--csslint-ignore",
+                   dest="csslint_ignore", default="",
+                   help="Ignore rules")]
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
@@ -44,6 +47,7 @@ class Task(BaseTask):
             self.output = sys.stdout
 
         self.exclude = options['csslint_exclude'].split(',')
+        self.ignore = options['csslint_ignore']
         self.static_dirname = options.get('csslint_static-dirname', 'static')
 
     def teardown_test_environment(self, **kwargs):
@@ -55,6 +59,9 @@ class Task(BaseTask):
 
         if files:
             cmd = ['csslint', '--format=%s' % fmt] + files
+
+            if self.ignore:
+                cmd += ['--ignore=%s' % self.ignore]
 
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
             output, err = process.communicate()
