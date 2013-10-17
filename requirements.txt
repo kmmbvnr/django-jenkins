@@ -1,7 +1,7 @@
 django==1.5.4
 django-discover-runner==1.0
 pylint==1.0.0
-coverage==3.6
+coverage==3.7
 pyflakes==0.7.3
 pep8==1.4.6
 lettuce==0.2.19
