@@ -64,11 +64,14 @@ class Task(BaseTask):
         # apps/company/migrations/*
         self.exclude_locations.extend(
                         getattr(settings, 'COVERAGE_EXCLUDES_FOLDERS', []))
-        #import ipdb; ipdb.set_trace()
+
+        omit = self.exclude_locations
+        if not omit:
+            omit = None
 
         self.coverage = coverage(branch=self.branch,
                                  source=self.test_apps,
-                                 omit=self.exclude_locations,
+                                 omit=omit,
                                  config_file=options.get('coverage_rcfile') or
                                                  Task.default_config_path())
 
