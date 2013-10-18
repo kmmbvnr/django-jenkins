@@ -7,7 +7,10 @@ from django.conf import settings
 from django_jenkins.tasks import BaseTask, get_apps_under_test
 
 from pylint import lint
-from pylint.reporters.text import ParseableTextReporter
+from pylint.reporters.text import TextReporter
+
+
+OUTPUT_FORMAT = '{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}'
 
 
 class Task(BaseTask):
@@ -41,7 +44,8 @@ class Task(BaseTask):
             args += ['--errors-only']
         args += get_apps_under_test(self.test_labels, self.test_all)
 
-        lint.Run(args, reporter=ParseableTextReporter(output=self.output),
+        TextReporter.line_format = OUTPUT_FORMAT
+        lint.Run(args, reporter=TextReporter(output=self.output),
                                                       exit=False)
 
         return True
