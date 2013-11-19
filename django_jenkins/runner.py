@@ -85,12 +85,12 @@ class EXMLTestResult(TextTestResult):
             output = sys.stdout.getvalue()
             if output:
                 sysout = ET.SubElement(self.testcase, 'system-out')
-                sysout.text = output
+                sysout.text = output.decode('UTF-8', 'ignore')
 
             error = sys.stderr.getvalue()
             if error:
                 syserr = ET.SubElement(self.testcase, 'system-err')
-                syserr.text = error
+                syserr.text = error.decode('UTF-8', 'ignore')
 
         super(EXMLTestResult, self).stopTest(test)
 
