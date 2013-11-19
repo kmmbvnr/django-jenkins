@@ -21,6 +21,15 @@ class SaintyChecks(TestCase):
     def test_is_skipped(self):
         print("This test should be skipped")
 
+    def test_junit_xml_with_utf8_stdout_and_stderr(self):
+        sys.stdout.write('\xc4\x85')
+        sys.stderr.write('\xc4\x85')
+
+    def test_junit_xml_with_invalid_stdout_and_stderr_encoding(self):
+        sys.stdout.write('\xc4')
+        sys.stderr.write('\xc4')
+
+
     #def test_failure(self):
     #    raise Exception("Ups, should be disabled")
 
