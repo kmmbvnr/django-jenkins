@@ -1,10 +1,9 @@
-django==1.5.4
+django==1.6.2
 django-discover-runner==1.0
-pylint==1.0.0
-coverage==3.7
+pylint==1.1.0
+coverage==3.7.1
 pyflakes==0.7.3
 pep8==1.4.6
-lettuce==0.2.19
-selenium==2.35.0
+selenium==2.39.0
 flake8==2.0
 behave==1.2.3

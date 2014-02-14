@@ -43,11 +43,6 @@ JENKINS_TASKS = (
 )
 
 
-# not ported to python 3 libs
-if sys.version_info[0] < 3:
-    JENKINS_TASKS += ('django_jenkins.tasks.lettuce_tests',)
-
-
 # bug in python3 version
 if sys.version_info[0] < 3:
     JENKINS_TASKS += ('django_jenkins.tasks.run_pylint',)

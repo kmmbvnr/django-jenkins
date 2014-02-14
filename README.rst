@@ -27,7 +27,6 @@ Latest git version::
 Installation for Python 3::
 
     Works out of the box
-    Note that lettuce itself is not yet ported to python 3
 
 
 Usage
@@ -159,13 +158,6 @@ Here is the list of tasks prebuild with django-jenkins
 .. _django-extensions: http://pypi.python.org/pypi/django-extensions
 .. _pygraphviz: http://pypi.python.org/pypi/pygraphviz/
 
-- ``django_jenkins.tasks.lettuce_tests``
-
-  Discover Lettuce tests from app/feature directories.
-
-  You should have the Lettuce_ Python package installed to run this task.
-
-.. _Lettuce: http://lettuce.it/
 
 - ``django_jenkins.tasks.with_local_celery``
 
@@ -188,6 +180,7 @@ Changelog
 GIT Version
 ~~~~~~~~~~~
 * django_tests and dir_tests test dicovery tasks are replaced by directory discover test runner build-in in django 1.6
+* removed unmaintained lettuce support
 
 0.14.1 2013-08-15
 ~~~~~~~~~~~~~~~~~
