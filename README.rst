@@ -170,7 +170,7 @@ Here is the list of tasks prebuild with django-jenkins
 Changelog
 ---------
 
-0.15.0 2013-02-15
+0.15.0 2014-02-15
 ~~~~~~~~~~~
 * Speed up and reduced memory usage for junit reports generation
 * django_tests and dir_tests test discovery tasks are replaced by directory discover test runner build-in in django 1.6
