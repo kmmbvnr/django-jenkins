@@ -82,12 +82,12 @@ class EXMLTestResult(TextTestResult):
 
     def stopTest(self, test):
         if self.buffer:
-            output = sys.stdout.getvalue()
+            output = sys.stdout.getvalue() if hasattr(sys.stdout, 'getvalue') else ''
             if output:
                 sysout = ET.SubElement(self.testcase, 'system-out')
                 sysout.text = output
 
-            error = sys.stderr.getvalue()
+            error = sys.stderr.getvalue() if hasattr(sys.stderr, 'getvalue') else ''
             if error:
                 syserr = ET.SubElement(self.testcase, 'system-err')
                 syserr.text = error
