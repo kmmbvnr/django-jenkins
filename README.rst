@@ -275,29 +275,9 @@ Contribution guide
 
 Authors
 -------
-Mikhail Podgurskiy <kmmbvnr@gmail.com>
+Created and maintained by Mikhail Podgurskiy <kmmbvnr@gmail.com>
 
-Contributors:
+Contributors: https://github.com/kmmbvnr/django-jenkins/graphs/contributors
 
-* Chris Heisel (https://github.com/cmheisel)
-* Andrey Fedoseev (https://github.com/andreyfedoseev)
-* Jannis Leidel (https://github.com/jezdez)
-* Luciano Pacheco (https://github.com/lucmult)
-* Julien Lirochon (https://github.com/jlirochon)
-* Olivier Girardot (https://github.com/ssaboum)
-* Victor Safronovich (https://github.com/suvit)
-* Bradley Ayers (https://github.com/bradleyayers)
-* Jonas Obrist (https://github.com/ojii)
-* John Paulett (https://github.com/johnpaulett)
-* Michael Ellingen (https://github.com/mvantellingen)
-* Domen Kožar (https://github.com/iElectric)
-* Simon Panay (https://github.com/simonpanay)
-* Tom Mortimer-Jones (https://github.com/morty)
-* Philip Kimmey (https://github.com/philipkimmey)
-* Peter Baumgartner (https://github.com/ipmb)
-* Kris Kumler (https://github.com/kkumler)
-* Axel Haustant (https://github.com/noirbizarre)
-
-Special thanks, for all github forks authors not listed here
-for project extensions ideas and problem identifications.
+Special thanks, for all github forks authors for project extensions ideas and problem identifications.
 
