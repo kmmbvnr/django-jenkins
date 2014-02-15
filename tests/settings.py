@@ -1,9 +1,10 @@
-import os, sys
+import os
+import sys
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-DEBUG=True
-TEMPLATE_DEBUG=DEBUG
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 ROOT_URLCONF = 'test_app.urls'
 SECRET_KEY = 'nokey'
 
@@ -13,7 +14,7 @@ TEMPLATE_LOADERS = (
 )
 
 PROJECT_APPS = (
-    'django.contrib.sessions', # just to ensure that dotted apps test works
+    'django.contrib.sessions',  # just to ensure that dotted apps test works
     'django_jenkins',
     'test_app',
     'test_app_dirs',
@@ -37,9 +38,9 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_pyflakes',
     'django_jenkins.tasks.run_flake8',
     'django_jenkins.tasks.run_jshint',
-    'django_jenkins.tasks.run_csslint',    
-    'django_jenkins.tasks.run_sloccount',    
-    'django_jenkins.tasks.with_local_celery'
+    'django_jenkins.tasks.run_csslint',
+    'django_jenkins.tasks.run_sloccount',
+    'django_jenkins.tasks.with_local_celery',
 )
 
 
@@ -59,9 +60,9 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'console':{
-            'level':'DEBUG',
-            'class':'logging.StreamHandler',
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
         },
     },
     'loggers': {
