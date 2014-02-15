@@ -41,9 +41,14 @@ def check_output(*popenargs, **kwargs):
     if 'stdout' in kwargs or 'stderr' in kwargs:
         raise ValueError('stdout or stderr argument not allowed, '
                          'it will be overridden.')
-    process = subprocess.Popen(stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE,
-                               *popenargs, **kwargs)
+
+    try:
+        process = subprocess.Popen(stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE,
+                                   *popenargs, **kwargs)
+    except OSError:
+        raise RuntimeError('Could not open program %s. Are the dependencies installed?' % popenargs)
+
     output, err = process.communicate()
     retcode = process.poll()
     if retcode:
