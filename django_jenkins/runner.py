@@ -136,10 +136,11 @@ class CITestSuiteRunner(DiscoverRunner):
     """
     Continuous integration test runner
     """
-    def __init__(self, output_dir, with_reports=True, **kwargs):
+    def __init__(self, output_dir, with_reports=True, debug=False, **kwargs):
         super(CITestSuiteRunner, self).__init__(**kwargs)
         self.with_reports = with_reports
         self.output_dir = output_dir
+        self.debug = debug
 
     def setup_test_environment(self, **kwargs):
         super(CITestSuiteRunner, self).setup_test_environment()
@@ -164,7 +165,7 @@ class CITestSuiteRunner(DiscoverRunner):
 
     def run_suite(self, suite, **kwargs):
         signals.before_suite_run.send(sender=self)
-        result = TextTestRunner(buffer=True,
+        result = TextTestRunner(buffer=not self.debug,
                                 resultclass=EXMLTestResult,
                                 verbosity=self.verbosity).run(suite)
         if self.with_reports:
