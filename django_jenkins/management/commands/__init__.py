@@ -83,7 +83,8 @@ class TaskListCommand(BaseCommand):
             interactive=options['interactive'],
             debug=options['debug'],
             verbosity=int(options.get('verbosity', 1)),
-            with_reports=options.get('with_reports', True))
+            with_reports=options.get('with_reports', True),
+            test_all=options.get('test_all', False))
 
         if test_runner.run_tests(test_labels):
             sys.exit(1)

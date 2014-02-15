@@ -10,7 +10,7 @@ class CalledProcessError(subprocess.CalledProcessError):
 
     def __str__(self):
         return "Command '%s' returned non-zero exit status %d\nOutput:\n%s" \
-                        % (self.cmd, self.returncode, self.output)
+            % (self.cmd, self.returncode, self.output)
 
 
 def relpath(path, start=os.path.curdir):

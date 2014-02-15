@@ -137,11 +137,12 @@ class CITestSuiteRunner(DiscoverRunner):
     """
     Continuous integration test runner
     """
-    def __init__(self, output_dir, with_reports=True, debug=False, **kwargs):
+    def __init__(self, output_dir, with_reports=True, debug=False, test_all=False, **kwargs):
         super(CITestSuiteRunner, self).__init__(**kwargs)
         self.with_reports = with_reports
         self.output_dir = output_dir
         self.debug = debug
+        self.test_all = test_all
 
     def setup_test_environment(self, **kwargs):
         super(CITestSuiteRunner, self).setup_test_environment()
@@ -160,6 +161,10 @@ class CITestSuiteRunner(DiscoverRunner):
         return super(CITestSuiteRunner, self).setup_databases()
 
     def build_suite(self, test_labels, extra_tests=None, **kwargs):
+        if not test_labels and not self.test_all:
+            if hasattr(settings, 'PROJECT_APPS'):
+                test_labels = settings.PROJECT_APPS
+
         suite = super(CITestSuiteRunner, self).build_suite(test_labels, extra_tests=None, **kwargs)
         signals.build_suite.send(sender=self, suite=suite)
         return reorder_suite(suite, getattr(self, 'reorder_by', (TestCase,)))

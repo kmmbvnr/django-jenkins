@@ -180,7 +180,9 @@ Changelog
 GIT Version
 ~~~~~~~~~~~
 * django_tests and dir_tests test dicovery tasks are replaced by directory discover test runner build-in in django 1.6
-* removed unmaintained lettuce support
+* Removed unmaintained lettuce support
+* Fixed non-asci support in junit reports
+
 
 0.14.1 2013-08-15
 ~~~~~~~~~~~~~~~~~
