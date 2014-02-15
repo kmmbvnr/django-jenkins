@@ -42,3 +42,4 @@ class Task(BaseTask):
                     continue
                 self.output.write(line)
                 self.output.write('\n')
+        self.output.close()

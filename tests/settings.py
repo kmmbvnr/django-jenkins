@@ -34,6 +34,7 @@ DATABASES = {
 
 JENKINS_TASKS = (
     'django_jenkins.tasks.with_coverage',
+    'django_jenkins.tasks.run_pylint',
     'django_jenkins.tasks.run_pep8',
     'django_jenkins.tasks.run_pyflakes',
     'django_jenkins.tasks.run_flake8',
@@ -42,11 +43,6 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_sloccount',
     'django_jenkins.tasks.with_local_celery',
 )
-
-
-# bug in python3 version
-if sys.version_info[0] < 3:
-    JENKINS_TASKS += ('django_jenkins.tasks.run_pylint',)
 
 
 JSHINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/js/test.js')]

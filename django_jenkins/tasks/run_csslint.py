@@ -6,30 +6,29 @@ import fnmatch
 import codecs
 from optparse import make_option
 from django.conf import settings
-from django_jenkins.functions import (CalledProcessError,
-                                      find_first_existing_executable)
+from django_jenkins.functions import CalledProcessError
 from django_jenkins.tasks import BaseTask, get_apps_locations
 
 
 class Task(BaseTask):
     option_list = [
-       make_option("--csslint-with-staticdirs",
-                   dest="csslint_with-staticdirs",
-                   default=False, action="store_true",
-                   help="Check css files located in STATIC_DIRS settings"),
-       make_option("--csslint-with-mincss",
-                   dest="csslint_with_mincss",
-                   default=False, action="store_true",
-                   help="Do not ignore .min.css files"),
-       make_option("--csslint-exclude",
-                   dest="csslint_exclude", default="",
-                   help="Exclude patterns"),
-       make_option("--csslint-static-dirname",
-                   dest="csslint_static-dirname", default="static",
-                   help="Name of dir with css static files"),
-       make_option("--csslint-ignore",
-                   dest="csslint_ignore", default="",
-                   help="Ignore rules")]
+        make_option("--csslint-with-staticdirs",
+                    dest="csslint_with-staticdirs",
+                    default=False, action="store_true",
+                    help="Check css files located in STATIC_DIRS settings"),
+        make_option("--csslint-with-mincss",
+                    dest="csslint_with_mincss",
+                    default=False, action="store_true",
+                    help="Do not ignore .min.css files"),
+        make_option("--csslint-exclude",
+                    dest="csslint_exclude", default="",
+                    help="Exclude patterns"),
+        make_option("--csslint-static-dirname",
+                    dest="csslint_static-dirname", default="static",
+                    help="Name of dir with css static files"),
+        make_option("--csslint-ignore",
+                    dest="csslint_ignore", default="",
+                    help="Ignore rules")]
 
     def __init__(self, test_labels, options):
         super(Task, self).__init__(test_labels, options)
@@ -74,6 +73,8 @@ class Task(BaseTask):
         elif self.to_file:
             self.output.write('<?xml version="1.0" encoding='
                               '"utf-8"?><lint></lint>')
+
+        self.output.close()
 
     def static_files_iterator(self):
         locations = get_apps_locations(self.test_labels, self.test_all)
