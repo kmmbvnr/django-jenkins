@@ -5,6 +5,7 @@ import time
 
 from xml.etree import ElementTree as ET
 from django.conf import settings
+from django.utils.encoding import smart_text
 from django.test.testcases import TestCase
 from django.utils.unittest import TextTestResult, TextTestRunner
 
@@ -85,12 +86,12 @@ class EXMLTestResult(TextTestResult):
             output = sys.stdout.getvalue() if hasattr(sys.stdout, 'getvalue') else ''
             if output:
                 sysout = ET.SubElement(self.testcase, 'system-out')
-                sysout.text = output
+                sysout.text = smart_text(output, errors='ignore')
 
             error = sys.stderr.getvalue() if hasattr(sys.stderr, 'getvalue') else ''
             if error:
                 syserr = ET.SubElement(self.testcase, 'system-err')
-                syserr.text = error
+                syserr.text = smart_text(error, errors='ignore')
 
         super(EXMLTestResult, self).stopTest(test)
 
