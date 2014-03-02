@@ -39,45 +39,40 @@ class TaskListCommand(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('--all', action='store_true',
                     dest='test_all', default=False,
-            help='Ignore PROJECT_APPS settings and run '
-                 'through all INSTALLED_APPS'),
+                    help='Ignore PROJECT_APPS settings and run through all INSTALLED_APPS'),
         make_option('--interactive', action='store_true',
                     dest='interactive', default=False,
-            help='Allow to ask user input'),
+                    help='Allow to ask user input'),
         make_option('--debug', action='store_true',
                     dest='debug', default=False,
-            help='Do not intercept stdout and stderr, '
-                 'friendly for console debuggers'),
+                    help='Do not intercept stdout and stderr, friendly for console debuggers'),
         make_option('--output-dir', dest='output_dir', default="reports",
-            help='Report files directory'),
+                    help='Report files directory'),
         make_option('--liveserver',
-            action='store', dest='liveserver', default=None,
-            help='Overrides the default address where the live server (used '
-                 'with LiveServerTestCase) is expected to run from. The '
-                 'default value is localhost:8081.')
+                    action='store', dest='liveserver', default=None,
+                    help='Overrides the default address where the live server (used '
+                    'with LiveServerTestCase) is expected to run from. The '
+                    'default value is localhost:8081.')
     )
 
     def __init__(self):
         super(TaskListCommand, self).__init__()
         self.tasks_cls = [import_module(module_name).Task
-                                for module_name in self.get_task_list()]
+                          for module_name in self.get_task_list()]
 
     def handle(self, *test_labels, **options):
-        options['verbosity'] = int(options.get('verbosity'))
+        options['verbosity'] = int(options.get('verbosity', 1))
 
         # options
         if options.get('liveserver') is not None:
-            os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = \
-                                                        options['liveserver']
+            os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = options['liveserver']
             del options['liveserver']
 
         # instantiate tasks
         self.tasks = self.get_tasks(*test_labels, **options)
 
         # subscribe
-        for signal_name, signal in inspect.getmembers(
-                                                signals,
-                                                predicate=lambda obj: obj):
+        for signal_name, signal in inspect.getmembers(signals, predicate=lambda obj: obj):
             for task in self.tasks:
                 signal_handler = getattr(task, signal_name, None)
                 if signal_handler:

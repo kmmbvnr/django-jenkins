@@ -5,6 +5,7 @@ import time
 
 from xml.etree import ElementTree as ET
 from django.conf import settings
+from django.utils.encoding import smart_text
 from django.test.testcases import TestCase
 from django.utils.unittest import TextTestResult, TextTestRunner
 
@@ -82,15 +83,15 @@ class EXMLTestResult(TextTestResult):
 
     def stopTest(self, test):
         if self.buffer:
-            output = sys.stdout.getvalue()
+            output = sys.stdout.getvalue() if hasattr(sys.stdout, 'getvalue') else ''
             if output:
                 sysout = ET.SubElement(self.testcase, 'system-out')
-                sysout.text = output
+                sysout.text = smart_text(output, errors='ignore')
 
-            error = sys.stderr.getvalue()
+            error = sys.stderr.getvalue() if hasattr(sys.stderr, 'getvalue') else ''
             if error:
                 syserr = ET.SubElement(self.testcase, 'system-err')
-                syserr.text = error
+                syserr.text = smart_text(error, errors='ignore')
 
         super(EXMLTestResult, self).stopTest(test)
 
@@ -136,10 +137,12 @@ class CITestSuiteRunner(DiscoverRunner):
     """
     Continuous integration test runner
     """
-    def __init__(self, output_dir, with_reports=True, **kwargs):
+    def __init__(self, output_dir, with_reports=True, debug=False, test_all=False, **kwargs):
         super(CITestSuiteRunner, self).__init__(**kwargs)
         self.with_reports = with_reports
         self.output_dir = output_dir
+        self.debug = debug
+        self.test_all = test_all
 
     def setup_test_environment(self, **kwargs):
         super(CITestSuiteRunner, self).setup_test_environment()
@@ -158,13 +161,17 @@ class CITestSuiteRunner(DiscoverRunner):
         return super(CITestSuiteRunner, self).setup_databases()
 
     def build_suite(self, test_labels, extra_tests=None, **kwargs):
+        if not test_labels and not self.test_all:
+            if hasattr(settings, 'PROJECT_APPS'):
+                test_labels = settings.PROJECT_APPS
+
         suite = super(CITestSuiteRunner, self).build_suite(test_labels, extra_tests=None, **kwargs)
         signals.build_suite.send(sender=self, suite=suite)
         return reorder_suite(suite, getattr(self, 'reorder_by', (TestCase,)))
 
     def run_suite(self, suite, **kwargs):
         signals.before_suite_run.send(sender=self)
-        result = TextTestRunner(buffer=True,
+        result = TextTestRunner(buffer=not self.debug,
                                 resultclass=EXMLTestResult,
                                 verbosity=self.verbosity).run(suite)
         if self.with_reports:

@@ -10,7 +10,7 @@ class CalledProcessError(subprocess.CalledProcessError):
 
     def __str__(self):
         return "Command '%s' returned non-zero exit status %d\nOutput:\n%s" \
-                        % (self.cmd, self.returncode, self.output)
+            % (self.cmd, self.returncode, self.output)
 
 
 def relpath(path, start=os.path.curdir):
@@ -41,9 +41,14 @@ def check_output(*popenargs, **kwargs):
     if 'stdout' in kwargs or 'stderr' in kwargs:
         raise ValueError('stdout or stderr argument not allowed, '
                          'it will be overridden.')
-    process = subprocess.Popen(stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE,
-                               *popenargs, **kwargs)
+
+    try:
+        process = subprocess.Popen(stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE,
+                                   *popenargs, **kwargs)
+    except OSError:
+        raise RuntimeError('Could not open program %s. Are the dependencies installed?' % popenargs)
+
     output, err = process.communicate()
     retcode = process.poll()
     if retcode:

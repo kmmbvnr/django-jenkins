@@ -27,7 +27,6 @@ Latest git version::
 Installation for Python 3::
 
     Works out of the box
-    Note that lettuce itself is not yet ported to python 3
 
 
 Usage
@@ -159,13 +158,6 @@ Here is the list of tasks prebuild with django-jenkins
 .. _django-extensions: http://pypi.python.org/pypi/django-extensions
 .. _pygraphviz: http://pypi.python.org/pypi/pygraphviz/
 
-- ``django_jenkins.tasks.lettuce_tests``
-
-  Discover Lettuce tests from app/feature directories.
-
-  You should have the Lettuce_ Python package installed to run this task.
-
-.. _Lettuce: http://lettuce.it/
 
 - ``django_jenkins.tasks.with_local_celery``
 
@@ -174,20 +166,18 @@ Here is the list of tasks prebuild with django-jenkins
 
 .. _Celery: http://ask.github.com/django-celery/
 
-- ``django_jenkins.tasks.behave_tests``
-
-  Discover Behave tests from app/features directories.
-
-  You should have the Behave_ Python package installed to run this task.
-
-.. _Behave: http://pythonhosted.org/behave/
 
 Changelog
 ---------
 
-GIT Version
+0.15.0 2014-02-15
 ~~~~~~~~~~~
-* django_tests and dir_tests test dicovery tasks are replaced by directory discover test runner build-in in django 1.6
+* Speed up and reduced memory usage for junit reports generation
+* django_tests and dir_tests test discovery tasks are replaced by directory discover test runner build-in in django 1.6
+* Removed unmaintained lettuce tests support
+* Removed unmaintained behave tests support
+* Fixed non-asci support in junit reports
+
 
 0.14.1 2013-08-15
 ~~~~~~~~~~~~~~~~~
@@ -286,29 +276,9 @@ Contribution guide
 
 Authors
 -------
-Mikhail Podgurskiy <kmmbvnr@gmail.com>
+Created and maintained by Mikhail Podgurskiy <kmmbvnr@gmail.com>
 
-Contributors:
+Contributors: https://github.com/kmmbvnr/django-jenkins/graphs/contributors
 
-* Chris Heisel (https://github.com/cmheisel)
-* Andrey Fedoseev (https://github.com/andreyfedoseev)
-* Jannis Leidel (https://github.com/jezdez)
-* Luciano Pacheco (https://github.com/lucmult)
-* Julien Lirochon (https://github.com/jlirochon)
-* Olivier Girardot (https://github.com/ssaboum)
-* Victor Safronovich (https://github.com/suvit)
-* Bradley Ayers (https://github.com/bradleyayers)
-* Jonas Obrist (https://github.com/ojii)
-* John Paulett (https://github.com/johnpaulett)
-* Michael Ellingen (https://github.com/mvantellingen)
-* Domen Kožar (https://github.com/iElectric)
-* Simon Panay (https://github.com/simonpanay)
-* Tom Mortimer-Jones (https://github.com/morty)
-* Philip Kimmey (https://github.com/philipkimmey)
-* Peter Baumgartner (https://github.com/ipmb)
-* Kris Kumler (https://github.com/kkumler)
-* Axel Haustant (https://github.com/noirbizarre)
-
-Special thanks, for all github forks authors not listed here
-for project extensions ideas and problem identifications.
+Special thanks, for all github forks authors for project extensions ideas and problem identifications.
 

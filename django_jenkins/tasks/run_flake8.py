@@ -55,14 +55,12 @@ class Task(Task):
 
         class JenkinsReport(pep8.BaseReport):
             def error(instance, line_number, offset, text, check):
-                code = super(JenkinsReport, instance).error(
-                                            line_number, offset, text, check)
+                code = super(JenkinsReport, instance).error(line_number, offset, text, check)
 
                 if not code:
                     return
                 sourceline = instance.line_offset + line_number
-                self.output.write('%s:%s:%s: %s\n' %
-                            (instance.filename, sourceline, offset + 1, text))
+                self.output.write('%s:%s:%s: %s\n' % (instance.filename, sourceline, offset + 1, text))
 
         pep8style = get_style_guide(parse_argv=False, config_file=self.pep8_rcfile,
                                     reporter=JenkinsReport, max_complexity=self.max_complexity,
@@ -72,4 +70,3 @@ class Task(Task):
             pep8style.input_dir(relpath(location))
 
         self.output.close()
-
