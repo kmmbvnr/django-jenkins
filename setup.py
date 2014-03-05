@@ -3,24 +3,35 @@
 
 import codecs
 from os import path
-from setuptools import setup
-
+from subprocess import check_call
+from distutils.core import setup
+from distutils.command.build import build
 
 read = lambda filepath: codecs.open(filepath, 'r', 'utf-8').read()
 
 
+class build_with_submodules(build):
+
+    def run(self):
+        if path.exists('.git'):
+            check_call(['git', 'submodule', 'init'])
+            check_call(['git', 'submodule', 'update'])
+        build.run(self)
+
 setup(
     name='django-jenkins',
+    cmdclass={"build": build_with_submodules},
     version='0.15.0',
     author='Mikhail Podgurskiy',
     author_email='kmmbvnr@gmail.com',
     description='Plug and play continuous integration with django and jenkins',
-    long_description=read(path.abspath(path.join(path.dirname(__file__), 'README.rst'))),
+    long_description=read(
+        path.abspath(path.join(path.dirname(__file__), 'README.rst'))),
     license='LGPL',
     platforms=['Any'],
     keywords=['pyunit', 'unittest', 'testrunner', 'hudson', 'jenkins',
               'django', 'pylint', 'pep8', 'pyflakes', 'csslint', 'jshint',
-              'coverage'],
+              'coverage', 'testem'],
     url='http://github.com/kmmbvnr/django-jenkins',
     classifiers=[
         'Development Status :: 4 - Beta',
