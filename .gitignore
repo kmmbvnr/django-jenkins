@@ -4,6 +4,10 @@
 .coverage
 *.pyc
 reports
+.reports_py??
+.tox
+django_jenkins.egg-info/
 MANIFEST
+.idea/*
 
 

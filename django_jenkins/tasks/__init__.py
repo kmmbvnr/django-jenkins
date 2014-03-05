@@ -42,9 +42,10 @@ def get_apps_under_test(test_labels, all_apps=False):
         else:
             apps = settings.INSTALLED_APPS
     else:
-        apps = [app for app in settings.INSTALLED_APPS \
-                    for label in test_labels \
-                    if app == label.split('.')[0] or app.endswith('.%s' % label.split('.')[0])]
+        apps = [app for app in settings.INSTALLED_APPS
+                for label in test_labels
+                if (app == label.rsplit('.', 1)[-1]
+                    or app.endswith('.%s' % label.split('.')[0]))]
     return apps
 
 
@@ -52,7 +53,7 @@ def get_apps_locations(test_labels, all_apps=False):
     """
     Returns list of paths to tested apps
     """
-    return [os.path.dirname(os.path.normpath(import_module(app_name).__file__)) \
+    return [os.path.dirname(os.path.normpath(import_module(app_name).__file__))
             for app_name in get_apps_under_test(test_labels, all_apps)]
 
 
@@ -61,4 +62,3 @@ def get_app_location(app_module):
     Returns path to app
     """
     return os.path.dirname(os.path.normpath(app_module.__file__))
-

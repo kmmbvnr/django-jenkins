@@ -15,4 +15,3 @@ test_success = Signal(providing_args=['test'])
 test_skip = Signal(providing_args=['test', 'reason'])
 test_expected_failure = Signal(providing_args=['test', 'err'])
 test_unexpected_success = Signal(providing_args=['test'])
-

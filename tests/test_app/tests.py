@@ -7,6 +7,10 @@ from django.test import LiveServerTestCase
 
 
 class SaintyChecks(TestCase):
+    #@classmethod
+    #def setUpClass(cls):
+    #    raise Exception("Ups, should be disabled")
+
     def test_mailbox_stubs_not_broken(self):
         print("Testing mailbox django stubs")
         mail.send_mail('Test subject', 'Test message', 'nobody@kenkins.com',
@@ -16,6 +20,15 @@ class SaintyChecks(TestCase):
     @skip("Check skiped test")
     def test_is_skipped(self):
         print("This test should be skipped")
+
+    def test_junit_xml_with_utf8_stdout_and_stderr(self):
+        sys.stdout.write('\xc4\x85')
+        sys.stderr.write('\xc4\x85')
+
+    def test_junit_xml_with_invalid_stdout_and_stderr_encoding(self):
+        sys.stdout.write('\xc4')
+        sys.stderr.write('\xc4')
+
 
     #def test_failure(self):
     #    raise Exception("Ups, should be disabled")

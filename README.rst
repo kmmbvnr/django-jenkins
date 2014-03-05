@@ -3,6 +3,12 @@ django-jenkins
 
 Plug and play continuous integration with Django and Jenkins
 
+.. image:: https://requires.io/github/kmmbvnr/django-jenkins/requirements.png?branch=master
+   :target: https://requires.io/github/kmmbvnr/django-jenkins/requirements/?branch=master
+
+.. image:: https://pypip.in/d/django-jenkins/badge.png
+        :target: https://crate.io/packages/django-jenkins
+
 Installation
 ------------
 
@@ -14,26 +20,14 @@ Or by downloading the source and running::
 
     $ python setup.py install
 
-For the latest git version, you need the latest pip installed first::
+Latest git version::
 
-    $ pip install git+https://github.com/pypa/pip.git
     $ pip install -e git+git://github.com/kmmbvnr/django-jenkins.git#egg=django-jenkins
-
 
 Installation for Python 3::
 
-    $ pip install git+https://github.com/django/django.git
-    $ pip install hg+http://hg.logilab.org/pylint
-    $ pip install coverage
-    $ # if required
-    $ pip install pyflakes3k
-    $ pip install pep8
-    $ # lettuce and selenium are not yet ported to python 3k
+    Works out of the box
 
-
-And then, upgrade the pip and install django-jenkins from git as described above.
-
-.. _PyPI: http://pypi.python.org/
 
 Usage
 -----
@@ -67,7 +61,6 @@ Settings
     JENKINS_TASKS = (
         'django_jenkins.tasks.run_pylint',
         'django_jenkins.tasks.with_coverage',
-        'django_jenkins.tasks.django_tests',
     )
 
 - ``JENKINS_TEST_RUNNER``
@@ -75,6 +68,7 @@ Settings
   The name of the class to use for starting the test suite for ``jenkins``
   and ``jtest`` commands. Class should be inherited from
   ``django_jenkins.runner.CITestSuiteRunner``
+
 
 Tasks
 -----
@@ -84,7 +78,7 @@ Here is the list of tasks prebuild with django-jenkins
 - ``django_jenkins.tasks.run_pylint``
 
   Runs Pylint_ over selected Django apps.
-  
+
   Task-specific settings: ``PYLINT_RCFILE``
 
 .. _Pylint: http://www.logilab.org/project/pylint
@@ -92,37 +86,25 @@ Here is the list of tasks prebuild with django-jenkins
 - ``django_jenkins.tasks.with_coverage``
 
   Produces `XML coverage report <http://nedbatchelder.com/code/coverage/sample_html/>`__ for Jenkins
-  
-  Task-specific settings: ``COVERAGE_RCFILE``, ``COVERAGE_REPORT_HTML_OUTPUT_DIR``, ``COVERAGE_MEASURE_BRANCH``, ``COVERAGE_EXCLUDES``, ``COVERAGE_WITH_MIGRATIONS``
 
-- ``django_jenkins.tasks.django_tests``
-
-  Discovers standard Django test suite from test.py files
-
-- ``django_jenkins.tasks.dir_tests``
-
-  Discover tests from all test*.py files in app subdirectories
+  Task-specific settings: ``COVERAGE_RCFILE``, ``COVERAGE_REPORT_HTML_OUTPUT_DIR``, ``COVERAGE_MEASURE_BRANCH``, ``COVERAGE_EXCLUDES``, ``COVERAGE_WITH_MIGRATIONS``, ``COVERAGE_EXCLUDES_FOLDERS``
 
 - ``django_jenkins.tasks.run_jshint``
 
   Runs jshint tools over ``<app>/static/*/*.js`` files.
   Creates Pylint compatible report for Jenkins
 
-  You should have the rhino_ or nodejs_ javascript interpreter installed for jshint
-  
-  Task-specific settings: ``JSHINT_INTERPRETER``, ``JSHINT_CHECKED_FILES``
+  You should have the jshint installed
 
 - ``django_jenkins.tasks.run_csslint``
 
   Runs CSS lint tools over `app/static/*/*.css` files.
   Creates CSS Lint compatible report for Jenkins
 
-  You should have the rhino_ or nodejs_ javascript interpreter installed for csslint
-  
-  Task-specific settings: ``CSSLINT_INTERPRETER``, ``CSSLINT_CHECKED_FILES``
+  You should have the csslint installed
 
-.. _rhino: http://www.mozilla.org/rhino/
-.. _nodejs: http://nodejs.org/
+  Task-specific settings: ``CSSLINT_CHECKED_FILES``
+
 
 - ``django_jenkins.tasks.run_pep8``
 
@@ -130,6 +112,8 @@ Here is the list of tasks prebuild with django-jenkins
   Creates Pylint compatible report for Jenkins
 
   You should have pep8_ python package (>=1.3) installed to run this task.
+
+  Task-specific settings: ``PEP8_RCFILE``
 
 .. _pep8: http://pypi.python.org/pypi/pep8
 
@@ -141,6 +125,15 @@ Here is the list of tasks prebuild with django-jenkins
   You should have Pyflakes_ python package installed to run this task.
 
 .. _Pyflakes: http://pypi.python.org/pypi/pyflakes
+
+- ``django_jenkins.tasks.run_flake8``
+
+  Runs flake8 tool over selected Django apps.
+  Creates Pylint compatible report for Jenkins.
+
+  You should have flake8_ python package installed to run this task.
+
+.. _flake8: http://pypi.python.org/pypi/flake8
 
 - ``django_jenkins.tasks.run_sloccount``
 
@@ -157,7 +150,7 @@ Here is the list of tasks prebuild with django-jenkins
   Creates ``models.png`` graphic (`example <https://code.djangoproject.com/wiki/DjangoGraphviz#Examples>`__).
 
   You should have django-extensions_ and pygraphviz_ installed to run this task.
-  
+
   Task-specific settings:
 
   - ``GRAPH_MODELS``: A dictionary of settings for graph_models, most corresponding to the command-line options (with 'graphmodels\_' removed): ``fail_without_error``, ``disable_fields``, ``group_models``, ``all_applications``, ``outputfile``, ``layout``, ``verbose_names``, ``language``, ``exclude_columns``, ``exclude_models``, ``inheritance``
@@ -165,13 +158,6 @@ Here is the list of tasks prebuild with django-jenkins
 .. _django-extensions: http://pypi.python.org/pypi/django-extensions
 .. _pygraphviz: http://pypi.python.org/pypi/pygraphviz/
 
-- ``django_jenkins.tasks.lettuce_tests``
-
-  Discover Lettuce tests from app/feature directories.
-
-  You should have the Lettuce_ Python package installed to run this task.
-
-.. _Lettuce: http://lettuce.it/
 
 - ``django_jenkins.tasks.with_local_celery``
 
@@ -180,8 +166,32 @@ Here is the list of tasks prebuild with django-jenkins
 
 .. _Celery: http://ask.github.com/django-celery/
 
+
 Changelog
 ---------
+
+0.15.0 2014-02-15
+~~~~~~~~~~~
+* Speed up and reduced memory usage for junit reports generation
+* django_tests and dir_tests test discovery tasks are replaced by directory discover test runner build-in in django 1.6
+* Removed unmaintained lettuce tests support
+* Removed unmaintained behave tests support
+* Fixed non-asci support in junit reports
+
+
+0.14.1 2013-08-15
+~~~~~~~~~~~~~~~~~
+* Django 1.6 compatibility
+* Flake8 support
+* Pep8 file configuration support
+* CSSLint no longer shipped with django-jenkins. Install it with ``npm install csslint -g``
+
+
+0.14.0 2012-12-15
+~~~~~~~~~~~~~~~~~
+* Python 3 (with django 1.5) support
+* JSHint no longer shipped with django-jenkins. Install it with ``npm install jshint -g``
+
 
 0.13.0 2012-07-15
 ~~~~~~~~~~~~~~~~~
@@ -247,30 +257,28 @@ Changelog
 * Initial public release
 
 
+Contribution guide
+~~~~~~~~~~~~~~~~~~
+
+* Set up local jenkins
+* Set up django-jenkins::
+
+    npm install jshint
+    npm install csslint
+    PATH=$PATH:$WORKSPACE/node_modules/.bin
+    tox -e $TOXENV
+
+* Ensure that everythig works
+* Modify the code
+* Ensure that everythig works again
+* Fix pep8/pyflakes errors and minimize pylint's warninigs
+* Pull request!
+
 Authors
 -------
-Mikhail Podgurskiy <kmmbvnr@gmail.com>
+Created and maintained by Mikhail Podgurskiy <kmmbvnr@gmail.com>
 
-Contributors:
+Contributors: https://github.com/kmmbvnr/django-jenkins/graphs/contributors
 
-* Chris Heisel (https://github.com/cmheisel)
-* Andrey Fedoseev (https://github.com/andreyfedoseev)
-* Jannis Leidel (https://github.com/jezdez)
-* Luciano Pacheco (https://github.com/lucmult)
-* Julien Lirochon (https://github.com/jlirochon)
-* Olivier Girardot (https://github.com/ssaboum)
-* Victor Safronovich (https://github.com/suvit)
-* Bradley Ayers (https://github.com/bradleyayers)
-* Jonas Obrist (https://github.com/ojii)
-* John Paulett (https://github.com/johnpaulett)
-* Michael Ellingen (https://github.com/mvantellingen)
-* Domen Kožar (https://github.com/iElectric)
-* Simon Panay (https://github.com/simonpanay)
-* Tom Mortimer-Jones (https://github.com/morty)
-* Philip Kimmey (https://github.com/philipkimmey)
-* Peter Baumgartner (https://github.com/ipmb)
-* Kris Kumler (https://github.com/kkumler)
-
-Special thanks, for all github forks authors not listed here 
-for for project extensions ideas and problem identifications.
+Special thanks, for all github forks authors for project extensions ideas and problem identifications.
 

@@ -9,7 +9,8 @@ class CalledProcessError(subprocess.CalledProcessError):
         self.output = output
 
     def __str__(self):
-        return "Command '%s' returned non-zero exit status %d\nOutput:\n%s" % (self.cmd, self.returncode, self.output)
+        return "Command '%s' returned non-zero exit status %d\nOutput:\n%s" \
+            % (self.cmd, self.returncode, self.output)
 
 
 def relpath(path, start=os.path.curdir):
@@ -38,15 +39,23 @@ def check_output(*popenargs, **kwargs):
     Backport from Python2.7
     """
     if 'stdout' in kwargs or 'stderr' in kwargs:
-        raise ValueError('stdout or stderr argument not allowed, it will be overridden.')
-    process = subprocess.Popen(stdout=subprocess.PIPE, stderr=subprocess.PIPE, *popenargs, **kwargs)
+        raise ValueError('stdout or stderr argument not allowed, '
+                         'it will be overridden.')
+
+    try:
+        process = subprocess.Popen(stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE,
+                                   *popenargs, **kwargs)
+    except OSError:
+        raise RuntimeError('Could not open program %s. Are the dependencies installed?' % popenargs)
+
     output, err = process.communicate()
     retcode = process.poll()
     if retcode:
         cmd = kwargs.get("args")
         if cmd is None:
             cmd = popenargs[0]
-        raise CalledProcessError(retcode, cmd, output=output + '\n' + err)
+        raise CalledProcessError(retcode, cmd, output="%s\n%s" % (output, err))
     return output
 
 
@@ -57,7 +66,9 @@ def find_first_existing_executable(exe_list):
     """
     for filepath, opts in exe_list:
         try:
-            proc = subprocess.Popen([filepath, opts], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            proc = subprocess.Popen([filepath, opts],
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
             proc.communicate()
         except OSError:
             pass
@@ -70,4 +81,3 @@ def total_seconds(delta):
     Backport timedelta.total_seconds() from Python 2.7
     """
     return delta.days * 86400.0 + delta.seconds + delta.microseconds * 1e-6
-

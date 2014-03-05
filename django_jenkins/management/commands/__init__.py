@@ -9,6 +9,7 @@ from django.utils.importlib import import_module
 from django_jenkins import signals
 from django_jenkins.runner import CITestSuiteRunner
 
+
 def get_runner():
     if hasattr(settings, 'JENKINS_TEST_RUNNER'):
         test_path = settings.JENKINS_TEST_RUNNER.split('.')
@@ -21,7 +22,8 @@ def get_runner():
         test_runner = getattr(test_module, test_path[-1])
 
         if not issubclass(test_runner, CITestSuiteRunner):
-            raise ValueError('Your custom TestRunner should extend the CITestSuiteRunner class.')
+            raise ValueError('Your custom TestRunner should extend '
+                             'the CITestSuiteRunner class.')
         return test_runner
     else:
         return CITestSuiteRunner
@@ -31,29 +33,36 @@ class TaskListCommand(BaseCommand):
     """
     Run list of predifined tasks from command line
     """
-    requires_model_validation = False  # if True, breaks coverage of models.py files
+    requires_model_validation = False  # if True, breaks coverage
+                                       # of models.py files
 
     option_list = BaseCommand.option_list + (
-        make_option('--all', action='store_true', dest='test_all', default=False,
-            help='Ignore PROJECT_APPS settings and run through all INSTALLED_APPS'),
-        make_option('--interactive', action='store_true', dest='interactive', default=False,
-            help='Allow to ask user input'),
-        make_option('--debug', action='store_true', dest='debug', default=False,
-            help='Do not intercept stdout and stderr, friendly for console debuggers'),
+        make_option('--all', action='store_true',
+                    dest='test_all', default=False,
+                    help='Ignore PROJECT_APPS settings and run through all INSTALLED_APPS'),
+        make_option('--interactive', action='store_true',
+                    dest='interactive', default=False,
+                    help='Allow to ask user input'),
+        make_option('--debug', action='store_true',
+                    dest='debug', default=False,
+                    help='Do not intercept stdout and stderr, friendly for console debuggers'),
         make_option('--output-dir', dest='output_dir', default="reports",
-            help='Report files directory'),
+                    help='Report files directory'),
         make_option('--liveserver',
-            action='store', dest='liveserver', default=None,
-            help='Overrides the default address where the live server (used '
-                 'with LiveServerTestCase) is expected to run from. The '
-                 'default value is localhost:8081.')
+                    action='store', dest='liveserver', default=None,
+                    help='Overrides the default address where the live server (used '
+                    'with LiveServerTestCase) is expected to run from. The '
+                    'default value is localhost:8081.')
     )
 
     def __init__(self):
         super(TaskListCommand, self).__init__()
-        self.tasks_cls = [import_module(module_name).Task for module_name in self.get_task_list()]
+        self.tasks_cls = [import_module(module_name).Task
+                          for module_name in self.get_task_list()]
 
     def handle(self, *test_labels, **options):
+        options['verbosity'] = int(options.get('verbosity', 1))
+
         # options
         if options.get('liveserver') is not None:
             os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = options['liveserver']
@@ -71,12 +80,7 @@ class TaskListCommand(BaseCommand):
 
         # run
         test_runner_cls = get_runner()
-        test_runner = test_runner_cls(
-            output_dir=options['output_dir'],
-            interactive=options['interactive'],
-            debug=options['debug'],
-            verbosity=int(options.get('verbosity', 1)),
-            with_reports=options.get('with_reports', True))
+        test_runner = test_runner_cls(**options)
 
         if test_runner.run_tests(test_labels):
             sys.exit(1)
@@ -101,12 +105,21 @@ class TaskListCommand(BaseCommand):
         """
         parser = super(TaskListCommand, self).create_parser(*args)
 
+        test_runner_class = get_runner()
+        if hasattr(test_runner_class, 'option_list'):
+            option_group = OptionGroup(parser, test_runner_class.__module__, "")
+            for option in test_runner_class.option_list:
+                option_group.add_option(option)
+
+            parser.add_option_group(option_group)
+
         for task_cls in self.tasks_cls:
             option_group = OptionGroup(parser, task_cls.__module__, "")
 
             if task_cls.option_list:
                 for option in task_cls.option_list:
-                    option_group.add_option(option)
+                    if option._long_opts and not parser.has_option(option._long_opts[0]):
+                        option_group.add_option(option)
                 parser.add_option_group(option_group)
 
         return parser

@@ -1,17 +1,23 @@
-# -*- coding: utf-8 -*-
 import os
 import sys
 import pep8
 
-from optparse import make_option
-from django.conf import settings
-
+from flake8.engine import get_style_guide
+from django_jenkins.tasks import get_apps_locations
+from django_jenkins.tasks.run_pep8 import Task
 from django_jenkins.functions import relpath
-from django_jenkins.tasks import BaseTask, get_apps_locations
+from optparse import make_option
 
 
-class Task(BaseTask):
+class Task(Task):
+    """
+    Runs flake8 on python files.
+    """
     option_list = [
+        make_option('--max-complexity',
+                    dest='max_complexity',
+                    default='-1',
+                    help='McCabe complexity treshold'),
         make_option("--pep8-exclude",
                     dest="pep8-exclude",
                     default=pep8.DEFAULT_EXCLUDE + ",migrations",
@@ -34,22 +40,15 @@ class Task(BaseTask):
         super(Task, self).__init__(test_labels, options)
         self.test_all = options['test_all']
 
-        if options.get('pep8_file_output', True):
+        self.max_complexity = int(options['max_complexity'])
+
+        if options.get('flake8_file_output', True):
             output_dir = options['output_dir']
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-            self.output = open(os.path.join(output_dir, 'pep8.report'), 'w')
+            self.output = open(os.path.join(output_dir, 'flake8.report'), 'w')
         else:
             self.output = sys.stdout
-
-        self.pep8_rcfile = options['pep8-rcfile'] or Task.default_config_path()
-        self.pep8_options = {'exclude': options['pep8-exclude'].split(',')}
-        if options['pep8-select']:
-            self.pep8_options['select'] = options['pep8-select'].split(',')
-        if options['pep8-ignore']:
-            self.pep8_options['ignore'] = options['pep8-ignore'].split(',')
-        if options['pep8-max-line-length']:
-            self.pep8_options['max_line_length'] = options['pep8-max-line-length']
 
     def teardown_test_environment(self, **kwargs):
         locations = get_apps_locations(self.test_labels, self.test_all)
@@ -61,19 +60,13 @@ class Task(BaseTask):
                 if not code:
                     return
                 sourceline = instance.line_offset + line_number
-                self.output.write('%s:%s:%s: %s\n' %
-                                  (instance.filename, sourceline, offset + 1, text))
+                self.output.write('%s:%s:%s: %s\n' % (instance.filename, sourceline, offset + 1, text))
 
-        pep8style = pep8.StyleGuide(parse_argv=False, config_file=self.pep8_rcfile,
-                                    reporter=JenkinsReport,
+        pep8style = get_style_guide(parse_argv=False, config_file=self.pep8_rcfile,
+                                    reporter=JenkinsReport, max_complexity=self.max_complexity,
                                     **self.pep8_options)
 
         for location in locations:
             pep8style.input_dir(relpath(location))
 
         self.output.close()
-
-    @staticmethod
-    def default_config_path():
-        rcfile = getattr(settings, 'PEP8_RCFILE', 'pep8.rc')
-        return rcfile if os.path.exists(rcfile) else None
