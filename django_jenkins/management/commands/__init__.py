@@ -61,6 +61,8 @@ class TaskListCommand(BaseCommand):
                           for module_name in self.get_task_list()]
 
     def handle(self, *test_labels, **options):
+        options['verbosity'] = int(options.get('verbosity', 1))
+
         # options
         if options.get('liveserver') is not None:
             os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = options['liveserver']
@@ -78,13 +80,7 @@ class TaskListCommand(BaseCommand):
 
         # run
         test_runner_cls = get_runner()
-        test_runner = test_runner_cls(
-            output_dir=options['output_dir'],
-            interactive=options['interactive'],
-            debug=options['debug'],
-            verbosity=int(options.get('verbosity', 1)),
-            with_reports=options.get('with_reports', True),
-            test_all=options.get('test_all', False))
+        test_runner = test_runner_cls(**options)
 
         if test_runner.run_tests(test_labels):
             sys.exit(1)
@@ -108,6 +104,14 @@ class TaskListCommand(BaseCommand):
         Extend the option list with tasks specific options
         """
         parser = super(TaskListCommand, self).create_parser(*args)
+
+        test_runner_class = get_runner()
+        if hasattr(test_runner_class, 'option_list'):
+            option_group = OptionGroup(parser, test_runner_class.__module__, "")
+            for option in test_runner_class.option_list:
+                option_group.add_option(option)
+
+            parser.add_option_group(option_group)
 
         for task_cls in self.tasks_cls:
             option_group = OptionGroup(parser, task_cls.__module__, "")
