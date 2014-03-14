@@ -12,6 +12,10 @@ from django.utils.unittest import TextTestResult, TextTestRunner
 try:
     # Django 1.6
     from django.test.runner import DiscoverRunner
+    # For those who still use django 1.5 tests on Django 1.6
+    if settings.TEST_RUNNER == 'django.test.simple.DjangoTestSuiteRunner':
+        from django.test.simple import DjangoTestSuiteRunner as DiscoverRunner
+
 except ImportError:
     # Fallback to third-party app on Django 1.5
     try:
