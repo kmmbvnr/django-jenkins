@@ -15,7 +15,7 @@ cache-size=500
 # W0613 Unused argument %r Used when a function or method argument is not used.
 # W0702 No exception's type specified Used when an except clause doesn't specify exceptions type to catch.
 # R0201 Method could be a function
-disable=C0111,I0011,I0012,W0704,W0142,W0212,W0232,W0613,W0702,R0201
+disable=C0111,I0011,I0012,W0704,W0142,W0212,W0232,W0613,W0702,R0201,C1001
 
 [REPORTS]
 output-format=parseable
