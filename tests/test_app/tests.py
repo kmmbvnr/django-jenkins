@@ -31,7 +31,7 @@ class SaintyChecks(TestCase):
 
     @expectedFailure
     def test_error_with_unicode_msg(self):
-        raise self.assertTrue(False, 'Привет, я ошибка')
+        self.assertTrue(False, 'Привет, я ошибка')
 
     @expectedFailure
     def test_failure(self):
