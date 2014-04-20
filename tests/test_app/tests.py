@@ -2,7 +2,7 @@
 import sys
 from django.core import mail
 from django.test import TestCase
-from django.utils.unittest import skip
+from django.utils.unittest import skip, expectedFailure
 from django.test import LiveServerTestCase
 
 
@@ -29,9 +29,13 @@ class SaintyChecks(TestCase):
         sys.stdout.write('\xc4')
         sys.stderr.write('\xc4')
 
+    @expectedFailure
+    def test_error_with_unicode_msg(self):
+        raise self.assertTrue(False, 'Привет, я ошибка')
 
-    #def test_failure(self):
-    #    raise Exception("Ups, should be disabled")
+    @expectedFailure
+    def test_failure(self):
+        raise Exception("Ups, should be disabled")
 
 
 if sys.version_info[0] < 3:
