@@ -2,7 +2,7 @@ django==1.6.2
 django-discover-runner==1.0
 pylint==1.2.0
 coverage==3.7.1
-pyflakes==0.7.3
+pyflakes==0.8.1
 pep8==1.5.6
 selenium==2.41.0
-flake8==0.8.1
+flake8==2.1.0
