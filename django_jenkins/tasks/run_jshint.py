@@ -93,10 +93,11 @@ class Task(BaseTask):
             from django.contrib.staticfiles import finders
 
             for finder in finders.get_finders():
-                for path, storage in finder.list(self.exclude):
-                    path = os.path.join(storage.location, path)
-                    if path.endswith('.js') and in_tested_locations(path):
-                        yield path
+                for path, storage in finder.list(None):
+                    if not is_excluded(path):
+                        path = os.path.join(storage.location, path)
+                        if path.endswith('.js') and in_tested_locations(path):
+                            yield path
         else:
             # scan apps directories for static folders
             for location in locations:
