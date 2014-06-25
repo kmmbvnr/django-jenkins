@@ -64,9 +64,11 @@ class Task(Task):
 
         pep8style = get_style_guide(parse_argv=False, config_file=self.pep8_rcfile,
                                     reporter=JenkinsReport, max_complexity=self.max_complexity,
-                                    **self.pep8_options)
+                                    jobs=1, **self.pep8_options)
 
+        pep8style.options.report.start()
         for location in locations:
             pep8style.input_dir(relpath(location))
+        pep8style.options.report.stop()
 
         self.output.close()

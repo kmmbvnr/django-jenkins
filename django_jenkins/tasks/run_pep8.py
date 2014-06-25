@@ -68,8 +68,10 @@ class Task(BaseTask):
                                     reporter=JenkinsReport,
                                     **self.pep8_options)
 
+        pep8style.options.report.start()
         for location in locations:
             pep8style.input_dir(relpath(location))
+        pep8style.options.report.stop()
 
         self.output.close()
 
