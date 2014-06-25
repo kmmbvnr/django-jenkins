@@ -170,6 +170,11 @@ Here is the list of tasks prebuild with django-jenkins
 Changelog
 ---------
 
+GIT Version
+~~~~~~~~~~~
+
+* Support for all standard django test runner options
+
 0.15.0 2014-02-15
 ~~~~~~~~~~~
 * Speed up and reduced memory usage for junit reports generation
