@@ -139,7 +139,7 @@ GIT Version
 * ``django_jenkins.tasks.with_coverage`` removed use command line option instead `./manage.py jenkins --enable-coverage`
 * ``django_jenkins.tasks.run_graphmodels`` removed
 * ``django_jenkins.tasks.with_local_celery`` removed
-* Ability to run linters (pep8/pyflakes/pylint/csslint/jshint) removed
+* Ability to run linters (pep8/pyflakes/pylint/csslint/jshint) from command line without tests removed
 
 
 
