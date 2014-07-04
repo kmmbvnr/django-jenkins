@@ -3,7 +3,17 @@ from optparse import make_option
 from django.conf import settings
 
 from pylint import lint
-from pylint.reporters.text import ParseableTextReporter
+from pylint.reporters.text import TextReporter
+
+
+class ParseableTextReporter(TextReporter):
+    """
+    Outputs messages in a form recognized by jenkins
+
+    <filename>:<linenum>:<msg>
+    """
+    name = 'parseable'
+    line_format = '{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}'
 
 
 class Reporter(object):

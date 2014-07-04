@@ -97,7 +97,7 @@ class Command(TestCommand):
             coverage = apps.get_app_config('django_jenkins').coverage
             if coverage:
                 if options['verbosity'] >= 1:
-                    print('Storing coverage info..')
+                    print('Storing coverage info...')
 
                 coverage.stop()
                 coverage._harvest_data()
