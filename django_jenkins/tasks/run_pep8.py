@@ -1,17 +1,11 @@
-# -*- coding: utf-8 -*-
-import os
-import sys
+import os.path
 import pep8
-
 from optparse import make_option
 from django.conf import settings
 
-from django_jenkins.functions import relpath
-from django_jenkins.tasks import BaseTask, get_apps_locations
 
-
-class Task(BaseTask):
-    option_list = [
+class Reporter(object):
+    option_list = (
         make_option("--pep8-exclude",
                     dest="pep8-exclude",
                     default=pep8.DEFAULT_EXCLUDE + ",migrations",
@@ -27,55 +21,41 @@ class Task(BaseTask):
                     help="set maximum allowed line length (default: %d)" %
                     pep8.MAX_LINE_LENGTH),
         make_option("--pep8-rcfile", dest="pep8-rcfile",
-                    help="PEP8 configuration file"),
-    ]
+                    help="PEP8 configuration file")
+    )
 
-    def __init__(self, test_labels, options):
-        super(Task, self).__init__(test_labels, options)
-        self.test_all = options['test_all']
-
-        if options.get('pep8_file_output', True):
-            output_dir = options['output_dir']
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir)
-            self.output = open(os.path.join(output_dir, 'pep8.report'), 'w')
-        else:
-            self.output = sys.stdout
-
-        self.pep8_rcfile = options['pep8-rcfile'] or Task.default_config_path()
-        self.pep8_options = {'exclude': options['pep8-exclude'].split(',')}
-        if options['pep8-select']:
-            self.pep8_options['select'] = options['pep8-select'].split(',')
-        if options['pep8-ignore']:
-            self.pep8_options['ignore'] = options['pep8-ignore'].split(',')
-        if options['pep8-max-line-length']:
-            self.pep8_options['max_line_length'] = options['pep8-max-line-length']
-
-    def teardown_test_environment(self, **kwargs):
-        locations = get_apps_locations(self.test_labels, self.test_all)
+    def run(self, apps_locations, **options):
+        output = open(os.path.join(options['output_dir'], 'pep8.report'), 'w')
 
         class JenkinsReport(pep8.BaseReport):
             def error(instance, line_number, offset, text, check):
                 code = super(JenkinsReport, instance).error(line_number, offset, text, check)
+                if code:
+                    sourceline = instance.line_offset + line_number
+                    output.write('%s:%s:%s: %s\n' % (instance.filename, sourceline, offset + 1, text))
 
-                if not code:
-                    return
-                sourceline = instance.line_offset + line_number
-                self.output.write('%s:%s:%s: %s\n' %
-                                  (instance.filename, sourceline, offset + 1, text))
+        pep8_options = {'exclude': options['pep8-exclude'].split(',')}
+        if options['pep8-select']:
+            pep8_options['select'] = options['pep8-select'].split(',')
+        if options['pep8-ignore']:
+            pep8_options['ignore'] = options['pep8-ignore'].split(',')
+        if options['pep8-max-line-length']:
+            pep8_options['max_line_length'] = options['pep8-max-line-length']
 
-        pep8style = pep8.StyleGuide(parse_argv=False, config_file=self.pep8_rcfile,
-                                    reporter=JenkinsReport,
-                                    **self.pep8_options)
+        pep8style = pep8.StyleGuide(
+            parse_argv=False,
+            config_file=self.get_config_path(options),
+            reporter=JenkinsReport,
+            **pep8_options)
 
         pep8style.options.report.start()
-        for location in locations:
-            pep8style.input_dir(relpath(location))
+        for location in apps_locations:
+            pep8style.input_dir(os.path.relpath(location))
         pep8style.options.report.stop()
 
-        self.output.close()
+    def get_config_path(self, options):
+        if options['pep8-rcfile']:
+            return options['pep8-rcfile']
 
-    @staticmethod
-    def default_config_path():
         rcfile = getattr(settings, 'PEP8_RCFILE', 'pep8.rc')
         return rcfile if os.path.exists(rcfile) else None

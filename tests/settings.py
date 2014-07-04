@@ -7,6 +7,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 ROOT_URLCONF = 'test_app.urls'
 SECRET_KEY = 'nokey'
+MIDDLEWARE_CLASSES = ()
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -33,15 +34,13 @@ DATABASES = {
 }
 
 JENKINS_TASKS = (
-    'django_jenkins.tasks.with_coverage',
     'django_jenkins.tasks.run_pylint',
     'django_jenkins.tasks.run_pep8',
-    'django_jenkins.tasks.run_pyflakes',
-    'django_jenkins.tasks.run_flake8',
-    'django_jenkins.tasks.run_jshint',
     'django_jenkins.tasks.run_csslint',
+    'django_jenkins.tasks.run_flake8',
+    'django_jenkins.tasks.run_pyflakes',
+    'django_jenkins.tasks.run_jshint',
     'django_jenkins.tasks.run_sloccount',
-    'django_jenkins.tasks.with_local_celery',
 )
 
 

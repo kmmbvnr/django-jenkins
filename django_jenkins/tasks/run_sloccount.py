@@ -1,45 +1,19 @@
 # -*- coding: utf-8 -*-
 import os
-import sys
-from optparse import make_option
-from django_jenkins.functions import check_output
-from django_jenkins.tasks import BaseTask, get_apps_locations
+import subprocess
 
 
-class Task(BaseTask):
-    option_list = [
-        make_option("--sloccount-with-migrations",
-                    action="store_true", default=False,
-                    dest="sloccount_with_migrations",
-                    help="Count migrations sloc.")]
+class Reporter(object):
+    def run(self, apps_locations, **options):
+        output = open(os.path.join(options['output_dir'], 'sloccount.report'), 'w')
+        cmd = ['sloccount', "--duplicates", "--wide", "--details"] + apps_locations
 
-    def __init__(self, test_labels, options):
-        super(Task, self).__init__(test_labels, options)
-        self.test_all = options['test_all']
-        self.with_migrations = options['sloccount_with_migrations']
+        process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        report_output, err = process.communicate()
 
-        if options.get('sloccount_file_output', True):
-            output_dir = options['output_dir']
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir)
-            self.output = open(os.path.join(output_dir,
-                                            'sloccount.report'), 'w')
-        else:
-            self.output = sys.stdout
+        retcode = process.poll()
+        if retcode not in [0]:  # normal sloccount return codes
+            raise subprocess.CalledProcessError(retcode, cmd, output='%s\n%s' % (report_output, err))
 
-    def teardown_test_environment(self, **kwargs):
-        locations = get_apps_locations(self.test_labels, self.test_all)
-
-        report_output = check_output(
-            ['sloccount', "--duplicates", "--wide", "--details"] + locations)
-        report_output = report_output.decode('utf-8')
-
-        if self.with_migrations:
-            self.output.write(report_output)
-        else:
-            for line in report_output.splitlines():
-                if (os.sep + 'migrations' + os.sep) in line:
-                    continue
-                self.output.write(line)
-                self.output.write('\n')
-        self.output.close()
+        output.write(report_output.decode('utf-8'))
+        output.close()

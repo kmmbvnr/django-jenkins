@@ -1,64 +1,21 @@
-# -*- coding: utf-8 -*-
 import os
+import itertools
+
 from django.conf import settings
-from django.utils.importlib import import_module
+from django.contrib.staticfiles import finders
 
 
-class BaseTask(object):
-    """
-    Base interface for ci tasks
-    """
-    option_list = []
+def static_files_iterator(tested_locations, extension, ignore_patterns=None, additional_settings_list=None):
+    if ignore_patterns is None:
+        ignore_patterns = []
 
-    def __init__(self, test_labels, options):
-        self.test_labels = test_labels
+    source = (os.path.join(storage.location, path)
+              for finder in finders.get_finders()
+              for path, storage in finder.list(ignore_patterns))
 
-    def setup_test_environment(self, **kwargs):
-        pass
+    if additional_settings_list and hasattr(settings, additional_settings_list):
+        source = itertools.chain(source, getattr(settings, additional_settings_list))
 
-    def teardown_test_environment(self, **kwargs):
-        pass
-
-    def before_suite_run(self, **kwargs):
-        pass
-
-    def after_suite_run(self, **kwargs):
-        pass
-
-    def build_suite(self, suite, **kwargs):
-        pass
-
-
-def get_apps_under_test(test_labels, all_apps=False):
-    """
-    Convert test_lables for apps names
-
-    all_apps - if test_labels empty, ignore white list,
-    and returns all installed apps
-    """
-    if not test_labels:
-        if hasattr(settings, 'PROJECT_APPS') and not all_apps:
-            apps = settings.PROJECT_APPS
-        else:
-            apps = settings.INSTALLED_APPS
-    else:
-        apps = [app for app in settings.INSTALLED_APPS
-                for label in test_labels
-                if (app == label.rsplit('.', 1)[-1]
-                    or app.endswith('.%s' % label.split('.')[0]))]
-    return apps
-
-
-def get_apps_locations(test_labels, all_apps=False):
-    """
-    Returns list of paths to tested apps
-    """
-    return [os.path.dirname(os.path.normpath(import_module(app_name).__file__))
-            for app_name in get_apps_under_test(test_labels, all_apps)]
-
-
-def get_app_location(app_module):
-    """
-    Returns path to app
-    """
-    return os.path.dirname(os.path.normpath(app_module.__file__))
+    return (path for path in source
+            if path.endswith(extension)
+            if any(path.startswith(location) for location in tested_locations))

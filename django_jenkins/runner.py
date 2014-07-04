@@ -1,38 +1,12 @@
-# -*- coding: utf-8; mode: django -*-
 import os
 import sys
 import time
 
 from xml.etree import ElementTree as ET
-from django.conf import settings
+
+from django.test.runner import DiscoverRunner
 from django.utils.encoding import smart_text
-from django.test.testcases import TestCase
-from django.utils.unittest import TextTestResult, TextTestRunner
-
-try:
-    # Django 1.6
-    from django.test.runner import DiscoverRunner
-    # For those who still use django 1.5 tests on Django 1.6
-    if settings.TEST_RUNNER == 'django.test.simple.DjangoTestSuiteRunner':
-        from django.test.simple import DjangoTestSuiteRunner as DiscoverRunner
-
-except ImportError:
-    # Fallback to third-party app on Django 1.5
-    try:
-        from discover_runner.runner import DiscoverRunner
-    except ImportError:
-        import warnings
-        warnings.warn(
-            "Directory-only tests are ignored. Install django-discover-runner to enable it",
-            UserWarning)
-        from django.test.simple import DjangoTestSuiteRunner as DiscoverRunner
-
-try:
-    from django.test.simple import reorder_suite
-except ImportError:
-    from django.test.runner import reorder_suite
-
-from django_jenkins import signals
+from django.utils.unittest import TextTestResult
 
 
 class EXMLTestResult(TextTestResult):
@@ -130,56 +104,22 @@ class EXMLTestResult(TextTestResult):
         """
         Dumps test result to xml
         """
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
-
         output = ET.ElementTree(self.tree)
         output.write(os.path.join(output_dir, 'junit.xml'), encoding="utf-8")
 
 
 class CITestSuiteRunner(DiscoverRunner):
-    """
-    Continuous integration test runner
-    """
-    def __init__(self, output_dir, with_reports=True, debug=False, test_all=False, **kwargs):
-        super(CITestSuiteRunner, self).__init__(**kwargs)
-        self.with_reports = with_reports
+    def __init__(self, output_dir='reports', **kwargs):
         self.output_dir = output_dir
-        self.debug = debug
-        self.test_all = test_all
-
-    def setup_test_environment(self, **kwargs):
-        super(CITestSuiteRunner, self).setup_test_environment()
-        signals.setup_test_environment.send(sender=self)
-
-    def teardown_test_environment(self, **kwargs):
-        super(CITestSuiteRunner, self).teardown_test_environment()
-        signals.teardown_test_environment.send(sender=self)
-
-    def setup_databases(self):
-        if 'south' in settings.INSTALLED_APPS:
-            from south.management.commands import (
-                patch_for_test_db_setup  # pylint: disable=F0401
-            )
-            patch_for_test_db_setup()
-        return super(CITestSuiteRunner, self).setup_databases()
-
-    def build_suite(self, test_labels, extra_tests=None, **kwargs):
-        if not test_labels and not self.test_all:
-            if hasattr(settings, 'PROJECT_APPS'):
-                test_labels = settings.PROJECT_APPS
-
-        suite = super(CITestSuiteRunner, self).build_suite(test_labels, extra_tests=None, **kwargs)
-        signals.build_suite.send(sender=self, suite=suite)
-        return reorder_suite(suite, getattr(self, 'reorder_by', (TestCase,)))
+        super(CITestSuiteRunner, self).__init__(**kwargs)
 
     def run_suite(self, suite, **kwargs):
-        signals.before_suite_run.send(sender=self)
-        result = TextTestRunner(buffer=not self.debug,
-                                resultclass=EXMLTestResult,
-                                verbosity=self.verbosity).run(suite)
-        if self.with_reports:
-            result.dump_xml(self.output_dir)
-        signals.after_suite_run.send(sender=self)
-        return result
+        result = self.test_runner(
+            verbosity=self.verbosity,
+            failfast=self.failfast,
+            resultclass=EXMLTestResult,
+        ).run(suite)
 
+        result.dump_xml(self.output_dir)
+
+        return result

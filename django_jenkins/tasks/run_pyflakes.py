@@ -2,10 +2,7 @@
 import os
 import re
 import sys
-from optparse import make_option
 from pyflakes.scripts import pyflakes
-from django_jenkins.functions import relpath
-from django_jenkins.tasks import BaseTask, get_apps_locations
 
 try:
     from StringIO import StringIO
@@ -13,47 +10,23 @@ except ImportError:
     from io import StringIO
 
 
-class Task(BaseTask):
-    option_list = [
-        make_option("--pyflakes-with-migrations",
-                    action="store_true", default=False,
-                    dest="pyflakes_with_migrations",
-                    help="Don't check migrations with pyflakes.")]
-
-    def __init__(self, test_labels, options):
-        super(Task, self).__init__(test_labels, options)
-        self.test_all = options['test_all']
-        self.with_migrations = options['pyflakes_with_migrations']
-
-        if options.get('pyflakes_file_output', True):
-            output_dir = options['output_dir']
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir)
-            self.output = open(os.path.join(output_dir,
-                                            'pyflakes.report'), 'w')
-        else:
-            self.output = sys.stdout
-
-    def teardown_test_environment(self, **kwargs):
-        locations = get_apps_locations(self.test_labels, self.test_all)
+class Reporter(object):
+    def run(self, apps_locations, **options):
+        output = open(os.path.join(options['output_dir'], 'pyflakes.report'), 'w')
 
         # run pyflakes tool with captured output
         old_stdout, pyflakes_output = sys.stdout, StringIO()
         sys.stdout = pyflakes_output
         try:
-            for location in locations:
+            for location in apps_locations:
                 if os.path.isdir(location):
-                    for dirpath, dirnames, filenames in \
-                                        os.walk(relpath(location)):
-                        if not self.with_migrations and \
-                                dirpath.endswith(os.sep + 'migrations'):
-                            continue
+                    for dirpath, dirnames, filenames in os.walk(os.path.relpath(location)):
                         for filename in filenames:
                             if filename.endswith('.py'):
                                 pyflakes.checkPath(os.path.join(dirpath,
                                                                 filename))
                 else:
-                    pyflakes.checkPath(relpath(location))
+                    pyflakes.checkPath(os.path.relpath(location))
         finally:
             sys.stdout = old_stdout
 
@@ -65,6 +38,6 @@ class Task(BaseTask):
             if not line:
                 break
             message = re.sub(r': ', r': [E] PYFLAKES:', line)
-            self.output.write(message)
+            output.write(message)
 
-        self.output.close()
+        output.close()
