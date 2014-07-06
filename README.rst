@@ -12,15 +12,15 @@ Plug and play continuous integration with Django and Jenkins
 Installation
 ------------
 
-From PyPI (django 1.6 compatible)::
+From PyPI::
 
-    $ pip install django-jenkins==0.15.0
+    $ pip install django-jenkins
 
 Or by downloading the source and running::
 
     $ python setup.py install
 
-Latest git version (django 1.7 compatible only)::
+Latest git version (django 1.7 compatible)::
 
     $ pip install -e git+git://github.com/kmmbvnr/django-jenkins.git#egg=django-jenkins
     $ pip install coverage
@@ -134,13 +134,12 @@ Changelog
 GIT Version
 ~~~~~~~~~~~
 
-* Due drastic changes in app loading latest django-jenkins compatible only with django 1.7
+* Django 1.7 compatibility
 * Support for all standard django test runner options
-* ``django_jenkins.tasks.with_coverage`` removed use command line option instead `./manage.py jenkins --enable-coverage`
+* ``django_jenkins.tasks.with_coverage`` depricated, use command line option instead `./manage.py jenkins --enable-coverage`
 * ``django_jenkins.tasks.run_graphmodels`` removed
 * ``django_jenkins.tasks.with_local_celery`` removed
-* Ability to run linters (pep8/pyflakes/pylint/csslint/jshint) from command line without tests removed
-
+* Ability to run linters (pep8/pyflakes/pylint/csslint/jshint) from command line without tests removed (feel free to PR it back, if you need them)
 
 
 Contribution guide

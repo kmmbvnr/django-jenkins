@@ -3,8 +3,6 @@ import sys
 import warnings
 from optparse import OptionParser, make_option
 
-
-from django.apps import apps
 from django.conf import settings
 from django.core.management.commands.test import Command as TestCommand
 from django.utils.importlib import import_module
@@ -55,8 +53,16 @@ class Command(TestCommand):
         self.tasks = [task_cls() for task_cls in self.tasks_cls]
 
     def get_task_list(self):
-        return getattr(settings, 'JENKINS_TASKS',
-                       ('django_jenkins.tasks.run_pep8',))
+        tasks = getattr(settings, 'JENKINS_TASKS', ())
+        if '--enable-coverage' in sys.argv and 'django_jenkins.tasks.with_coverage' not in tasks:
+            try:
+                from django.apps import apps  # NOQA
+            except ImportError:
+                """
+                We are on django 1.6
+                """
+                tasks += ('django_jenkins.tasks.with_coverage',)
+        return tasks
 
     def create_parser(self, prog_name, subcommand):
         test_runner_class = get_runner(settings, self.test_runner)
@@ -93,25 +99,21 @@ class Command(TestCommand):
         else:
             tested_locations = self.get_tested_locations(test_labels)
 
-            # Dump coverage
-            coverage = apps.get_app_config('django_jenkins').coverage
-            if coverage:
-                if options['verbosity'] >= 1:
-                    print('Storing coverage info...')
+            # dump coverage
+            try:
+                from django.apps import apps
+                coverage = apps.get_app_config('django_jenkins').coverage
+                if coverage:
+                    if options['verbosity'] >= 1:
+                        print('Storing coverage info...')
 
-                coverage.stop()
-                coverage._harvest_data()
-                morfs = self.get_morfs(coverage, tested_locations, options)
+                    coverage.save(tested_locations, options)
+            except ImportError:
+                """
+                Do nothing on django 1.6
+                """
 
-                coverage.xml_report(morfs=morfs, outfile=os.path.join(options['output_dir'], 'coverage.xml'))
-
-                # Dump coverage html
-                coverage_html_dir = options.get('coverage_html_report_dir') \
-                    or getattr(settings, 'COVERAGE_REPORT_HTML_OUTPUT_DIR', '')
-                if coverage_html_dir:
-                    coverage.html_report(morfs=morfs, directory=coverage_html_dir)
-
-            # Run reporters
+            # run reporters
             for task in self.tasks:
                 if options['verbosity'] >= 1:
                     print('Excuting {}...'.format(task.__module__))
@@ -131,27 +133,16 @@ class Command(TestCommand):
             warnings.warn('No PROJECTS_APPS settings, coverage gathered over all apps')
             test_labels = settings.INSTALLED_APPS
 
-        for test_label in test_labels:
-            app_config = apps.get_containing_app_config(test_label)
-            locations.append(os.path.dirname(app_config.module.__file__))
+        try:
+            from django.apps import apps
+            for test_label in test_labels:
+                app_config = apps.get_containing_app_config(test_label)
+                locations.append(os.path.dirname(app_config.module.__file__))
+        except ImportError:
+            # django 1.6
+            from django.db.models import get_app
+            for test_label in test_labels:
+                models_module = get_app(test_label.split('.')[-1])
+                locations.append(os.path.dirname(models_module.__file__))
 
         return locations
-
-    def get_morfs(self, coverage, tested_locations, options):
-        excluded = []
-
-        # Exclude by module
-        modnames = options.get('coverage_excludes') or getattr(settings, 'COVERAGE_EXCLUDES', [])
-        for modname in modnames:
-            try:
-                excluded.append(
-                    os.path.dirname(import_module(modname).__file__))
-            except ImportError:
-                pass
-
-        # Exclude by directory
-        excluded.extend(getattr(settings, 'COVERAGE_EXCLUDES_FOLDERS', []))
-
-        return [filename for filename in coverage.data.measured_files()
-                if any(filename.startswith(location) for location in tested_locations)
-                if not any(filename.startswith(location) for location in excluded)]

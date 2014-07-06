@@ -113,6 +113,11 @@ class CITestSuiteRunner(DiscoverRunner):
         self.output_dir = output_dir
         super(CITestSuiteRunner, self).__init__(**kwargs)
 
+        if not hasattr(self, 'test_runner'):
+            # django 1.6 compatibility
+            import unittest
+            self.test_runner = unittest.TextTestRunner
+
     def run_suite(self, suite, **kwargs):
         result = self.test_runner(
             verbosity=self.verbosity,
