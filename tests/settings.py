@@ -32,6 +32,10 @@ DATABASES = {
         }
 }
 
+SOUTH_MIGRATION_MODULES = {
+    'test_app': 'test_app.south_migrations',
+}
+
 JENKINS_TASKS = (
     'django_jenkins.tasks.run_pylint',
     'django_jenkins.tasks.run_pep8',

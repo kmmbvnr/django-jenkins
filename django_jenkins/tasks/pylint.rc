@@ -1,7 +1,7 @@
 [MASTER]
 profile=no
 persistent=yes
-ignore=migrations
+ignore=south_migrations
 cache-size=500
 
 [MESSAGES CONTROL]
@@ -16,8 +16,9 @@ cache-size=500
 # W0702 No exception's type specified Used when an except clause doesn't specify exceptions type to catch.
 # R0201 Method could be a function
 # C1001 Used when a class is defined that does not inherit from anotherclass and does not inherit explicitly from “object”.
+# C0103 Invalid module name
 # R0901 Used when class has too many parent classes, try to reduce this to get a simpler (and so easier to use) class.
-disable=C0111,I0011,I0012,W0704,W0142,W0212,W0232,W0613,W0702,R0201,C1001,R0901
+disable=C0111,I0011,I0012,W0704,W0142,W0212,W0232,W0613,W0702,R0201,C1001,C0103,R0901
 
 [REPORTS]
 msg-template={path}:{line}: [{msg_id}({symbol}), {obj}] {msg}

@@ -136,6 +136,7 @@ GIT Version
 
 * Django 1.7 compatibility
 * Support for all standard django test runner options
+* Migrations now our friends and checked by all linters, `south_migrations` are ignored
 * ``django_jenkins.tasks.with_coverage`` depricated, use command line option instead `./manage.py jenkins --enable-coverage`
 * ``django_jenkins.tasks.run_graphmodels`` removed
 * ``django_jenkins.tasks.with_local_celery`` removed

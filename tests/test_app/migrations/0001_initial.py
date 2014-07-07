@@ -1,9 +1,23 @@
-from south.v2 import SchemaMigration
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
-class Migration(SchemaMigration):
-    def forwards(self, orm):
-        a = 1 # pyflakes/pylint violation
-        pass
+from django.db import models, migrations
 
-    def backwards(self, orm):
-        pass
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='TestModel',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('test_text', models.CharField(max_length=250)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+    ]

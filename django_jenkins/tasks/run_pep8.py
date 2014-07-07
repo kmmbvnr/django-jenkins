@@ -8,7 +8,7 @@ class Reporter(object):
     option_list = (
         make_option("--pep8-exclude",
                     dest="pep8-exclude",
-                    default=pep8.DEFAULT_EXCLUDE + ",migrations",
+                    default=pep8.DEFAULT_EXCLUDE + ",south_migrations",
                     help="exclude files or directories which match these "
                     "comma separated patterns (default: %s)" %
                     pep8.DEFAULT_EXCLUDE),

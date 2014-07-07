@@ -21,10 +21,12 @@ class Reporter(object):
             for location in apps_locations:
                 if os.path.isdir(location):
                     for dirpath, dirnames, filenames in os.walk(os.path.relpath(location)):
+                        if dirpath.endswith(os.sep + 'south_migrations'):
+                            continue
+
                         for filename in filenames:
                             if filename.endswith('.py'):
-                                pyflakes.checkPath(os.path.join(dirpath,
-                                                                filename))
+                                pyflakes.checkPath(os.path.join(dirpath, filename))
                 else:
                     pyflakes.checkPath(os.path.relpath(location))
         finally:
