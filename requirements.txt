@@ -4,4 +4,4 @@ coverage==3.7.1
 pyflakes==0.8.1
 pep8==1.5.7
 selenium==2.42.1
-flake8==2.2.1
+flake8==2.2.2
