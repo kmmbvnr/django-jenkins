@@ -109,8 +109,9 @@ class EXMLTestResult(TextTestResult):
 
 
 class CITestSuiteRunner(DiscoverRunner):
-    def __init__(self, output_dir='reports', **kwargs):
+    def __init__(self, output_dir='reports', debug=False, **kwargs):
         self.output_dir = output_dir
+        self.debug = debug
         super(CITestSuiteRunner, self).__init__(**kwargs)
 
         if not hasattr(self, 'test_runner'):
@@ -123,6 +124,7 @@ class CITestSuiteRunner(DiscoverRunner):
             verbosity=self.verbosity,
             failfast=self.failfast,
             resultclass=EXMLTestResult,
+            buffer=not self.debug
         ).run(suite)
 
         result.dump_xml(self.output_dir)
