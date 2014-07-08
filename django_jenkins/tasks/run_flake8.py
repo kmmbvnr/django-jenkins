@@ -72,5 +72,12 @@ class Reporter(object):
         if options['pep8-rcfile']:
             return options['pep8-rcfile']
 
-        rcfile = getattr(settings, 'PEP8_RCFILE', 'pep8.rc')
-        return rcfile if os.path.exists(rcfile) else None
+        rcfile = getattr(settings, 'PEP8_RCFILE', None)
+        if rcfile:
+            return rcfile
+
+        if os.path.exists('tox.ini'):
+            return 'tox.ini'
+
+        if os.path.exists('setup.cfg'):
+            return 'setup.cfg'
