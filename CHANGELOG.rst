@@ -1,3 +1,15 @@
+0.16.0 2014-07-15
+~~~~~~~~~~~
+
+* Django 1.7 compatibility
+* Support for all standard django test runner options
+* Migrations now our friends and checked by all linters, `south_migrations` are ignored
+* ``django_jenkins.tasks.with_coverage`` depricated, use command line option instead `./manage.py jenkins --enable-coverage`
+* ``django_jenkins.tasks.run_graphmodels`` removed
+* ``django_jenkins.tasks.with_local_celery`` removed
+* Ability to run linters (pep8/pyflakes/pylint/csslint/jshint) from command line without tests removed (feel free to PR it back, if you need them)
+
+
 0.15.0 2014-02-15
 ~~~~~~~~~~~
 * Speed up and reduced memory usage for junit reports generation
