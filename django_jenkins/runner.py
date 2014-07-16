@@ -120,6 +120,12 @@ class CITestSuiteRunner(DiscoverRunner):
             import unittest
             self.test_runner = unittest.TextTestRunner
 
+    def setup_databases(self):
+        if 'south' in settings.INSTALLED_APPS:
+            from south.management.commands import patch_for_test_db_setup
+            patch_for_test_db_setup()
+        return super(CITestSuiteRunner, self).setup_databases()
+
     def run_suite(self, suite, **kwargs):
         result = self.test_runner(
             verbosity=self.verbosity,
