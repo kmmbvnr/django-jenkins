@@ -3,6 +3,7 @@
 .ve3?
 .coverage
 *.pyc
+dist
 reports
 .reports_py??
 .tox

@@ -119,7 +119,7 @@ class Command(TestCommand):
             # run reporters
             for task in self.tasks:
                 if options['verbosity'] >= 1:
-                    print('Excuting {}...'.format(task.__module__))
+                    print('Executing {0}...'.format(task.__module__))
                 task.run(tested_locations, **options)
 
             if options['verbosity'] >= 1:

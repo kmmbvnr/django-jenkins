@@ -7,7 +7,7 @@ from xml.etree import ElementTree as ET
 from django.conf import settings
 from django.test.runner import DiscoverRunner
 from django.utils.encoding import smart_text
-from django.utils.unittest import TextTestResult
+from django.utils.unittest import TextTestResult, TextTestRunner
 
 
 class EXMLTestResult(TextTestResult):
@@ -118,8 +118,7 @@ class CITestSuiteRunner(DiscoverRunner):
 
         if not hasattr(self, 'test_runner'):
             # django 1.6 compatibility
-            import unittest
-            self.test_runner = unittest.TextTestRunner
+            self.test_runner = TextTestRunner
 
     def setup_databases(self):
         if 'south' in settings.INSTALLED_APPS:
