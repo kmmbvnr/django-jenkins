@@ -20,7 +20,7 @@ Or by downloading the source and running::
 
     $ python setup.py install
 
-Latest git version (django 1.7 compatible)::
+Latest git version::
 
     $ pip install -e git+git://github.com/kmmbvnr/django-jenkins.git#egg=django-jenkins
     $ pip install coverage
@@ -42,7 +42,6 @@ This will create reports/ directory with junit xml, Coverage and Pylint
 reports.
 
 For more details see the generic tutorial: https://sites.google.com/site/kmmbvnr/home/django-jenkins-tutorial
-or tutorial for running django-jenkins on ShiningPanda CI https://docs.shiningpanda.com/tutorials/multi-databases/project.html
 
 Settings
 --------
