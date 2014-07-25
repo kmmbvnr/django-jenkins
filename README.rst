@@ -95,7 +95,15 @@ Here is the reporters prebuild with django-jenkins
 
   You should have pep8_ python package (>=1.3) installed to run this task.
 
-  Task-specific settings: ``PEP8_RCFILE``
+  Task-specific settings: ``PEP8_RCFILE``, ``PEP8_EXCLUDES``
+  - ``PEP8_EXCLUDES``
+  
+      Accepts a list of additional file exclusion patterns to add to the pep8 task.
+  
+      Default Value::
+      
+      PEP8_EXCLUDES = ()
+
 
 .. _pep8: http://pypi.python.org/pypi/pep8
 
