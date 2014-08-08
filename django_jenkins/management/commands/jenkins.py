@@ -128,9 +128,7 @@ class Command(TestCommand):
     def get_tested_locations(self, test_labels):
         locations = []
 
-        if test_labels:
-            pass
-        elif hasattr(settings, 'PROJECT_APPS'):
+        if hasattr(settings, 'PROJECT_APPS'):
             test_labels = settings.PROJECT_APPS
         else:
             warnings.warn('No PROJECTS_APPS settings, coverage gathered over all apps')
@@ -143,9 +141,9 @@ class Command(TestCommand):
                 locations.append(os.path.dirname(app_config.module.__file__))
         except ImportError:
             # django 1.6
-            from django.db.models import get_app
+            from django.utils.importlib import import_module
             for test_label in test_labels:
-                models_module = get_app(test_label.split('.')[-1])
+                models_module = import_module(test_label)
                 locations.append(os.path.dirname(models_module.__file__))
 
         return locations
