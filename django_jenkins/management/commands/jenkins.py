@@ -143,7 +143,7 @@ class Command(TestCommand):
             # django 1.6
             from django.utils.importlib import import_module
             for test_label in test_labels:
-                models_module = get_app(test_label.split('.')[-1])
+                models_module = import_module(test_label)
                 locations.append(os.path.dirname(models_module.__file__))
 
         return locations
