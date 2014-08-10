@@ -50,7 +50,6 @@ Settings
 
   If present, it is supposed to be a list/tuple of django apps for Jenkins to run.
   Tests, reports, and coverage are generated only for the apps from this list.
-  You should specify --all option to ignore this setting.
 
 - ``JENKINS_TASKS``
 
