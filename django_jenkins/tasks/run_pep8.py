@@ -38,7 +38,7 @@ class Reporter(object):
 
         if options['pep8-exclude'] is None:
             if pep8_options['config_file'] is None:
-                pep8_options = {'exclude': pep8.DEFAULT_EXCLUDE + ",south_migrations"}
+                pep8_options = {'exclude': (pep8.DEFAULT_EXCLUDE + ",south_migrations").split(',')}
         else:
             pep8_options = {'exclude': options['pep8-exclude'].split(',')}
         if options['pep8-select']:
@@ -62,6 +62,6 @@ class Reporter(object):
         if options['pep8-rcfile']:
             return options['pep8-rcfile']
 
-        rcfile = getattr(settings, 'PEP8_RCFILE', 'pep8.rc')
+        rcfile = getattr(settings, 'PEP8_RCFILE', None)
         if rcfile:
             return rcfile
