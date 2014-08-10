@@ -16,8 +16,8 @@ TEMPLATE_LOADERS = (
 PROJECT_APPS = (
     'django.contrib.sessions',  # just to ensure that dotted apps test works
     'django_jenkins',
-    'test_app',
-    'test_app_dirs',
+    'tests.test_app',
+    'tests.test_app_dirs',
 )
 
 INSTALLED_APPS = (

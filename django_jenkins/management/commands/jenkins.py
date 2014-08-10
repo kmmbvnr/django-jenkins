@@ -143,9 +143,24 @@ class Command(TestCommand):
                 locations.append(os.path.dirname(app_config.module.__file__))
         except ImportError:
             # django 1.6
-            from django.db.models import get_app
+            from django.utils.importlib import import_module
+
+            def get_containing_app(object_name):
+                candidates = []
+                for app_label in settings.INSTALLED_APPS:
+                    if object_name.startswith(app_label):
+                        subpath = object_name[len(app_label):]
+                        if subpath == '' or subpath[0] == '.':
+                            candidates.append(app_label)
+                if candidates:
+                    return sorted(candidates, key=lambda label: -len(label))[0]
+
             for test_label in test_labels:
-                models_module = get_app(test_label.split('.')[-1])
-                locations.append(os.path.dirname(models_module.__file__))
+                app_label = get_containing_app(test_label)
+                if app_label is not None:
+                    app_module = import_module(app_label)
+                    locations.append(os.path.dirname(app_module.__file__))
+                else:
+                    warnings.warn('No app found for test: {0}'.format(test_label))
 
         return locations
