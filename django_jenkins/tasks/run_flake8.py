@@ -17,10 +17,10 @@ class Reporter(object):
                     help='McCabe complexity treshold'),
         make_option("--pep8-exclude",
                     dest="pep8-exclude",
-                    default=pep8.DEFAULT_EXCLUDE + ",south_migrations",
+                    default=None,
                     help="exclude files or directories which match these "
                     "comma separated patterns (default: %s)" %
-                    pep8.DEFAULT_EXCLUDE),
+                    (pep8.DEFAULT_EXCLUDE + ",south_migrations")),
         make_option("--pep8-select", dest="pep8-select",
                     help="select errors and warnings (e.g. E,W6)"),
         make_option("--pep8-ignore", dest="pep8-ignore",
@@ -45,7 +45,13 @@ class Reporter(object):
                 sourceline = instance.line_offset + line_number
                 output.write('%s:%s:%s: %s\n' % (instance.filename, sourceline, offset + 1, text))
 
-        pep8_options = {'exclude': options['pep8-exclude'].split(',')}
+        pep8_options = {'config_file': self.get_config_path(options)}
+
+        if options['pep8-exclude'] is None:
+            if pep8_options['config_file'] is None:
+                pep8_options = {'exclude': pep8.DEFAULT_EXCLUDE + ",south_migrations"}
+        else:
+            pep8_options = {'exclude': options['pep8-exclude'].split(',')}
         if options['pep8-select']:
             pep8_options['select'] = options['pep8-select'].split(',')
         if options['pep8-ignore']:
@@ -55,7 +61,6 @@ class Reporter(object):
 
         pep8style = get_style_guide(
             parse_argv=False,
-            config_file=self.get_config_path(options),
             reporter=JenkinsReport,
             max_complexity=int(options['max_complexity']),
             jobs='1',
