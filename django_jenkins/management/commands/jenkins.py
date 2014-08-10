@@ -46,7 +46,10 @@ class Command(TestCommand):
                     " written. If not specified, no report is generated."),
         make_option("--coverage-exclude", action="append",
                     default=[], dest="coverage_excludes",
-                    help="Module name to exclude")
+                    help="Module name to exclude"),
+        make_option("--project-apps-tests", action="store_true",
+                    default=False, dest="project_apps_tests",
+                    help="Take tests only from project apps")
     )
 
     def __init__(self):
@@ -95,6 +98,10 @@ class Command(TestCommand):
             os.makedirs(output_dir)
 
         test_runner = TestRunner(**options)
+
+        if not test_labels and options['project_apps_tests']:
+            test_labels = getattr(settings, 'PROJECT_APPS', [])
+
         failures = test_runner.run_tests(test_labels)
 
         if failures:
