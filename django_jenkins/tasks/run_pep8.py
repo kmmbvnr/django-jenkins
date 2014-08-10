@@ -3,12 +3,15 @@ import pep8
 from optparse import make_option
 from django.conf import settings
 
+DEFAULT_PEP8_EXCLUDES = ('south_migrations',)
 
 class Reporter(object):
     option_list = (
         make_option("--pep8-exclude",
                     dest="pep8-exclude",
-                    default=pep8.DEFAULT_EXCLUDE + ",south_migrations",
+                    default=pep8.DEFAULT_EXCLUDE + ",".join(
+                        DEFAULT_PEP8_EXCLUDES + tuple(getattr(settings, 'PEP8_EXCLUDES', ()))
+                    ),
                     help="exclude files or directories which match these "
                     "comma separated patterns (default: %s)" %
                     pep8.DEFAULT_EXCLUDE),
