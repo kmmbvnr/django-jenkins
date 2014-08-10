@@ -67,7 +67,7 @@ Settings
 
 
 Reporters
------
+---------
 
 Here is the reporters prebuild with django-jenkins
 
@@ -130,7 +130,7 @@ Changelog
 ---------
 
 0.16.2 2014-07-15
-~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 * Django 1.7 compatibility
 * Support for all standard django test runner options
