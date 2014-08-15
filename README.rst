@@ -129,17 +129,13 @@ Here is the reporters prebuild with django-jenkins
 Changelog
 ---------
 
-0.16.2 2014-07-15
+0.16.3 2014-08-15
 ~~~~~~~~~~~~~~~~~
 
-* Django 1.7 compatibility
-* Support for all standard django test runner options
-* Migrations now our friends and checked by all linters, `south_migrations` are ignored
-* ``django_jenkins.tasks.with_coverage`` depricated, use command line option instead `./manage.py jenkins --enable-coverage`
-* ``django_jenkins.tasks.run_graphmodels`` removed
-* ``django_jenkins.tasks.with_local_celery`` removed
-* Ability to run linters (pep8/pyflakes/pylint/csslint/jshint) from command line without tests removed (feel free to PR it back, if you need them)
-
+* Python 2.6 compatibility returned
+* Added `--projects-apps-tests` options to limit tests discovery by `PROJECT_APPS` setting value
+* Fix coverage for apps with separate models packages under django 1.6
+* Fix missing pep8 excludes option from pep8 config
 
 Contribution guide
 ~~~~~~~~~~~~~~~~~~
