@@ -2,7 +2,7 @@
 ~~~~~~~~~~~~~~~~~
 
 * Python 2.6 compatibility returned
-* Added `--projects-apps-tests` options to limit tests discovery by `PROJECT_APPS` setting value
+* Added `--project-apps-tests` options to limit tests discovery by `PROJECT_APPS` setting value
 * Fix coverage for apps with separate models packages under django 1.6
 * Fix missing pep8 excludes option from pep8 config
 
