@@ -140,7 +140,7 @@ class Command(TestCommand):
         elif hasattr(settings, 'PROJECT_APPS'):
             test_labels = settings.PROJECT_APPS
         else:
-            warnings.warn('No PROJECTS_APPS settings, coverage gathered over all apps')
+            warnings.warn('No PROJECT_APPS settings, coverage gathered over all apps')
             test_labels = settings.INSTALLED_APPS
 
         try:
