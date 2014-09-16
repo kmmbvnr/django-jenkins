@@ -46,6 +46,8 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_sloccount',
 )
 
+COVERAGE_EXCLUDES = ['tests.test_app.not_for_coverage', ]
+COVERAGE_EXCLUDES_FOLDERS = [os.path.join(PROJECT_ROOT, 'test_app_dirs/not_for_coverage/'), ]
 
 # JSHINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/js/test.js')]
 # CSSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/css/test.css')]
