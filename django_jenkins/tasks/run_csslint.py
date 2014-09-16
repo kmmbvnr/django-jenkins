@@ -3,6 +3,7 @@ import os
 import subprocess
 import codecs
 from optparse import make_option
+from django.conf import settings
 from django_jenkins.tasks import static_files_iterator
 
 
@@ -20,7 +21,7 @@ class Reporter(object):
         output = codecs.open(os.path.join(options['output_dir'], 'csslint.report'), 'w', 'utf-8')
 
         files = list(
-            static_files_iterator(apps_locations,
+            static_files_iterator(apps_locations + list(getattr(settings, 'STATICFILES_DIRS', [])),
                                   extension='.css',
                                   ignore_patterns=options['csslint_exclude'].split(',')))
 

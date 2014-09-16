@@ -4,12 +4,12 @@ from django.core import mail
 from django.test import TestCase
 from django.utils.unittest import skip
 from django.test import LiveServerTestCase
-from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.chrome.webdriver import WebDriver
 
 
 class SaintyChecks(TestCase):
-    #@classmethod
-    #def setUpClass(cls):
+    # @classmethod
+    # def setUpClass(cls):
     #    raise Exception("Ups, should be disabled")
 
     def test_mailbox_stubs_not_broken(self):
@@ -30,8 +30,7 @@ class SaintyChecks(TestCase):
         sys.stdout.write('\xc4')
         sys.stderr.write('\xc4')
 
-
-    #def test_failure(self):
+    # def test_failure(self):
     #    raise Exception("Ups, should be disabled")
 
 

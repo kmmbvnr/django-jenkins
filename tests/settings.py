@@ -47,9 +47,12 @@ JENKINS_TASKS = (
 )
 
 
-JSHINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/js/test.js')]
-CSSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/css/test.css')]
+# JSHINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/js/test.js')]
+# CSSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/css/test.css')]
 
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_ROOT, 'static/'),
+]
 
 STATIC_URL = '/media/'
 
