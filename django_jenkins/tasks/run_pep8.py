@@ -65,3 +65,9 @@ class Reporter(object):
         rcfile = getattr(settings, 'PEP8_RCFILE', None)
         if rcfile:
             return rcfile
+
+        if os.path.exists('tox.ini'):
+            return 'tox.ini'
+
+        if os.path.exists('setup.cfg'):
+            return 'setup.cfg'
