@@ -147,7 +147,10 @@ class Command(TestCommand):
             from django.apps import apps
             for test_label in test_labels:
                 app_config = apps.get_containing_app_config(test_label)
-                locations.append(os.path.dirname(app_config.module.__file__))
+                if app_config is not None:
+                    locations.append(os.path.dirname(app_config.module.__file__))
+                else:
+                    warnings.warn('No app found for test: {0}'.format(test_label))
         except ImportError:
             # django 1.6
             from django.utils.importlib import import_module
