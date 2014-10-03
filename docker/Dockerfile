@@ -2,6 +2,10 @@
 # https://registry.hub.docker.com/_/jenkins/
 FROM phusion/baseimage
 
+ENV DB_USER jenkins
+ENV DB_PASSWORD jenkins
+
+
 USER root
 ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
@@ -43,24 +47,21 @@ RUN apt-get install sqlite3
 # https://github.com/vpicavet/docker-pggis/blob/master/Dockerfile
 # https://github.com/sameersbn/docker-postgresql/blob/master/start
 
-RUN apt-get install -y postgresql-common &&
-    echo "create_main_cluster = false" >> /etc/postgresql-common/createcluster.conf  && \
-    apt-get install -y postgresql-9.3 postgresql-client-9.3 libpq-dev python-psycopg2 python3-psycopg2  && \
-    echo "postgres" > /var/lib/postgresql/pwfile
-    sudo -u postgres -H /usr/lib/postgresql/9.3/bin/initdb --pwfile=/var/lib/postgresql/pwfile --pgdata=/var/lib/postgresql/9.3/main/ --username=postgres --encoding=unicode --auth=trust
-    # https://github.com/orchardup/docker-postgresql/blob/master/run
+RUN apt-get install -y postgresql-9.3 postgresql-client-9.3 libpq-dev python-psycopg2 python3-psycopg2 && \
+    POSTGRESQL_BIN=/usr/lib/postgresql/9.3/bin/postgres; \
+    POSTGRESQL_CONFIG_FILE=/etc/postgresql/9.3/main/postgresql.conf; \
+    POSTGRESQL_SINGLE="sudo -u postgres $POSTGRESQL_BIN --single --config-file=$POSTGRESQL_CONFIG_FILE"; \
+    echo "CREATE USER $DB_USER WITH SUPERUSER;" | $POSTGRESQL_SINGLE && \
+    echo "ALTER USER $DB_USER WITH PASSWORD '$DB_PASSWORD';" | $POSTGRESQL_SINGLE && \
+    sed -i 's/^local\s\+all\s\+all\s\+peer/local all all md5/g' /etc/postgresql/9.3/main/pg_hba.conf && \
+    echo "host all all 0.0.0.0/0  md5" >> /etc/postgresql/9.3/main/pg_hba.conf && \
+    echo "listen_addresses='*'" >> /etc/postgresql/9.3/main/postgresql.conf
 
-#RUN mkdir /etc/service/postgresql
-#ADD data/postgresql.sh /etc/service/postgresql/run
+RUN mkdir /etc/service/postgresql
+ADD data/postgresql.sh /etc/service/postgresql/run
 
-#RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.3/main/pg_hba.conf
-#RUN echo "listen_addresses='*'" >> /etc/postgresql/9.3/main/postgresql.conf
-
-#ADD data/pgpass /root/.pgpass
-#RUN chmod 700 /root/.pgpass
-
-#EXPOSE 5432
-# VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+EXPOSE 5432
+VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
 # MySQL
 # https://github.com/fideloper/docker-mysql/blob/master/Dockerfile
