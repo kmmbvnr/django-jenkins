@@ -19,8 +19,8 @@ setup(
     license='LGPL',
     platforms=['Any'],
     keywords=['pyunit', 'unittest', 'testrunner', 'hudson', 'jenkins',
-              'django', 'pylint', 'pep8', 'pyflakes', 'csslint', 'jshint',
-              'coverage'],
+              'django', 'pylint', 'pep8', 'pyflakes', 'csslint', 'scsslint',
+              'jshint', 'coverage'],
     url='http://github.com/kmmbvnr/django-jenkins',
     classifiers=[
         'Development Status :: 4 - Beta',

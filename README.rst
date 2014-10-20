@@ -61,7 +61,7 @@ Settings
 
 - ``JENKINS_TEST_RUNNER``
 
-  The name of the class to use for starting the test suite for ``jenkins`` command. 
+  The name of the class to use for starting the test suite for ``jenkins`` command.
   Class should be inherited from
   ``django_jenkins.runner.CITestSuiteRunner``
 
@@ -86,6 +86,14 @@ Here is the reporters prebuild with django-jenkins
 
   You should have the pylint package installed
 
+- ``django_jenkins.tasks.run_scsslint``
+
+  Runs SCSS lint tools over `app/static/*/*.scss` files.
+  Creates CSS Lint compatible report for Jenkins
+
+  You should have the scss-lint_ tool installed
+
+.. _scss-lint: https://github.com/causes/scss-lint
 
 - ``django_jenkins.tasks.run_pep8``
 
@@ -161,4 +169,3 @@ Created and maintained by Mikhail Podgurskiy <kmmbvnr@gmail.com>
 Contributors: https://github.com/kmmbvnr/django-jenkins/graphs/contributors
 
 Special thanks, for all github forks authors for project extensions ideas and problem identifications.
-
