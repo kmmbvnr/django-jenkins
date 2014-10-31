@@ -11,7 +11,7 @@ class Reporter(object):
                     default=None,
                     help="exclude files or directories which match these "
                     "comma separated patterns (default: %s)" %
-                    (pep8.DEFAULT_EXCLUDE + ",south_migrations")),
+                    (pep8.DEFAULT_EXCLUDE + ",migrations,south_migrations")),
         make_option("--pep8-select", dest="pep8-select",
                     help="select errors and warnings (e.g. E,W6)"),
         make_option("--pep8-ignore", dest="pep8-ignore",
