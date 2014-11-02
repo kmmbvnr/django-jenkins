@@ -15,7 +15,7 @@ def default_coverage_config():
 class CoverageReporter(object):
     def __init__(self):
         try:
-            from coverage.control import coverage
+            from coverage import coverage
         except ImportError:
             raise ImportError('coverage is not installed')
         else:
