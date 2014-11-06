@@ -15,7 +15,7 @@ class Reporter(object):
     option_list = (
         make_option('--max-complexity',
                     dest='max_complexity',
-                    default='-1',
+                    default=None,
                     help='McCabe complexity treshold'),
         make_option("--pep8-exclude",
                     dest="pep8-exclude",
@@ -49,13 +49,14 @@ class Reporter(object):
 
         pep8_options = {'config_file': self.get_config_path(options)}
 
-        max_complexity = int(options['max_complexity'])
+        max_complexity = None
 
-        if pep8_options['config_file']:
-            max_complexity_from_cfg = self.get_max_complexity_from_config(
-                pep8_options['config_file'])
-            if max_complexity_from_cfg:
-                max_complexity = max_complexity_from_cfg
+        if options['max_complexity'] is None:
+            if pep8_options['config_file']:
+                max_complexity = self.get_max_complexity_from_config(
+                    pep8_options['config_file'])
+        else:
+            max_complexity = int(options['max_complexity'])
 
         if options['pep8-exclude'] is None:
             if pep8_options['config_file'] is None:
