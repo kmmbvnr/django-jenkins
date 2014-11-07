@@ -37,6 +37,8 @@ class Reporter(object):
 
         lint.Run(args, reporter=ParseableTextReporter(output=output), exit=False)
 
+        output.close()
+
     def get_config_path(self, options):
         if options['pylint_rcfile']:
             return options['pylint_rcfile']
