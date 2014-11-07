@@ -58,6 +58,8 @@ class Reporter(object):
             pep8style.input_dir(os.path.relpath(location))
         pep8style.options.report.stop()
 
+        output.close()
+
     def get_config_path(self, options):
         if options['pep8-rcfile']:
             return options['pep8-rcfile']
