@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
+import io
 import sys
+from xml.etree import ElementTree as ET
+
 from django.core import mail
 from django.test import TestCase
 from django.utils.unittest import skip
 from django.test import LiveServerTestCase
 from selenium.webdriver.chrome.webdriver import WebDriver
+
+from django_jenkins.runner import EXMLTestResult
 
 
 class SaintyChecks(TestCase):
@@ -32,6 +37,60 @@ class SaintyChecks(TestCase):
 
     # def test_failure(self):
     #    raise Exception("Ups, should be disabled")
+
+
+class EXMLTestResultTests(TestCase):
+    def setUp(self):
+        self.exml_result = EXMLTestResult(None, None, None)
+        self.exml_result.startTestRun()
+        self.result_element = ET.SubElement(self.exml_result.tree, 'result')
+
+    def test_non_ascii_traceback(self):
+        try:
+            self.explode_with_unicode_traceback()
+        except ValueError:
+            err = sys.exc_info()
+        else:
+            self.fail()
+
+        self.exml_result._add_tb_to_test(TestCase('fail'), self.result_element, err)
+
+        output = self.write_element(self.result_element)
+
+        self.assert_(output)
+
+    def test_non_ascii_message(self):
+        try:
+            self.explode_with_unicode_message()
+        except ValueError:
+            err = sys.exc_info()
+        else:
+            self.fail()
+
+        self.exml_result._add_tb_to_test(TestCase('fail'), self.result_element, err)
+
+        output = self.write_element(self.result_element)
+
+        self.assert_(output)
+
+    def write_element(self, element):
+        # write out the element the way that our TestResult.dump_xml does.
+        # (except not actually to disk.)
+        tree = ET.ElementTree(element)
+        output = io.BytesIO()
+        # this bit blows up if components of the output are byte-strings with non-ascii content.
+        tree.write(output, encoding='utf-8')
+        output_bytes = output.getvalue()
+        return output_bytes
+
+    def explode_with_unicode_traceback(self):
+        # The following will result in an ascii error message, but the traceback will contain the
+        # full source line, including the comment's non-ascii characters.
+        raise ValueError("dead")  # "⚠ Not enough ☕"
+
+    def explode_with_unicode_message(self):
+        # This source code has only ascii, the exception has a non-ascii message.
+        raise ValueError(u"\N{BIOHAZARD SIGN} Too much \N{HOT BEVERAGE}")
 
 
 class SeleniumTests(LiveServerTestCase):

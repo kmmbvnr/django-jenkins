@@ -100,7 +100,7 @@ class EXMLTestResult(TextTestResult):
         tb_str = self._exc_info_to_string(err, test)
         test_result.set('type', '%s.%s' % (exc_class.__module__, exc_class.__name__))
         test_result.set('message', smart_text(exc_value))
-        test_result.text = tb_str
+        test_result.text = smart_text(tb_str)
 
     def dump_xml(self, output_dir):
         """
