@@ -41,7 +41,7 @@ class SaintyChecks(TestCase):
 
 class EXMLTestResultTests(TestCase):
     def setUp(self):
-        self.exml_result = EXMLTestResult(None, None, None)
+        self.exml_result = EXMLTestResult(None, None, 1)
         self.exml_result.startTestRun()
         self.result_element = ET.SubElement(self.exml_result.tree, 'result')
 

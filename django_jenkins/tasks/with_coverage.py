@@ -15,7 +15,7 @@ def default_coverage_config():
 class CoverageReporter(object):
     def __init__(self):
         try:
-            from coverage.control import coverage
+            from coverage import coverage
         except ImportError:
             raise ImportError('coverage is not installed')
         else:
@@ -31,7 +31,7 @@ class CoverageReporter(object):
 
     def save(self, apps_locations, options):
         self.coverage.stop()
-        self.coverage._harvest_data()
+        # self.coverage._harvest_data()
         morfs = self.get_morfs(self.coverage, apps_locations, options)
 
         self.coverage.xml_report(morfs=morfs, outfile=os.path.join(options['output_dir'], 'coverage.xml'))
