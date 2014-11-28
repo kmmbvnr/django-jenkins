@@ -53,9 +53,9 @@ COVERAGE_EXCLUDES_FOLDERS = [os.path.join(PROJECT_ROOT, 'test_app_dirs/not_for_c
 # JSHINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/js/test.js')]
 # CSSLINT_CHECKED_FILES = [os.path.join(PROJECT_ROOT, 'static/css/test.css')]
 
-# PYLINT_LOAD_PLUGIN = (
-#     'pylint_django',
-# )
+PYLINT_LOAD_PLUGIN = (
+    'pylint_django',
+)
 
 STATICFILES_DIRS = [
     os.path.join(PROJECT_ROOT, 'static/'),
