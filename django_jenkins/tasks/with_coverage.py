@@ -31,7 +31,7 @@ class CoverageReporter(object):
 
     def save(self, apps_locations, options):
         self.coverage.stop()
-        # self.coverage._harvest_data()
+        self.coverage._harvest_data()
         morfs = self.get_morfs(self.coverage, apps_locations, options)
 
         self.coverage.xml_report(morfs=morfs, outfile=os.path.join(options['output_dir'], 'coverage.xml'))
