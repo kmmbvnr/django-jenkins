@@ -4,6 +4,8 @@ import pep8
 from flake8.engine import get_style_guide
 from django.conf import settings
 from optparse import make_option
+import ConfigParser
+from ConfigParser import NoOptionError
 
 
 class Reporter(object):
@@ -13,7 +15,7 @@ class Reporter(object):
     option_list = (
         make_option('--max-complexity',
                     dest='max_complexity',
-                    default='-1',
+                    default=None,
                     help='McCabe complexity treshold'),
         make_option("--pep8-exclude",
                     dest="pep8-exclude",
@@ -47,11 +49,21 @@ class Reporter(object):
 
         pep8_options = {'config_file': self.get_config_path(options)}
 
+        max_complexity = None
+
+        if options['max_complexity'] is None:
+            if pep8_options['config_file']:
+                max_complexity = self.get_max_complexity_from_config(
+                    pep8_options['config_file'])
+        else:
+            max_complexity = int(options['max_complexity'])
+
         if options['pep8-exclude'] is None:
             if pep8_options['config_file'] is None:
                 pep8_options = {'exclude': (pep8.DEFAULT_EXCLUDE + ",south_migrations").split(',')}
         else:
             pep8_options = {'exclude': options['pep8-exclude'].split(',')}
+
         if options['pep8-select']:
             pep8_options['select'] = options['pep8-select'].split(',')
         if options['pep8-ignore']:
@@ -62,7 +74,7 @@ class Reporter(object):
         pep8style = get_style_guide(
             parse_argv=False,
             reporter=JenkinsReport,
-            max_complexity=int(options['max_complexity']),
+            max_complexity=max_complexity,
             jobs='1',
             **pep8_options)
 
@@ -86,3 +98,11 @@ class Reporter(object):
 
         if os.path.exists('setup.cfg'):
             return 'setup.cfg'
+
+    def get_max_complexity_from_config(self, config):
+        config_parser = ConfigParser.ConfigParser()
+        config_parser.read(config)
+        try:
+            return config_parser.getint('flake8', 'max-complexity')
+        except NoOptionError:
+            return None
