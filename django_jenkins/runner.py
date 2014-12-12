@@ -94,6 +94,11 @@ class EXMLTestResult(TextTestResult):
                                      getattr(test, 'description', 'UNKNOWN')))
         return testcase
 
+    def _restoreStdout(self):
+        '''Disables buffering once the stdout/stderr are reset.'''
+        super(EXMLTestResult, self)._restoreStdout()
+        self.buffer = False
+
     def _add_tb_to_test(self, test, test_result, err):
         '''Add a traceback to the test result element'''
         exc_class, exc_value, tb = err
