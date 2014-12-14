@@ -3,12 +3,13 @@ import pep8
 from optparse import make_option
 from django.conf import settings
 
+from . import set_option
+
 
 class Reporter(object):
     option_list = (
         make_option("--pep8-exclude",
                     dest="pep8-exclude",
-                    default=None,
                     help="exclude files or directories which match these "
                     "comma separated patterns (default: %s)" %
                     (pep8.DEFAULT_EXCLUDE + ",south_migrations")),
@@ -34,19 +35,20 @@ class Reporter(object):
                     sourceline = instance.line_offset + line_number
                     output.write('%s:%s:%s: %s\n' % (instance.filename, sourceline, offset + 1, text))
 
-        pep8_options = {'config_file': self.get_config_path(options)}
+        pep8_options = {}
+        config_file = self.get_config_path(options)
+        if config_file is not None:
+            pep8_options['config_file'] = config_file
 
-        if options['pep8-exclude'] is None:
-            if pep8_options['config_file'] is None:
-                pep8_options = {'exclude': (pep8.DEFAULT_EXCLUDE + ",south_migrations").split(',')}
-        else:
-            pep8_options = {'exclude': options['pep8-exclude'].split(',')}
-        if options['pep8-select']:
-            pep8_options['select'] = options['pep8-select'].split(',')
-        if options['pep8-ignore']:
-            pep8_options['ignore'] = options['pep8-ignore'].split(',')
-        if options['pep8-max-line-length']:
-            pep8_options['max_line_length'] = options['pep8-max-line-length']
+        set_option(pep8_options, 'exclude', options['pep8-exclude'], config_file,
+                   default=pep8.DEFAULT_EXCLUDE + ",south_migrations", split=',')
+
+        set_option(pep8_options, 'select', options['pep8-select'], config_file, split=',')
+
+        set_option(pep8_options, 'ignore', options['pep8-ignore'], config_file, split=',')
+
+        set_option(pep8_options, 'max_line_length', options['pep8-max-line-length'], config_file,
+                   default=pep8.MAX_LINE_LENGTH)
 
         pep8style = pep8.StyleGuide(
             parse_argv=False,
