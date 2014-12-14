@@ -137,13 +137,16 @@ Here is the reporters prebuild with django-jenkins
 Changelog
 ---------
 
-0.16.3 2014-08-15
+GIT Version 2014-12-
 ~~~~~~~~~~~~~~~~~
 
-* Python 2.6 compatibility returned
-* Added `--projects-apps-tests` options to limit tests discovery by `PROJECT_APPS` setting value
-* Fix coverage for apps with separate models packages under django 1.6
-* Fix missing pep8 excludes option from pep8 config
+* New scss-lint task
+* Added support for pylint plugins
+* Include STATICFILES_DIRS to search path for csslint and jshint
+* Search pep8 confing in setup.cfg and tox.ini 
+* Fix non-ascii tracback problem
+* Fix error handlin in case exception happens in fixture loading
+* Fix max-complexity option overriding
 
 Contribution guide
 ~~~~~~~~~~~~~~~~~~
