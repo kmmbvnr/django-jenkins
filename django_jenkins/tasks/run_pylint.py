@@ -24,13 +24,20 @@ class Reporter(object):
         make_option("--pylint-errors-only",
                     dest="pylint_errors_only",
                     action="store_true", default=False,
-                    help="pylint output errors only mode")
+                    help="pylint output errors only mode"),
+        make_option("--pylint-load-plugins",
+                    dest="pylint_load_plugins",
+                    help="list of pylint plugins to load"),
     )
 
     def run(self, apps_locations, **options):
         output = open(os.path.join(options['output_dir'], 'pylint.report'), 'w')
 
-        args = ["--rcfile=%s" % self.get_config_path(options)]
+        args = []
+        args.append("--rcfile=%s" % self.get_config_path(options))
+        if self.get_plugins(options):
+            args.append('--load-plugins=%s' % self.get_plugins(options))
+
         if options['pylint_errors_only']:
             args += ['--errors-only']
         args += apps_locations
@@ -38,6 +45,16 @@ class Reporter(object):
         lint.Run(args, reporter=ParseableTextReporter(output=output), exit=False)
 
         output.close()
+
+    def get_plugins(self, options):
+        if options.get('pylint_load_plugins', None):
+            return options['pylint_load_plugins']
+
+        plugins = getattr(settings, 'PYLINT_LOAD_PLUGIN', None)
+        if plugins:
+            return ','.join(plugins)
+
+        return None
 
     def get_config_path(self, options):
         if options['pylint_rcfile']:
