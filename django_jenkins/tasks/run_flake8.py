@@ -47,11 +47,16 @@ class Reporter(object):
 
         pep8_options = {'config_file': self.get_config_path(options)}
 
+        if pep8_options['config_file'] is None:
+            pass
+        else:
+            pass
+
         if options['pep8-exclude'] is None:
             if pep8_options['config_file'] is None:
-                pep8_options = {'exclude': (pep8.DEFAULT_EXCLUDE + ",south_migrations").split(',')}
+                pep8_options['exclude'] = (pep8.DEFAULT_EXCLUDE + ",south_migrations").split(',')
         else:
-            pep8_options = {'exclude': options['pep8-exclude'].split(',')}
+            pep8_options['exclude'] = options['pep8-exclude'].split(',')
         if options['pep8-select']:
             pep8_options['select'] = options['pep8-select'].split(',')
         if options['pep8-ignore']:
