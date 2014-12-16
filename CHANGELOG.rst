@@ -1,4 +1,15 @@
-0.16.3 2014-06-15
+0.16.4 2014-12-15
+~~~~~~~~~~~~~~~~~
+
+* New scss-lint task
+* Added support for pylint plugins
+* Include STATICFILES_DIRS to search path for csslint and jshint
+* Search pep8 confing in setup.cfg and tox.ini.
+* Fix non-ascii tracback problem
+* Fix error handlin in case exception happens in fixture loading
+* Fix max-complexity option overriding
+
+0.16.3 2014-08-15
 ~~~~~~~~~~~~~~~~~
 
 * Python 2.6 compatibility returned

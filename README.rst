@@ -137,7 +137,7 @@ Here is the reporters prebuild with django-jenkins
 Changelog
 ---------
 
-GIT Version 2014-12-
+0.16.4 2014-12-15
 ~~~~~~~~~~~~~~~~~
 
 * New scss-lint task
