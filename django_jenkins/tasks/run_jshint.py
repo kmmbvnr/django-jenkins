@@ -22,7 +22,7 @@ class Reporter(object):
                                   extension='.js',
                                   ignore_patterns=options['jshint_exclude'].split(',')))
 
-        cmd = ['jshint', '--jslint-reporter'] + files
+        cmd = ['jshint', '--reporter=jslint'] + files
 
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
         jshint_output, err = process.communicate()
