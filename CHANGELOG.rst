@@ -1,3 +1,7 @@
+0.16.5 2015-02-05
+~~~~~~~~~~~~~~~~~
+* Support Django 1.5 when django-discover-runner is installed. (jsaz)
+
 0.16.4 2014-12-15
 ~~~~~~~~~~~~~~~~~
 

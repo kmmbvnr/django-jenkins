@@ -5,9 +5,13 @@ import time
 from xml.etree import ElementTree as ET
 
 from django.conf import settings
-from django.test.runner import DiscoverRunner
 from django.utils.encoding import smart_text
 from django.utils.unittest import TextTestResult, TextTestRunner
+
+try:
+    from django.test.runner import DiscoverRunner
+except ImportError:
+    from discover_runner import DiscoverRunner
 
 
 class EXMLTestResult(TextTestResult):

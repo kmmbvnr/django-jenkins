@@ -29,6 +29,10 @@ Installation for Python 3::
 
     Works out of the box
 
+For Django 1.5, install this first::
+
+    $ pip install django-discover-runner
+
 
 Usage
 -----
@@ -136,6 +140,9 @@ Here is the reporters prebuild with django-jenkins
 
 Changelog
 ---------
+0.16.5 2015-02-05
+~~~~~~~~~~~~~~~~~
+* Support Django 1.5 when django-discover-runner is installed. (jsaz)
 
 0.16.4 2014-12-15
 ~~~~~~~~~~~~~~~~~
