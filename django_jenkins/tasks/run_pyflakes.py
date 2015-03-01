@@ -2,6 +2,7 @@
 import os
 import re
 import sys
+from optparse import make_option
 from pyflakes.scripts import pyflakes
 
 try:
@@ -11,6 +12,14 @@ except ImportError:
 
 
 class Reporter(object):
+    option_list = (
+        make_option("--pyflakes-exclude-dir",
+                    action="append",
+                    default=['south_migrations'],
+                    dest="pyflakes_exclude_dirs",
+                    help="Path name to exclude"),
+    )
+
     def run(self, apps_locations, **options):
         output = open(os.path.join(options['output_dir'], 'pyflakes.report'), 'w')
 
@@ -21,7 +30,8 @@ class Reporter(object):
             for location in apps_locations:
                 if os.path.isdir(location):
                     for dirpath, dirnames, filenames in os.walk(os.path.relpath(location)):
-                        if dirpath.endswith(os.sep + 'south_migrations'):
+                        if dirpath.endswith(tuple(
+                                ''.join([os.sep, exclude_dir]) for exclude_dir in options['pyflakes_exclude_dirs'])):
                             continue
 
                         for filename in filenames:
