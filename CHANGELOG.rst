@@ -4,7 +4,7 @@
 * New scss-lint task
 * Added support for pylint plugins
 * Include STATICFILES_DIRS to search path for csslint and jshint
-* Search pep8 confing in setup.cfg and tox.ini.
+* Search pep8 config in setup.cfg and tox.ini.
 * Fix non-ascii tracback problem
 * Fix error handlin in case exception happens in fixture loading
 * Fix max-complexity option overriding
