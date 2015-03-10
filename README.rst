@@ -159,7 +159,7 @@ Contribution guide
     PATH=$PATH:$WORKSPACE/node_modules/.bin
     tox
 
-* Ensure that everythig works
+* Ensure that everything works
 * Modify the code
 * Ensure that everythig works again
 * Fix pep8/pyflakes errors and minimize pylint's warninigs
