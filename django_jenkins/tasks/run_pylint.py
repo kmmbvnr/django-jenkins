@@ -64,6 +64,6 @@ class Reporter(object):
         if os.path.exists(rcfile):
             return rcfile
 
-        # use build-in
+        # use built-in
         root_dir = os.path.normpath(os.path.dirname(__file__))
         return os.path.join(root_dir, 'pylint.rc')
