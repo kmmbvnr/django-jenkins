@@ -15,8 +15,9 @@ install_requires=[
 # Needed for Python <2.7
 try:
     import importlib
+    import unittest
 except ImportError:
-    install_requires.append('importlib')
+    install_requires.append(['importlib', 'unittest'])
 
 setup(
     name='django-jenkins',
