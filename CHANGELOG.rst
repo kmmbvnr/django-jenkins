@@ -1,3 +1,7 @@
+0.16.5 2014-04-03 (NON OFFICIAL)
+~~~~~~~~~~~~~~~~~
+* Added compatibility for python3.4 and Django 1.8 by using argparse instead of optparse (see https://docs.djangoproject.com/en/1.8/releases/1.8/#custom-test-management-command-arguments-through-test-runner)
+
 0.16.4 2014-12-15
 ~~~~~~~~~~~~~~~~~
 

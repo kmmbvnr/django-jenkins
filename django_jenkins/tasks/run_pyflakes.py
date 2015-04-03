@@ -10,15 +10,17 @@ try:
 except ImportError:
     from io import StringIO
 
+from django_jenkins.tasks import ArgsparseMixin
 
-class Reporter(object):
-    option_list = (
-        make_option("--pyflakes-exclude-dir",
+
+class Reporter(ArgsparseMixin):
+
+    def add_arguments(self, parser):
+        parser.add_argument("--pyflakes-exclude-dir",
                     action="append",
                     default=['south_migrations'],
                     dest="pyflakes_exclude_dirs",
-                    help="Path name to exclude"),
-    )
+                    help="Path name to exclude")
 
     def run(self, apps_locations, **options):
         output = open(os.path.join(options['output_dir'], 'pyflakes.report'), 'w')

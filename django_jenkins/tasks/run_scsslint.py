@@ -4,15 +4,20 @@ import subprocess
 import codecs
 from optparse import make_option
 from django.conf import settings
-from django_jenkins.tasks import static_files_iterator
+from django_jenkins.tasks import static_files_iterator, ArgsparseMixin
 
 
-class Reporter(object):
+class Reporter(ArgsparseMixin):
     option_list = (
         make_option("--scss-lint-exclude",
                     dest="scss_lint_exclude", default="",
                     help="Comma separated exclude file patterns"),
     )
+
+    def add_arguments(self, parser):
+        parser.add_argument("--scss-lint-exclude",
+                    dest="scss_lint_exclude", default="",
+                    help="Comma separated exclude file patterns")
 
     def run(self, apps_locations, **options):
         output = codecs.open(os.path.join(options['output_dir'], 'scss-lint.xml'), 'w', 'utf-8')

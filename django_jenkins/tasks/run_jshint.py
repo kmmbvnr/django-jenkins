@@ -4,15 +4,15 @@ import codecs
 import subprocess
 from optparse import make_option
 from django.conf import settings
-from django_jenkins.tasks import static_files_iterator
+from django_jenkins.tasks import static_files_iterator, ArgsparseMixin
 
 
-class Reporter(object):
-    option_list = (
-        make_option("--jshint-exclude",
+class Reporter(ArgsparseMixin):
+
+    def add_arguments(self, parser):
+        parser.add_argument("--jshint-exclude",
                     dest="jshint_exclude", default="",
-                    help="Exclude patterns"),
-    )
+                    help="Exclude patterns")
 
     def run(self, apps_locations, **options):
         output = codecs.open(os.path.join(options['output_dir'], 'jshint.xml'), 'w', 'utf-8')

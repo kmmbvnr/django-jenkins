@@ -4,18 +4,18 @@ import subprocess
 import codecs
 from optparse import make_option
 from django.conf import settings
-from django_jenkins.tasks import static_files_iterator
+from django_jenkins.tasks import static_files_iterator, ArgsparseMixin
 
 
-class Reporter(object):
-    option_list = (
-        make_option("--csslint-exclude",
+class Reporter(ArgsparseMixin):
+
+    def add_arguments(self, parser):
+        parser.add_argument("--csslint-exclude",
                     dest="csslint_exclude", default=".min.css",
-                    help="Comma separated exclude file patterns"),
-        make_option("--csslint-ignore",
+                    help="Comma separated exclude file patterns")
+        parser.add_argument("--csslint-ignore",
                     dest="csslint_ignore", default="",
                     help="CSSLint Ignore rules")
-    )
 
     def run(self, apps_locations, **options):
         output = codecs.open(os.path.join(options['output_dir'], 'csslint.report'), 'w', 'utf-8')
