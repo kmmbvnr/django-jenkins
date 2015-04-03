@@ -26,49 +26,6 @@ def get_runner(settings, test_runner_class=None):
 
 
 class Command(TestCommand):
-    option_list = TestCommand.option_list + (
-        make_option('--output-dir', dest='output_dir', default="reports",
-                    help='Report files directory'),
-        make_option("--enable-coverage",
-                    action="store_true", default=False,
-                    help="Measure code coverage"),
-        make_option('--debug', action='store_true',
-                    dest='debug', default=False,
-                    help='Do not intercept stdout and stderr, friendly for console debuggers'),
-        make_option("--coverage-rcfile",
-                    dest="coverage_rcfile",
-                    default="",
-                    help="Specify configuration file."),
-        make_option("--coverage-html-report",
-                    dest="coverage_html_report_dir",
-                    default="",
-                    help="Directory to which HTML coverage report should be"
-                    " written. If not specified, no report is generated."),
-        make_option("--coverage-exclude", action="append",
-                    default=[], dest="coverage_excludes",
-                    help="Module name to exclude"),
-        make_option("--project-apps-tests", action="store_true",
-                    default=False, dest="project_apps_tests",
-                    help="Take tests only from project apps"),
-
-        # Required by Django 1.8 if create_parser overrided
-        make_option('-v', '--verbosity', action='store', dest='verbosity', default='1',
-                    type='choice', choices=['0', '1', '2', '3'],
-                    help='Verbosity level; 0=minimal output, 1=normal output, 2=verbose output, 3=very verbose output'),
-        make_option('--settings',
-                    help=(
-                        'The Python path to a settings module, e.g. '
-                        '"myproject.settings.main". If this isn\'t provided, the '
-                        'DJANGO_SETTINGS_MODULE environment variable will be used.'
-                    ),
-        ),
-        make_option('--pythonpath',
-                    help='A directory to add to the Python path, e.g. "/home/djangoprojects/myproject".'),
-        make_option('--traceback', action='store_true',
-                    help='Raise on CommandError exceptions'),
-        make_option('--no-color', action='store_true', dest='no_color', default=False,
-                    help="Don't colorize the command output."),
-    )
 
     def __init__(self):
         super(Command, self).__init__()
@@ -87,6 +44,33 @@ class Command(TestCommand):
                 """
                 tasks += ('django_jenkins.tasks.with_coverage',)
         return tasks
+
+    def add_arguments(self, parser):
+        super(Command, self).add_arguments(parser)
+        parser.add_argument('--output-dir', dest='output_dir', default="reports",
+            help='Report files directory')
+        parser.add_argument("--enable-coverage",
+                        action="store_true", default=False,
+                        help="Measure code coverage")
+        parser.add_argument('--debug', action='store_true',
+                        dest='debug', default=False,
+                        help='Do not intercept stdout and stderr, friendly for console debuggers')
+        parser.add_argument("--coverage-rcfile",
+                        dest="coverage_rcfile",
+                        default="",
+                        help="Specify configuration file.")
+        parser.add_argument("--coverage-html-report",
+                        dest="coverage_html_report_dir",
+                        default="",
+                        help="Directory to which HTML coverage report should be"
+                        " written. If not specified, no report is generated.")
+        parser.add_argument("--coverage-exclude", action="append",
+                        default=[], dest="coverage_excludes",
+                        help="Module name to exclude")
+        parser.add_argument("--project-apps-tests", action="store_true",
+                        default=False, dest="project_apps_tests",
+                        help="Take tests only from project apps")
+
 
     def create_parser(self, prog_name, subcommand):
         test_runner_class = get_runner(settings, self.test_runner)
