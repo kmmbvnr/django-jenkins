@@ -28,7 +28,7 @@ class Reporter(ArgsparseMixin):
         parser.add_argument("--pep8-ignore", dest="pep8-ignore",
                     help="skip errors and warnings (e.g. E4,W)"),
         parser.add_argument("--pep8-max-line-length",
-                    dest="pep8-max-line-length", type='int',
+                    dest="pep8-max-line-length", type=int,
                     help="set maximum allowed line length (default: %d)" %
                     pep8.MAX_LINE_LENGTH),
         parser.add_argument("--pep8-rcfile", dest="pep8-rcfile",
