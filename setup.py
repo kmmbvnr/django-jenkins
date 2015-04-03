@@ -9,7 +9,7 @@ from setuptools import setup
 read = lambda filepath: codecs.open(filepath, 'r', 'utf-8').read()
 
 install_requires=[
-    'Django>=1.6',
+    'Django>=1.8',
 ]
 
 # Needed for Python <2.7
