@@ -52,8 +52,8 @@ class Command(TestCommand):
                     help="Take tests only from project apps"),
 
         # Required by Django 1.8 if create_parser overrided
-        make_option('-v', '--verbosity', action='store', dest='verbosity', default='1',
-                    type='choice', choices=['0', '1', '2', '3'],
+        make_option('-v', '--verbosity', action='store', dest='verbosity', default=1,
+                    type='choice', choices=[0, 1, 2, 3],
                     help='Verbosity level; 0=minimal output, 1=normal output, 2=verbose output, 3=very verbose output'),
         make_option('--settings',
                     help=(
