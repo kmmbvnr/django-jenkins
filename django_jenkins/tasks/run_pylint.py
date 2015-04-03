@@ -5,6 +5,8 @@ from django.conf import settings
 from pylint import lint
 from pylint.reporters.text import TextReporter
 
+from django_jenkins.tasks import ArgsparseMixin
+
 
 class ParseableTextReporter(TextReporter):
     """
@@ -16,23 +18,22 @@ class ParseableTextReporter(TextReporter):
     line_format = '{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}'
 
 
-class Reporter(object):
-    option_list = (
-        make_option("--pylint-rcfile",
+class Reporter(ArgsparseMixin):
+
+    def add_arguments(self, parser):
+        parser.add_argument("--pylint-rcfile",
                     dest="pylint_rcfile",
-                    help="pylint configuration file"),
-        make_option("--pylint-errors-only",
+                    help="pylint configuration file")
+        parser.add_argument("--pylint-errors-only",
                     dest="pylint_errors_only",
                     action="store_true", default=False,
-                    help="pylint output errors only mode"),
-        make_option("--pylint-load-plugins",
+                    help="pylint output errors only mode")
+        parser.add_argument("--pylint-load-plugins",
                     dest="pylint_load_plugins",
-                    help="list of pylint plugins to load"),
-    )
+                    help="list of pylint plugins to load")
 
     def run(self, apps_locations, **options):
         output = open(os.path.join(options['output_dir'], 'pylint.report'), 'w')
-
         args = []
         args.append("--rcfile=%s" % self.get_config_path(options))
         if self.get_plugins(options):

@@ -70,6 +70,11 @@ class Command(TestCommand):
         parser.add_argument("--project-apps-tests", action="store_true",
                         default=False, dest="project_apps_tests",
                         help="Take tests only from project apps")
+        for task in self.tasks:
+            try:
+                task.add_arguments(parser)
+            except AttributeError:
+                pass
 
     def handle(self, *test_labels, **options):
         TestRunner = get_runner(settings, options.get('testrunner'))

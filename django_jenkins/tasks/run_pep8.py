@@ -3,27 +3,28 @@ import pep8
 from optparse import make_option
 from django.conf import settings
 
-from . import set_option
+from . import set_option, ArgsparseMixin
 
 
-class Reporter(object):
-    option_list = (
-        make_option("--pep8-exclude",
+class Reporter(ArgsparseMixin):
+
+    def add_arguments(self, parser):
+        parser.add_argument("--pep8-exclude",
                     dest="pep8-exclude",
                     help="exclude files or directories which match these "
                     "comma separated patterns (default: %s)" %
-                    (pep8.DEFAULT_EXCLUDE + ",south_migrations")),
-        make_option("--pep8-select", dest="pep8-select",
-                    help="select errors and warnings (e.g. E,W6)"),
-        make_option("--pep8-ignore", dest="pep8-ignore",
-                    help="skip errors and warnings (e.g. E4,W)"),
-        make_option("--pep8-max-line-length",
+                    (pep8.DEFAULT_EXCLUDE + ",south_migrations"))
+        parser.add_argument("--pep8-select", dest="pep8-select",
+                    help="select errors and warnings (e.g. E,W6)")
+        parser.add_argument("--pep8-ignore", dest="pep8-ignore",
+                    help="skip errors and warnings (e.g. E4,W)")
+        parser.add_argument("--pep8-max-line-length",
                     dest="pep8-max-line-length", type='int',
                     help="set maximum allowed line length (default: %d)" %
-                    pep8.MAX_LINE_LENGTH),
-        make_option("--pep8-rcfile", dest="pep8-rcfile",
+                    pep8.MAX_LINE_LENGTH)
+        parser.add_argument("--pep8-rcfile", dest="pep8-rcfile",
                     help="PEP8 configuration file")
-    )
+
 
     def run(self, apps_locations, **options):
         output = open(os.path.join(options['output_dir'], 'pep8.report'), 'w')

@@ -4,6 +4,11 @@ import itertools
 from django.conf import settings
 from django.contrib.staticfiles import finders
 
+class ArgsparseMixin(object):
+
+    def add_arguments(self, parser):
+        ''' Entry points to add additionnal arguments on Reporter instead of using optparse '''
+        pass
 
 def static_files_iterator(tested_locations, extension, ignore_patterns=None, additional_settings_list=None):
     if ignore_patterns is None:
