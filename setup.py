@@ -8,6 +8,16 @@ from setuptools import setup
 
 read = lambda filepath: codecs.open(filepath, 'r', 'utf-8').read()
 
+install_requires=[
+    'Django>=1.6',
+]
+
+# Needed for Python <2.7
+try:
+    import importlib
+    import unittest
+except ImportError:
+    install_requires.append(['importlib', 'unittest'])
 
 setup(
     name='django-jenkins',
@@ -35,9 +45,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Software Development :: Testing'
     ],
-    install_requires=[
-        'Django>=1.6',
-    ],
+    install_requires=install_requires,
     packages=['django_jenkins', 'django_jenkins.management',
               'django_jenkins.tasks', 'django_jenkins.management.commands'],
     package_data={'django_jenkins': ['tasks/pylint.rc']},
