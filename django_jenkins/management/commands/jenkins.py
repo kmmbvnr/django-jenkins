@@ -71,22 +71,6 @@ class Command(TestCommand):
                         default=False, dest="project_apps_tests",
                         help="Take tests only from project apps")
 
-
-    def create_parser(self, prog_name, subcommand):
-        test_runner_class = get_runner(settings, self.test_runner)
-        options = self.option_list + getattr(
-            test_runner_class, 'option_list', ())
-
-        for task in self.tasks:
-            options += tuple(option for option in getattr(task, 'option_list', ())
-                             if all(option._long_opts[0] != existing._long_opts[0]
-                                    for existing in options))
-
-        return OptionParser(prog=prog_name,
-                            usage=self.usage(subcommand),
-                            version=self.get_version(),
-                            option_list=options)
-
     def handle(self, *test_labels, **options):
         TestRunner = get_runner(settings, options.get('testrunner'))
         options['verbosity'] = int(options.get('verbosity'))
