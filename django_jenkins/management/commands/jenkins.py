@@ -3,6 +3,7 @@ import sys
 import warnings
 from optparse import OptionParser, make_option
 
+import django
 from django.conf import settings
 from django.core.management.commands.test import Command as TestCommand
 from django.utils.importlib import import_module
@@ -26,6 +27,7 @@ def get_runner(settings, test_runner_class=None):
 
 
 class Command(TestCommand):
+    # TODO Remove, when drop django 1.7 support
     option_list = TestCommand.option_list + (
         make_option('--output-dir', dest='output_dir', default="reports",
                     help='Report files directory'),
@@ -70,20 +72,61 @@ class Command(TestCommand):
                 tasks += ('django_jenkins.tasks.with_coverage',)
         return tasks
 
-    def create_parser(self, prog_name, subcommand):
-        test_runner_class = get_runner(settings, self.test_runner)
-        options = self.option_list + getattr(
-            test_runner_class, 'option_list', ())
+    @property
+    def use_argparse(self):
+        return True
 
+    def add_arguments(self, parser):
+        super(Command, self).add_arguments(parser)
+        parser.add_argument('--output-dir', dest='output_dir', default="reports",
+                            help='Report files directory'),
+        parser.add_argument("--enable-coverage",
+                            action="store_true", default=False,
+                            help="Measure code coverage"),
+        parser.add_argument('--debug', action='store_true',
+                            dest='debug', default=False,
+                            help='Do not intercept stdout and stderr, friendly for console debuggers'),
+        parser.add_argument("--coverage-rcfile",
+                            dest="coverage_rcfile",
+                            default="",
+                            help="Specify configuration file."),
+        parser.add_argument("--coverage-html-report",
+                            dest="coverage_html_report_dir",
+                            default="",
+                            help="Directory to which HTML coverage report should be"
+                            " written. If not specified, no report is generated."),
+        parser.add_argument("--coverage-exclude", action="append",
+                            default=[], dest="coverage_excludes",
+                            help="Module name to exclude"),
+        parser.add_argument("--project-apps-tests", action="store_true",
+                            default=False, dest="project_apps_tests",
+                            help="Take tests only from project apps")
+
+        parser._optionals.conflict_handler = 'resolve'
         for task in self.tasks:
-            options += tuple(option for option in getattr(task, 'option_list', ())
-                             if all(option._long_opts[0] != existing._long_opts[0]
-                                    for existing in options))
+            if hasattr(task, 'add_arguments'):
+                task.add_arguments(parser)
 
-        return OptionParser(prog=prog_name,
-                            usage=self.usage(subcommand),
-                            version=self.get_version(),
-                            option_list=options)
+    def create_parser(self, prog_name, subcommand):
+        if django.VERSION >= (1, 8):
+            parser = super(Command, self).create_parser(prog_name, subcommand)
+        else:
+            # TODO Remove, when drop django 1.7 support
+            test_runner_class = get_runner(settings, self.test_runner)
+            options = self.option_list + getattr(
+                test_runner_class, 'option_list', ())
+
+            for task in self.tasks:
+                options += tuple(option for option in getattr(task, 'option_list', ())
+                                 if all(option._long_opts[0] != existing._long_opts[0]
+                                        for existing in options))
+
+            parser = OptionParser(prog=prog_name,
+                                  usage=self.usage(subcommand),
+                                  version=self.get_version(),
+                                  option_list=options)
+
+        return parser
 
     def handle(self, *test_labels, **options):
         TestRunner = get_runner(settings, options.get('testrunner'))

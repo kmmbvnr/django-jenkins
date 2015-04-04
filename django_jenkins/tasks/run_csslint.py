@@ -8,6 +8,7 @@ from django_jenkins.tasks import static_files_iterator
 
 
 class Reporter(object):
+    # TODO Remove, when drop django 1.7 support
     option_list = (
         make_option("--csslint-exclude",
                     dest="csslint_exclude", default=".min.css",
@@ -16,6 +17,14 @@ class Reporter(object):
                     dest="csslint_ignore", default="",
                     help="CSSLint Ignore rules")
     )
+
+    def add_arguments(self, parser):
+        parser.add_argument("--csslint-exclude",
+                            dest="csslint_exclude", default=".min.css",
+                            help="Comma separated exclude file patterns")
+        parser.add_argument("--csslint-ignore",
+                            dest="csslint_ignore", default="",
+                            help="CSSLint Ignore rules")
 
     def run(self, apps_locations, **options):
         output = codecs.open(os.path.join(options['output_dir'], 'csslint.report'), 'w', 'utf-8')

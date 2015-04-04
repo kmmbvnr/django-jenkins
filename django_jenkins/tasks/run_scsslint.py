@@ -8,11 +8,17 @@ from django_jenkins.tasks import static_files_iterator
 
 
 class Reporter(object):
+    # TODO Remove, when drop django 1.7 support
     option_list = (
         make_option("--scss-lint-exclude",
                     dest="scss_lint_exclude", default="",
                     help="Comma separated exclude file patterns"),
     )
+
+    def add_arguments(self, parser):
+        parser.add_argument("--scss-lint-exclude",
+                            dest="scss_lint_exclude", default="",
+                            help="Comma separated exclude file patterns")
 
     def run(self, apps_locations, **options):
         output = codecs.open(os.path.join(options['output_dir'], 'scss-lint.xml'), 'w', 'utf-8')

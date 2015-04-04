@@ -9,6 +9,11 @@ Plug and play continuous integration with Django and Jenkins
 .. image:: https://pypip.in/d/django-jenkins/badge.png
         :target: https://crate.io/packages/django-jenkins
 
+
+** PLEASE. STOP. SENDING. PULL. REQUESTS. FOR. TESTING. LIBRARY. WITHOUT. SUCCESFULLY. RUNNING. ITS. TESTS. **
+
+** THANK YOU **
+
 Installation
 ------------
 
@@ -137,6 +142,13 @@ Here is the reporters prebuild with django-jenkins
 Changelog
 ---------
 
+0.17.0 GIT VERSION
+~~~~~~~~~~~~~~~~~~
+
+* Django 1.8 compatibility
+
+
+
 0.16.4 2014-12-15
 ~~~~~~~~~~~~~~~~~
 
@@ -160,7 +172,7 @@ Contribution guide
     tox
 
 * Ensure that everything works
-* Modify the code
+* Modify the *the only one thing*
 * Ensure that everythig works again
 * Fix pep8/pyflakes errors and minimize pylint's warninigs
 * Pull request!

@@ -12,6 +12,7 @@ except ImportError:
 
 
 class Reporter(object):
+    # TODO Remove, when drop django 1.7 support
     option_list = (
         make_option("--pyflakes-exclude-dir",
                     action="append",
@@ -19,6 +20,13 @@ class Reporter(object):
                     dest="pyflakes_exclude_dirs",
                     help="Path name to exclude"),
     )
+
+    def add_arguments(self, parser):
+        parser.add_argument("--pyflakes-exclude-dir",
+                            action="append",
+                            default=['south_migrations'],
+                            dest="pyflakes_exclude_dirs",
+                            help="Path name to exclude")
 
     def run(self, apps_locations, **options):
         output = open(os.path.join(options['output_dir'], 'pyflakes.report'), 'w')

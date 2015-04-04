@@ -8,11 +8,17 @@ from django_jenkins.tasks import static_files_iterator
 
 
 class Reporter(object):
+    # TODO Remove, when drop django 1.7 support
     option_list = (
         make_option("--jshint-exclude",
                     dest="jshint_exclude", default="",
                     help="Exclude patterns"),
     )
+
+    def add_arguments(self, parser):
+        parser.add_argument("--jshint-exclude",
+                            dest="jshint_exclude", default="",
+                            help="Exclude patterns")
 
     def run(self, apps_locations, **options):
         output = codecs.open(os.path.join(options['output_dir'], 'jshint.xml'), 'w', 'utf-8')

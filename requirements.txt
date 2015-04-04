@@ -1,8 +1,0 @@
-django==1.7.1
-pylint==1.4.0
-pylint-django==0.5.5
-coverage==3.7.1
-pyflakes==0.8.1
-pep8==1.5.7
-selenium==2.44.0
-flake8==2.2.5

@@ -17,6 +17,7 @@ class ParseableTextReporter(TextReporter):
 
 
 class Reporter(object):
+    # TODO Remove, when drop django 1.7 support
     option_list = (
         make_option("--pylint-rcfile",
                     dest="pylint_rcfile",
@@ -29,6 +30,18 @@ class Reporter(object):
                     dest="pylint_load_plugins",
                     help="list of pylint plugins to load"),
     )
+
+    def add_arguments(self, parser):
+        parser.add_argument("--pylint-rcfile",
+                            dest="pylint_rcfile",
+                            help="pylint configuration file")
+        parser.add_argument("--pylint-errors-only",
+                            dest="pylint_errors_only",
+                            action="store_true", default=False,
+                            help="pylint output errors only mode")
+        parser.add_argument("--pylint-load-plugins",
+                            dest="pylint_load_plugins",
+                            help="list of pylint plugins to load")
 
     def run(self, apps_locations, **options):
         output = open(os.path.join(options['output_dir'], 'pylint.report'), 'w')
