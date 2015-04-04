@@ -10,10 +10,6 @@ Plug and play continuous integration with Django and Jenkins
         :target: https://crate.io/packages/django-jenkins
 
 
-** PLEASE. STOP. SENDING. PULL. REQUESTS. FOR. TESTING. LIBRARY. WITHOUT. SUCCESFULLY. RUNNING. ITS. TESTS. **
-
-** THANK YOU **
-
 Installation
 ------------
 

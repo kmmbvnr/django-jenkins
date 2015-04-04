@@ -21,6 +21,7 @@ PROJECT_APPS = (
 )
 
 INSTALLED_APPS = (
+    'django.contrib.auth',
     'django.contrib.contenttypes',
 ) + PROJECT_APPS
 
