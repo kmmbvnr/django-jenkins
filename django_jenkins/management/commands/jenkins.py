@@ -1,11 +1,11 @@
 import os
 import sys
 import warnings
-from importlib import import_module
 from optparse import OptionParser, make_option
 
 from django.conf import settings
 from django.core.management.commands.test import Command as TestCommand
+from django.utils.importlib import import_module
 
 from django_jenkins.runner import CITestSuiteRunner
 
@@ -49,25 +49,7 @@ class Command(TestCommand):
                     help="Module name to exclude"),
         make_option("--project-apps-tests", action="store_true",
                     default=False, dest="project_apps_tests",
-                    help="Take tests only from project apps"),
-
-        # Required by Django 1.8 if create_parser overrided
-        make_option('-v', '--verbosity', action='store', dest='verbosity', default='1',
-                    type='choice', choices=['0', '1', '2', '3'],
-                    help='Verbosity level; 0=minimal output, 1=normal output, 2=verbose output, 3=very verbose output'),
-        make_option('--settings',
-                    help=(
-                        'The Python path to a settings module, e.g. '
-                        '"myproject.settings.main". If this isn\'t provided, the '
-                        'DJANGO_SETTINGS_MODULE environment variable will be used.'
-                    ),
-        ),
-        make_option('--pythonpath',
-                    help='A directory to add to the Python path, e.g. "/home/djangoprojects/myproject".'),
-        make_option('--traceback', action='store_true',
-                    help='Raise on CommandError exceptions'),
-        make_option('--no-color', action='store_true', dest='no_color', default=False,
-                    help="Don't colorize the command output."),
+                    help="Take tests only from project apps")
     )
 
     def __init__(self):
@@ -171,7 +153,7 @@ class Command(TestCommand):
                     warnings.warn('No app found for test: {0}'.format(test_label))
         except ImportError:
             # django 1.6
-            from importlib import import_module
+            from django.utils.importlib import import_module
 
             def get_containing_app(object_name):
                 candidates = []
