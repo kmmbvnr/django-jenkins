@@ -38,7 +38,7 @@ class Reporter(object):
                             help="skip errors and warnings (e.g. E4,W)"),
         parser.add_argument("--pep8-max-line-length",
                             dest="pep8-max-line-length", type=int,
-                            help="set maximum allowed line length (default: %d)".format(pep8.MAX_LINE_LENGTH))
+                            help="set maximum allowed line length (default: %d)" % pep8.MAX_LINE_LENGTH)
         parser.add_argument("--pep8-rcfile", dest="pep8-rcfile",
                             help="PEP8 configuration file")
 
