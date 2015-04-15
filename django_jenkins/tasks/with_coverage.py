@@ -34,13 +34,13 @@ class CoverageReporter(object):
         self.coverage._harvest_data()
         morfs = self.get_morfs(self.coverage, apps_locations, options)
 
-        self.coverage.xml_report(morfs=morfs, outfile=os.path.join(options['output_dir'], 'coverage.xml'))
-
-        # Dump coverage html
-        coverage_html_dir = options.get('coverage_html_report_dir') \
-            or getattr(settings, 'COVERAGE_REPORT_HTML_OUTPUT_DIR', '')
-        if coverage_html_dir:
-            self.coverage.html_report(morfs=morfs, directory=coverage_html_dir)
+        if 'xml' in options['coverage_format']:
+            self.coverage.xml_report(morfs=morfs, outfile=os.path.join(options['output_dir'], 'coverage.xml'))
+        if 'bin' in options['coverage_format']:
+            self.coverage.save()
+        if 'html' in options['coverage_format']:
+            # Dump coverage html
+            self.coverage.html_report(morfs=morfs, directory=os.path.join(options['output_dir'], 'coverage'))
 
     def get_morfs(self, coverage, tested_locations, options):
         excluded = []

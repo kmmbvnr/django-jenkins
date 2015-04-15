@@ -142,19 +142,9 @@ Changelog
 ~~~~~~~~~~~~~~~~~~
 
 * Django 1.8 compatibility
-
-
-
-0.16.4 2014-12-15
-~~~~~~~~~~~~~~~~~
-
-* New scss-lint task
-* Added support for pylint plugins
-* Include STATICFILES_DIRS to search path for csslint and jshint
-* Search pep8 confing in setup.cfg and tox.ini 
-* Fix non-ascii tracback problem
-* Fix error handlin in case exception happens in fixture loading
-* Fix max-complexity option overriding
+* Added support for excluding paths in the pyflakes runner
+* --coverage-html-report option removed
+* --coverage-format option added
 
 Contribution guide
 ~~~~~~~~~~~~~~~~~~
