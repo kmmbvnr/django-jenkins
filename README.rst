@@ -138,13 +138,14 @@ Here is the reporters prebuild with django-jenkins
 Changelog
 ---------
 
-0.17.0 GIT VERSION
+0.17.0 2014-04-15
 ~~~~~~~~~~~~~~~~~~
 
 * Django 1.8 compatibility
 * Added support for excluding paths in the pyflakes runner
 * --coverage-html-report option removed
 * --coverage-format option added
+
 
 Contribution guide
 ~~~~~~~~~~~~~~~~~~

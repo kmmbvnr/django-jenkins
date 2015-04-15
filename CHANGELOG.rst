@@ -1,3 +1,11 @@
+0.17.0 2014-04-15
+~~~~~~~~~~~~~~~~~~
+
+* Django 1.8 compatibility
+* Added support for excluding paths in the pyflakes runner
+* --coverage-html-report option removed
+* --coverage-format option added
+
 0.16.4 2014-12-15
 ~~~~~~~~~~~~~~~~~
 
