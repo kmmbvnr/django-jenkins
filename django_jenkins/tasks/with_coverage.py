@@ -2,7 +2,11 @@ import warnings
 import os
 import sys
 from django.conf import settings
-from django.utils.importlib import import_module
+
+try:
+    from importlib import import_module
+except ImportError:
+    from django.utils.importlib import import_module
 
 
 def default_coverage_config():
