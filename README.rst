@@ -122,7 +122,7 @@ Here is the reporters prebuild with django-jenkins
 - ``django_jenkins.tasks.run_flake8``
 
   Runs flake8 tool over selected Django apps.
-  Creates Pylint compatible report for Jenkins.
+  Creates pep8 compatible report for Jenkins.
 
   You should have flake8_ python package installed to run this task.
 
