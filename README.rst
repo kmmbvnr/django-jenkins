@@ -9,6 +9,9 @@ Plug and play continuous integration with Django and Jenkins
 .. image:: https://pypip.in/d/django-jenkins/badge.png
         :target: https://crate.io/packages/django-jenkins
 
+.. image:: https://badges.gitter.im/Join%20Chat.svg
+        :target: https://gitter.im/kmmbvnr/django-jenkins?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 
 Installation
 ------------
