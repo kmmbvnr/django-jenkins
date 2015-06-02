@@ -23,7 +23,7 @@ setup(
               'jshint', 'coverage'],
     url='http://github.com/kmmbvnr/django-jenkins',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
         'Natural Language :: English',
