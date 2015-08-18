@@ -4,6 +4,7 @@
 .coverage
 *.pyc
 dist
+build
 reports
 .reports_py??
 .tox

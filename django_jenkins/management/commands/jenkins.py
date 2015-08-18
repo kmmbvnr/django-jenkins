@@ -50,7 +50,9 @@ class Command(TestCommand):
                     help="Module name to exclude"),
         make_option("--project-apps-tests", action="store_true",
                     default=False, dest="project_apps_tests",
-                    help="Take tests only from project apps")
+                    help="Take tests only from project apps"),
+        make_option('--src-dir', dest='src_dir', default=None,
+                    help='Source directory for use in tasks [pep8, pyflakes etc]'),
     )
 
     def __init__(self):
@@ -135,6 +137,7 @@ class Command(TestCommand):
             del options['liveserver']
 
         output_dir = options['output_dir']
+        src_dir = options['src_dir']
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
@@ -149,6 +152,8 @@ class Command(TestCommand):
             sys.exit(bool(failures))
         else:
             tested_locations = self.get_tested_locations(test_labels)
+            if src_dir:
+                tested_locations.append(src_dir)
 
             # dump coverage
             try:
