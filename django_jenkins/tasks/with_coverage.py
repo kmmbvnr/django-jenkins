@@ -31,7 +31,10 @@ class CoverageReporter(object):
 
     def save(self, apps_locations, options):
         self.coverage.stop()
-        self.coverage._harvest_data()
+        try:
+            self.coverage._harvest_data()
+        except AttributeError:
+            self.coverage.get_data()
         morfs = self.get_morfs(self.coverage, apps_locations, options)
 
         if 'xml' in options['coverage_format']:
