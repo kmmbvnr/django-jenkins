@@ -163,7 +163,7 @@ Contribution guide
 
 * Ensure that everything works
 * Modify the *the only one thing*
-* Ensure that everythig works again
+* Ensure that everything works again
 * Fix pep8/pyflakes errors and minimize pylint's warninigs
 * Pull request!
 
