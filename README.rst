@@ -141,7 +141,7 @@ Here is the reporters prebuild with django-jenkins
 Changelog
 ---------
 
-0.17.0 2014-04-15
+0.17.0 2015-04-15
 ~~~~~~~~~~~~~~~~~~
 
 * Django 1.8 compatibility
@@ -163,7 +163,7 @@ Contribution guide
 
 * Ensure that everything works
 * Modify the *the only one thing*
-* Ensure that everythig works again
+* Ensure that everything works again
 * Fix pep8/pyflakes errors and minimize pylint's warninigs
 * Pull request!
 
