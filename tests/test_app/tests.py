@@ -7,7 +7,8 @@ from django.core import mail
 from django.test import TestCase
 from django.utils.unittest import skip
 from django.test import LiveServerTestCase
-from selenium.webdriver.chrome.webdriver import WebDriver
+from pyvirtualdisplay import Display
+from selenium import webdriver
 
 from django_jenkins.runner import EXMLTestResult
 
@@ -98,13 +99,16 @@ class SeleniumTests(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.selenium = WebDriver()
+        cls.display = Display(visible=0, size=(1024, 768))
+        cls.display.start()
+        cls.selenium = webdriver.Firefox()
         super(SeleniumTests, cls).setUpClass()
 
     @classmethod
     def tearDownClass(cls):
         super(SeleniumTests, cls).tearDownClass()
         cls.selenium.quit()
+        cls.display.stop()
 
     def test_login(self):
         self.selenium.get('%s%s' % (self.live_server_url, '/test_click/'))
