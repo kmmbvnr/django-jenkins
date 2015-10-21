@@ -6,7 +6,11 @@ from optparse import OptionParser, make_option
 import django
 from django.conf import settings
 from django.core.management.commands.test import Command as TestCommand
-from django.utils.importlib import import_module
+
+try:
+    from importlib import import_module
+except ImportError:
+    from django.utils.importlib import import_module
 
 from django_jenkins.runner import CITestSuiteRunner
 
@@ -194,7 +198,7 @@ class Command(TestCommand):
                     warnings.warn('No app found for test: {0}'.format(test_label))
         except ImportError:
             # django 1.6
-            from django.utils.importlib import import_module
+            from importlib import import_module
 
             def get_containing_app(object_name):
                 candidates = []
