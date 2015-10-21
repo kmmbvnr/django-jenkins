@@ -156,7 +156,7 @@ class Command(TestCommand):
                 if options['verbosity'] >= 1:
                     print('Storing coverage info...')
 
-            coverage.save(tested_locations, options)
+                coverage.save(tested_locations, options)
 
             # run reporters
             for task in self.tasks:
