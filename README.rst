@@ -141,7 +141,7 @@ Here is the reporters prebuild with django-jenkins
 Changelog
 ---------
 
-0.17.0 2014-04-15
+0.17.0 2015-04-15
 ~~~~~~~~~~~~~~~~~~
 
 * Django 1.8 compatibility
