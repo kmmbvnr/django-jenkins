@@ -6,7 +6,7 @@ Plug and play continuous integration with Django and Jenkins
 .. image:: https://requires.io/github/kmmbvnr/django-jenkins/requirements.png?branch=master
    :target: https://requires.io/github/kmmbvnr/django-jenkins/requirements/?branch=master
 
-.. image:: https://pypip.in/d/django-jenkins/badge.png
+.. image:: https://img.shields.io/pypi/dm/django-jenkins.svg
         :target: https://crate.io/packages/django-jenkins
 
 .. image:: https://badges.gitter.im/Join%20Chat.svg
@@ -90,15 +90,6 @@ Here is the reporters prebuild with django-jenkins
 
   You should have the csslint package installed
 
-- ``django_jenkins.tasks.run_scsslint``
-
-  Runs SCSS lint tools over `app/static/*/*.scss` files.
-  Creates CSS Lint compatible report for Jenkins
-
-  You should have the scss-lint_ tool installed
-
-.. _scss-lint: https://github.com/causes/scss-lint
-
 - ``django_jenkins.tasks.run_pep8``
 
   Runs pep8 tool over selected Django apps.
@@ -141,13 +132,15 @@ Here is the reporters prebuild with django-jenkins
 Changelog
 ---------
 
-0.17.0 2015-04-15
-~~~~~~~~~~~~~~~~~~
+0.18.0 1985-10-26
+~~~~~~~~~~~~~~~~~
 
-* Django 1.8 compatibility
-* Added support for excluding paths in the pyflakes runner
-* --coverage-html-report option removed
-* --coverage-format option added
+* An exceptional release for the last 5 years issued not on 15th day of a month
+* Drop python 2.6 support
+* Drop django 1.6 support
+* Add django 1.9 compatibility
+* Drop scss-lint support (the tool no longer have xml output)
+* Coverage>=4 compatibility
 
 
 Contribution guide

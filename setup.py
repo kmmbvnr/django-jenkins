@@ -11,7 +11,7 @@ read = lambda filepath: codecs.open(filepath, 'r', 'utf-8').read()
 
 setup(
     name='django-jenkins',
-    version='0.17.0',
+    version='0.18.0',
     author='Mikhail Podgurskiy',
     author_email='kmmbvnr@gmail.com',
     description='Plug and play continuous integration with django and jenkins',

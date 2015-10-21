@@ -1,3 +1,12 @@
+0.18.0 1985-10-26
+~~~~~~~~~~~~~~~~~
+
+* An exceptional release for the last 5 years issued not on 15th day of a month
+* Drop python 2.6 support
+* Drop django 1.6 support
+* Add django 1.9 compatibility
+* Drop scss-lint support (the tool no longer have xml output)
+
 0.17.0 2015-04-15
 ~~~~~~~~~~~~~~~~~~
 
