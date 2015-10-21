@@ -36,7 +36,7 @@ setup(
         'Topic :: Software Development :: Testing'
     ],
     install_requires=[
-        'Django>=1.6',
+        'Django>=1.7',
     ],
     packages=['django_jenkins', 'django_jenkins.management',
               'django_jenkins.tasks', 'django_jenkins.management.commands'],

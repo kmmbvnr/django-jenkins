@@ -1,21 +1,16 @@
-import warnings
 import os
 import sys
+from importlib import import_module
+
 from django.conf import settings
-from django.utils.importlib import import_module
-
-
-def default_coverage_config():
-    rcfile = getattr(settings, 'COVERAGE_RCFILE', 'coverage.rc')
-    if os.path.exists(rcfile):
-        return rcfile
-    return None
 
 
 class CoverageReporter(object):
     def __init__(self):
         try:
-            from coverage import coverage
+            import coverage
+            if coverage.__version__ < '4':
+                raise ImportError('coverage>=4 required')
         except ImportError:
             raise ImportError('coverage is not installed')
         else:
@@ -24,9 +19,9 @@ class CoverageReporter(object):
                 if argv.startswith('--coverage-rcfile='):
                     _, coverage_config_file = argv.split('=')
 
-            self.coverage = coverage(
+            self.coverage = coverage.coverage(
                 branch=True,
-                config_file=coverage_config_file or default_coverage_config())
+                config_file=coverage_config_file or self.default_coverage_config())
             self.coverage.start()
 
     def save(self, apps_locations, options):
@@ -65,20 +60,8 @@ class CoverageReporter(object):
                 if any(filename.startswith(location) for location in tested_locations)
                 if not any(filename.startswith(location) for location in excluded)]
 
-
-class Reporter(object):
-    def __init__(self):
-        try:
-            from django.apps import apps
-            self.coverage_reporter = apps.get_app_config('django_jenkins').coverage
-            if self.coverage_reporter is None:
-                warnings.warn('django_jenkins.tasks.with_coverage is depricated.'
-                              ' Please, delete it from JENKINS_TASKS and use --enable-coverage'
-                              ' command line option instead')
-                self.coverage_reporter = CoverageReporter()
-        except ImportError:
-            # Ok, on django 1.6 work as usual
-            self.coverage_reporter = CoverageReporter()
-
-    def run(self, apps_locations, **options):
-        self.coverage_reporter.save(apps_locations, options)
+    def default_coverage_config(self):
+        rcfile = getattr(settings, 'COVERAGE_RCFILE', 'coverage.rc')
+        if os.path.exists(rcfile):
+            return rcfile
+        return None

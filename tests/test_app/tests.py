@@ -5,7 +5,8 @@ from xml.etree import ElementTree as ET
 
 from django.core import mail
 from django.test import TestCase
-from django.utils.unittest import skip
+from unittest import skip
+
 from django.test import LiveServerTestCase
 from pyvirtualdisplay import Display
 from selenium import webdriver
@@ -95,8 +96,6 @@ class EXMLTestResultTests(TestCase):
 
 
 class SeleniumTests(LiveServerTestCase):
-    fixtures = ['default_users.json']
-
     @classmethod
     def setUpClass(cls):
         cls.display = Display(visible=0, size=(1024, 768))

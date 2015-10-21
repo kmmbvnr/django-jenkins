@@ -1,12 +1,13 @@
 import os
 import sys
 import warnings
+from importlib import import_module
 from optparse import OptionParser, make_option
 
 import django
+from django.apps import apps
 from django.conf import settings
 from django.core.management.commands.test import Command as TestCommand
-from django.utils.importlib import import_module
 
 from django_jenkins.runner import CITestSuiteRunner
 
@@ -150,19 +151,12 @@ class Command(TestCommand):
         else:
             tested_locations = self.get_tested_locations(test_labels)
 
-            # dump coverage
-            try:
-                from django.apps import apps
-                coverage = apps.get_app_config('django_jenkins').coverage
-                if coverage:
-                    if options['verbosity'] >= 1:
-                        print('Storing coverage info...')
+            coverage = apps.get_app_config('django_jenkins').coverage
+            if coverage:
+                if options['verbosity'] >= 1:
+                    print('Storing coverage info...')
 
-                    coverage.save(tested_locations, options)
-            except ImportError:
-                """
-                Do nothing on django 1.6
-                """
+            coverage.save(tested_locations, options)
 
             # run reporters
             for task in self.tasks:
@@ -184,34 +178,11 @@ class Command(TestCommand):
             warnings.warn('No PROJECT_APPS settings, coverage gathered over all apps')
             test_labels = settings.INSTALLED_APPS
 
-        try:
-            from django.apps import apps
-            for test_label in test_labels:
-                app_config = apps.get_containing_app_config(test_label)
-                if app_config is not None:
-                    locations.append(os.path.dirname(app_config.module.__file__))
-                else:
-                    warnings.warn('No app found for test: {0}'.format(test_label))
-        except ImportError:
-            # django 1.6
-            from django.utils.importlib import import_module
-
-            def get_containing_app(object_name):
-                candidates = []
-                for app_label in settings.INSTALLED_APPS:
-                    if object_name.startswith(app_label):
-                        subpath = object_name[len(app_label):]
-                        if subpath == '' or subpath[0] == '.':
-                            candidates.append(app_label)
-                if candidates:
-                    return sorted(candidates, key=lambda label: -len(label))[0]
-
-            for test_label in test_labels:
-                app_label = get_containing_app(test_label)
-                if app_label is not None:
-                    app_module = import_module(app_label)
-                    locations.append(os.path.dirname(app_module.__file__))
-                else:
-                    warnings.warn('No app found for test: {0}'.format(test_label))
+        for test_label in test_labels:
+            app_config = apps.get_containing_app_config(test_label)
+            if app_config is not None:
+                locations.append(os.path.dirname(app_config.module.__file__))
+            else:
+                warnings.warn('No app found for test: {0}'.format(test_label))
 
         return locations
