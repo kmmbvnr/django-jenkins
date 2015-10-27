@@ -1,4 +1,4 @@
-0.18.0 1985-10-26
+0.18.0 1975-10-26
 ~~~~~~~~~~~~~~~~~
 
 * An exceptional release for the last 5 years issued not on 15th day of a month
