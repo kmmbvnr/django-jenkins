@@ -132,6 +132,12 @@ Here is the reporters prebuild with django-jenkins
 Changelog
 ---------
 
+GIT Version
+~~~~~~~~~~~
+
+* Flake8 >= 2.5.0 support
+
+
 0.18.0 1985-10-26
 ~~~~~~~~~~~~~~~~~
 
