@@ -139,7 +139,7 @@ Changelog
 * Drop python 2.6 support
 * Drop django 1.6 support
 * Add django 1.9 compatibility
-* Drop scss-lint support (the tool no longer have xml output)
+* Drop scss-lint support (the tool no longer has xml output)
 * Coverage>=4 compatibility
 
 
