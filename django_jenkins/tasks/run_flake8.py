@@ -95,7 +95,11 @@ class Reporter(object):
 
         pep8style.options.report.start()
         for location in apps_locations:
-            pep8style.input_dir(os.path.relpath(location))
+            if hasattr(pep8style, '_styleguide'):
+                # pyflakes >=2.5.0
+                pep8style._styleguide.input_dir(os.path.relpath(location))  # TODO Better fix required
+            else:
+                pep8style.input_dir(os.path.relpath(location))
         pep8style.options.report.stop()
 
         output.close()
