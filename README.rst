@@ -85,10 +85,14 @@ Here is the reporters prebuild with django-jenkins
 
 - ``django_jenkins.tasks.run_csslint``
 
-  Runs CSS lint tools over `app/static/*/*.css` files.
+  Runs CSS lint tools over ``app/static/*/*.css`` files.
   Creates CSS Lint compatible report for Jenkins
 
-  You should have the csslint package installed
+  You will need the ``csslint`` node package installed:
+  
+  .. code-block:: bash
+   
+      sudo npm install csslint -g
 
 - ``django_jenkins.tasks.run_pep8``
 
