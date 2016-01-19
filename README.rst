@@ -100,11 +100,11 @@ Here is the reporters prebuild with django-jenkins
   Runs jshint tools over ``<app>/static/*/*.js`` files.
   Creates Pylint compatible report for Jenkins
 
-  You will need the ``jslint`` node package installed:
+  You will need the ``jshint`` node package installed:
 
   .. code-block:: bash
 
-      sudo npm install jslint -g
+      sudo npm install jshint -g
 
 - ``django_jenkins.tasks.run_pep8``
 
