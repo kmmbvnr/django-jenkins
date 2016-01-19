@@ -154,7 +154,7 @@ GIT Version
 * Flake8 >= 2.5.0 support
 
 
-0.18.0 1985-10-26
+0.18.0 2015-10-26
 ~~~~~~~~~~~~~~~~~
 
 * An exceptional release for the last 5 years issued not on 15th day of a month
