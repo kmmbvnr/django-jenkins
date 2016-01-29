@@ -9,20 +9,21 @@ class CoverageReporter(object):
     def __init__(self):
         try:
             import coverage
-            if coverage.__version__ < '4':
-                raise ImportError('coverage>=4 required')
         except ImportError:
             raise ImportError('coverage is not installed')
-        else:
-            coverage_config_file = None
-            for argv in sys.argv:
-                if argv.startswith('--coverage-rcfile='):
-                    _, coverage_config_file = argv.split('=')
 
-            self.coverage = coverage.coverage(
-                branch=True,
-                config_file=coverage_config_file or self.default_coverage_config())
-            self.coverage.start()
+        if coverage.__version__ < '4':
+            raise ImportError('coverage>=4 required')
+
+        coverage_config_file = None
+        for argv in sys.argv:
+            if argv.startswith('--coverage-rcfile='):
+                _, coverage_config_file = argv.split('=')
+
+        self.coverage = coverage.coverage(
+            branch=True,
+            config_file=coverage_config_file or self.default_coverage_config())
+        self.coverage.start()
 
     def save(self, apps_locations, options):
         self.coverage.stop()
