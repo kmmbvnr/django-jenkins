@@ -170,10 +170,14 @@ class Command(TestCommand):
     def get_tested_locations(self, test_labels):
         locations = []
 
+        coverage = apps.get_app_config('django_jenkins').coverage
         if test_labels:
             pass
         elif hasattr(settings, 'PROJECT_APPS'):
             test_labels = settings.PROJECT_APPS
+        elif coverage.coverage.source:
+            warnings.warn("No PROJECT_APPS settings, using 'source' config from rcfile")
+            locations = coverage.coverage.source
         else:
             warnings.warn('No PROJECT_APPS settings, coverage gathered over all apps')
             test_labels = settings.INSTALLED_APPS
