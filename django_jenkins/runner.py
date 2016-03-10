@@ -121,10 +121,6 @@ class CITestSuiteRunner(DiscoverRunner):
         self.debug = debug
         super(CITestSuiteRunner, self).__init__(**kwargs)
 
-        if not hasattr(self, 'test_runner'):
-            # django 1.6 compatibility
-            self.test_runner = TextTestRunner
-
     def setup_databases(self):
         if 'south' in settings.INSTALLED_APPS:
             from south.management.commands import patch_for_test_db_setup

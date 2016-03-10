@@ -2,19 +2,12 @@
 import os
 import codecs
 import subprocess
-from optparse import make_option
+
 from django.conf import settings
 from django_jenkins.tasks import static_files_iterator
 
 
 class Reporter(object):
-    # TODO Remove, when drop django 1.7 support
-    option_list = (
-        make_option("--jshint-exclude",
-                    dest="jshint_exclude", default="",
-                    help="Exclude patterns"),
-    )
-
     def add_arguments(self, parser):
         parser.add_argument("--jshint-exclude",
                             dest="jshint_exclude", default="",

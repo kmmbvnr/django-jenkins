@@ -3,7 +3,6 @@ import pep8
 
 from flake8.engine import get_style_guide
 from django.conf import settings
-from optparse import make_option
 
 from . import set_option
 
@@ -12,29 +11,6 @@ class Reporter(object):
     """
     Runs flake8 on python files.
     """
-    # TODO Remove, when drop django 1.7 support
-    option_list = (
-        make_option('--max-complexity',
-                    dest='flake8-max-complexity',
-                    type=int,
-                    help='McCabe complexity treshold'),
-        make_option("--pep8-exclude",
-                    dest="pep8-exclude",
-                    help="exclude files or directories which match these "
-                    "comma separated patterns (default: %s)" %
-                    (pep8.DEFAULT_EXCLUDE + ",south_migrations")),
-        make_option("--pep8-select", dest="pep8-select",
-                    help="select errors and warnings (e.g. E,W6)"),
-        make_option("--pep8-ignore", dest="pep8-ignore",
-                    help="skip errors and warnings (e.g. E4,W)"),
-        make_option("--pep8-max-line-length",
-                    dest="pep8-max-line-length", type='int',
-                    help="set maximum allowed line length (default: %d)" %
-                    pep8.MAX_LINE_LENGTH),
-        make_option("--pep8-rcfile", dest="pep8-rcfile",
-                    help="PEP8 configuration file"),
-    )
-
     def add_arguments(self, parser):
         parser.add_argument('--max-complexity',
                             dest='flake8-max-complexity',

@@ -2,9 +2,7 @@ import os
 import sys
 import warnings
 from importlib import import_module
-from optparse import OptionParser, make_option
 
-import django
 from django.apps import apps
 from django.conf import settings
 from django.core.management.commands.test import Command as TestCommand
@@ -28,32 +26,6 @@ def get_runner(settings, test_runner_class=None):
 
 
 class Command(TestCommand):
-    # TODO Remove, when drop django 1.7 support
-    option_list = TestCommand.option_list + (
-        make_option('--output-dir', dest='output_dir', default="reports",
-                    help='Report files directory'),
-        make_option("--enable-coverage",
-                    action="store_true", default=False,
-                    help="Measure code coverage"),
-        make_option('--debug', action='store_true',
-                    dest='debug', default=False,
-                    help='Do not intercept stdout and stderr, friendly for console debuggers'),
-        make_option("--coverage-rcfile",
-                    dest="coverage_rcfile",
-                    default="",
-                    help="Specify configuration file."),
-        make_option("--coverage-format",
-                    dest="coverage_format",
-                    default="xml",
-                    help="Specify coverage output formats html,xml,bin"),
-        make_option("--coverage-exclude", action="append",
-                    default=[], dest="coverage_excludes",
-                    help="Module name to exclude"),
-        make_option("--project-apps-tests", action="store_true",
-                    default=False, dest="project_apps_tests",
-                    help="Take tests only from project apps")
-    )
-
     def __init__(self):
         super(Command, self).__init__()
         self.tasks_cls = [import_module(module_name).Reporter
@@ -61,16 +33,7 @@ class Command(TestCommand):
         self.tasks = [task_cls() for task_cls in self.tasks_cls]
 
     def get_task_list(self):
-        tasks = getattr(settings, 'JENKINS_TASKS', ())
-        if '--enable-coverage' in sys.argv and 'django_jenkins.tasks.with_coverage' not in tasks:
-            try:
-                from django.apps import apps  # NOQA
-            except ImportError:
-                """
-                We are on django 1.6
-                """
-                tasks += ('django_jenkins.tasks.with_coverage',)
-        return tasks
+        return getattr(settings, 'JENKINS_TASKS', ())
 
     @property
     def use_argparse(self):
@@ -105,27 +68,6 @@ class Command(TestCommand):
         for task in self.tasks:
             if hasattr(task, 'add_arguments'):
                 task.add_arguments(parser)
-
-    def create_parser(self, prog_name, subcommand):
-        if django.VERSION >= (1, 8):
-            parser = super(Command, self).create_parser(prog_name, subcommand)
-        else:
-            # TODO Remove, when drop django 1.7 support
-            test_runner_class = get_runner(settings, self.test_runner)
-            options = self.option_list + getattr(
-                test_runner_class, 'option_list', ())
-
-            for task in self.tasks:
-                options += tuple(option for option in getattr(task, 'option_list', ())
-                                 if all(option._long_opts[0] != existing._long_opts[0]
-                                        for existing in options))
-
-            parser = OptionParser(prog=prog_name,
-                                  usage=self.usage(subcommand),
-                                  version=self.get_version(),
-                                  option_list=options)
-
-        return parser
 
     def handle(self, *test_labels, **options):
         TestRunner = get_runner(settings, options.get('testrunner'))

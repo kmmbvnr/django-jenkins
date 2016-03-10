@@ -139,6 +139,7 @@ GIT Version
 ~~~~~~~~~~~
 
 * Flake8 >= 2.5.0 support
+* Drop django 1.7 support
 
 
 0.18.0 1985-10-26

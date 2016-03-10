@@ -2,22 +2,12 @@
 import os
 import subprocess
 import codecs
-from optparse import make_option
+
 from django.conf import settings
 from django_jenkins.tasks import static_files_iterator
 
 
 class Reporter(object):
-    # TODO Remove, when drop django 1.7 support
-    option_list = (
-        make_option("--csslint-exclude",
-                    dest="csslint_exclude", default=".min.css",
-                    help="Comma separated exclude file patterns"),
-        make_option("--csslint-ignore",
-                    dest="csslint_ignore", default="",
-                    help="CSSLint Ignore rules")
-    )
-
     def add_arguments(self, parser):
         parser.add_argument("--csslint-exclude",
                             dest="csslint_exclude", default=".min.css",

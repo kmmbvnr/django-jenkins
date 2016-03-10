@@ -1,5 +1,4 @@
 [MASTER]
-profile=no
 persistent=yes
 ignore=south_migrations
 cache-size=500
@@ -42,10 +41,6 @@ ignore-mixin-members=yes
 # (useful for classes with attributes dynamically set).
 ignored-classes=SQLObject,WSGIRequest
 
-# When zope mode is activated, add a predefined set of Zope acquired attributes
-# to generated-members.
-zope=no
-
 # List of members which are set dynamically and missed by pylint inference
 # system, and so shouldn't trigger E0201 when accessed.
 generated-members=objects,DoesNotExist,id,pk,_meta,base_fields,context
@@ -84,4 +79,3 @@ max-parents=7
 max-attributes=7
 min-public-methods=0
 max-public-methods=50
-

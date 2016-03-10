@@ -11,7 +11,7 @@ read = lambda filepath: codecs.open(filepath, 'r', 'utf-8').read()
 
 setup(
     name='django-jenkins',
-    version='0.18.1',
+    version='0.19.0',
     author='Mikhail Podgurskiy',
     author_email='kmmbvnr@gmail.com',
     description='Plug and play continuous integration with django and jenkins',
@@ -28,15 +28,19 @@ setup(
         'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
         'Natural Language :: English',
         'Operating System :: OS Independent',
+        "Framework :: Django",
+        "Framework :: Django :: 1.8",
+        "Framework :: Django :: 1.9",
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Software Development :: Testing'
     ],
     install_requires=[
-        'Django>=1.7',
+        'Django>=1.8',
     ],
     packages=['django_jenkins', 'django_jenkins.management',
               'django_jenkins.tasks', 'django_jenkins.management.commands'],
