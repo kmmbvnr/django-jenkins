@@ -10,7 +10,7 @@ Plug and play continuous integration with Django and Jenkins
    :target: https://requires.io/github/kmmbvnr/django-jenkins/requirements/?branch=master
 
 .. image:: https://img.shields.io/pypi/dm/django-jenkins.svg
-        :target: https://crate.io/packages/django-jenkins
+        :target: pypi.python.org/pypi/django-jenkins
 
 .. image:: https://badges.gitter.im/Join%20Chat.svg
         :target: https://gitter.im/kmmbvnr/django-jenkins?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
