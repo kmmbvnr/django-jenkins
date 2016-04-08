@@ -127,7 +127,7 @@ class Command(TestCommand):
         for test_label in test_labels:
             app_config = apps.get_containing_app_config(test_label)
             if app_config is not None:
-                locations.append(os.path.dirname(app_config.module.__file__))
+                locations.append(app_config.path)
             else:
                 warnings.warn('No app found for test: {0}'.format(test_label))
 
