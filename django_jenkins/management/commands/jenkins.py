@@ -66,7 +66,7 @@ class Command(TestCommand):
 
         test_runner_class = get_runner(settings)
         if hasattr(test_runner_class, 'add_arguments'):
-            test_runner_class().add_arguments(parser)
+            test_runner_class.add_arguments(parser)
 
         parser._optionals.conflict_handler = 'resolve'
         for task in self.tasks:
