@@ -64,6 +64,10 @@ class Command(TestCommand):
                             default=False, dest="project_apps_tests",
                             help="Take tests only from project apps")
 
+        TestRunner = get_runner(settings)
+        if TestRunner:
+            TestRunner().add_arguments(parser)
+
         parser._optionals.conflict_handler = 'resolve'
         for task in self.tasks:
             if hasattr(task, 'add_arguments'):
