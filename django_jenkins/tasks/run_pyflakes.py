@@ -17,8 +17,12 @@ class Reporter(object):
                             default=['south_migrations'],
                             dest="pyflakes_exclude_dirs",
                             help="Path name to exclude")
+        parser.add_argument("--pyflakes-disable", action='store_true', dest="pyflakes-disable",
+                            help="Disable the pyflakes task")
 
     def run(self, apps_locations, **options):
+        if options['pyflakes-disable']:
+            return
         output = open(os.path.join(options['output_dir'], 'pyflakes.report'), 'w')
 
         # run pyflakes tool with captured output
