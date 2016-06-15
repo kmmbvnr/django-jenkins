@@ -1,11 +1,10 @@
 import os
 import sys
 import time
-from unittest import TextTestResult, TextTestRunner
+from unittest import TextTestResult
 
 from xml.etree import ElementTree as ET
 
-from django.conf import settings
 from django.test.runner import DiscoverRunner
 from django.utils.encoding import smart_text
 
@@ -120,12 +119,6 @@ class CITestSuiteRunner(DiscoverRunner):
         self.output_dir = output_dir
         self.debug = debug
         super(CITestSuiteRunner, self).__init__(**kwargs)
-
-    def setup_databases(self):
-        if 'south' in settings.INSTALLED_APPS:
-            from south.management.commands import patch_for_test_db_setup
-            patch_for_test_db_setup()
-        return super(CITestSuiteRunner, self).setup_databases()
 
     def run_suite(self, suite, **kwargs):
         result = self.test_runner(

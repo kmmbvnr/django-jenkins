@@ -49,10 +49,6 @@ class Command(TestCommand):
     def get_task_list(self):
         return getattr(settings, 'JENKINS_TASKS', ())
 
-    @property
-    def use_argparse(self):
-        return True
-
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
         parser.add_argument('--output-dir', dest='output_dir', default="reports",
