@@ -27,10 +27,24 @@ def get_runner(settings, test_runner_class=None):
 
 class Command(TestCommand):
     def __init__(self):
-        super(Command, self).__init__()
+        self.test_runner = None
         self.tasks_cls = [import_module(module_name).Reporter
                           for module_name in self.get_task_list()]
         self.tasks = [task_cls() for task_cls in self.tasks_cls]
+        super(Command, self).__init__()
+
+    def run_from_argv(self, argv):
+        """
+        Pre-parse the command line to extract the value of the --testrunner
+        option. This allows a test runner to define additional command line
+        arguments.
+        """
+        option = '--testrunner='
+        for arg in argv[2:]:
+            if arg.startswith(option):
+                self.test_runner = arg[len(option):]
+                break
+        super(Command, self).run_from_argv(argv)
 
     def get_task_list(self):
         return getattr(settings, 'JENKINS_TASKS', ())
@@ -69,8 +83,13 @@ class Command(TestCommand):
             if hasattr(task, 'add_arguments'):
                 task.add_arguments(parser)
 
+        test_runner_class = get_runner(settings, self.test_runner)
+
+        if hasattr(test_runner_class, 'add_arguments'):
+            test_runner_class.add_arguments(parser)
+
     def handle(self, *test_labels, **options):
-        TestRunner = get_runner(settings, options.get('testrunner'))
+        TestRunner = get_runner(settings, options['testrunner'])
         options['verbosity'] = int(options.get('verbosity'))
 
         if options.get('liveserver') is not None:
