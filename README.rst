@@ -135,22 +135,14 @@ Here is the reporters prebuild with django-jenkins
 Changelog
 ---------
 
-GIT Version
-~~~~~~~~~~~
+
+0.19.0 2016-06-15
+~~~~~~~~~~~~~~~~~
 
 * Flake8 >= 2.5.0 support
 * Drop django 1.7 support
-
-
-0.18.0 1985-10-26
-~~~~~~~~~~~~~~~~~
-
-* An exceptional release for the last 5 years issued not on 15th day of a month
-* Drop python 2.6 support
-* Drop django 1.6 support
-* Add django 1.9 compatibility
-* Drop scss-lint support (the tool no longer has xml output)
-* Coverage>=4 compatibility
+* Tested on django 1.10
+* Add suppport for `.add_arguments` from custom test runner for `jenkins` command
 
 
 Contribution guide

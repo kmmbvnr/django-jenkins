@@ -1,3 +1,11 @@
+0.19.0 2016-06-15
+~~~~~~~~~~~~~~~~~
+
+* Flake8 >= 2.5.0 support
+* Drop django 1.7 support
+* Tested on django 1.10
+* Add suppport for `.add_arguments` from custom test runner for `jenkins` command
+
 0.18.0 1985-10-26
 ~~~~~~~~~~~~~~~~~
 
