@@ -132,7 +132,7 @@ class Command(TestCommand):
             pass
         elif hasattr(settings, 'PROJECT_APPS'):
             test_labels = settings.PROJECT_APPS
-        elif coverage.coverage.source:
+        elif coverage and coverage.coverage.source:
             warnings.warn("No PROJECT_APPS settings, using 'source' config from rcfile")
             locations = coverage.coverage.source
         else:
