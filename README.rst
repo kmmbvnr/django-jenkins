@@ -5,7 +5,7 @@ Plug and play continuous integration with Django and Jenkins
 
 .. image:: https://img.shields.io/pypi/v/django-jenkins.svg
     :target: https://pypi.python.org/pypi/django-jenkins
-    
+
 .. image:: https://requires.io/github/kmmbvnr/django-jenkins/requirements.png?branch=master
    :target: https://requires.io/github/kmmbvnr/django-jenkins/requirements/?branch=master
 
@@ -92,6 +92,16 @@ Here is the reporters prebuild with django-jenkins
   Creates CSS Lint compatible report for Jenkins
 
   You should have the csslint package installed
+
+- ``django_jenkins.tasks.run_scsslint``
+
+  Runs SCSS lint tool over `app/static/*/*.scss` files.
+  Creates CSS Lint compatible report for Jenkins
+
+  You should have the scss-lint_ and scss_lint_reporter_checkstyle_ tools installed
+
+.. _scss-lint: https://github.com/brigade/scss-lint
+.. _scss_lint_reporter_checkstyle: https://github.com/Sweetchuck/scss_lint_reporter_checkstyle
 
 - ``django_jenkins.tasks.run_pep8``
 
