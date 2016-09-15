@@ -110,6 +110,9 @@ class EXMLTestResult(TextTestResult):
         """
         Dumps test result to xml
         """
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
         output = ET.ElementTree(self.tree)
         output.write(os.path.join(output_dir, 'junit.xml'), encoding="utf-8")
 
