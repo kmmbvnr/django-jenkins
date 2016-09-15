@@ -13,7 +13,7 @@ class Reporter(object):
 
         retcode = process.poll()
         if retcode not in [0]:  # normal sloccount return codes
-            raise subprocess.CalledProcessError(retcode, cmd, output='%s\n%s' % (report_output, err))
+            raise subprocess.CalledProcessError(retcode, cmd, output='{}\n\n{}'.format(output, err))
 
         output.write(report_output.decode('utf-8'))
         output.close()

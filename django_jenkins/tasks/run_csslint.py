@@ -34,7 +34,7 @@ class Reporter(object):
             process_output, err = process.communicate()
             retcode = process.poll()
             if retcode not in [0, 1]:  # normal csslint return codes
-                raise subprocess.CalledProcessError(retcode, cmd, output=output + '\n' + err)
+                raise subprocess.CalledProcessError(retcode, cmd, output='{}\n\n{}'.format(output, err))
 
             output.write(process_output.decode('utf-8'))
         else:

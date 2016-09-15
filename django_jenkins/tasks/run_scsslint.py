@@ -32,7 +32,7 @@ class Reporter(object):
             process_output, err = process.communicate()
             retcode = process.poll()
             if retcode not in [0, 1, 2]:  # normal scss-lint return codes
-                raise subprocess.CalledProcessError(retcode, cmd, output='%s\n%s' % (output, err))
+                raise subprocess.CalledProcessError(retcode, cmd, output='{}\n\n{}'.format(output, err))
 
             output.write(process_output.decode('utf-8'))
         else:
