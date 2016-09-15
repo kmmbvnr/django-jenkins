@@ -1,7 +1,14 @@
 import os
 import pep8
+import sys
 
-from flake8.engine import get_style_guide
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
+
+from flake8.api.legacy import get_style_guide  # Quck hack again, 3d time flake8 would be removed, if no volounters found
 from django.conf import settings
 
 from . import set_option
@@ -35,15 +42,6 @@ class Reporter(object):
     def run(self, apps_locations, **options):
         output = open(os.path.join(options['output_dir'], 'flake8.report'), 'w')
 
-        class JenkinsReport(pep8.BaseReport):
-            def error(instance, line_number, offset, text, check):
-                code = super(JenkinsReport, instance).error(line_number, offset, text, check)
-
-                if not code:
-                    return
-                sourceline = instance.line_offset + line_number
-                output.write('%s:%s:%s: %s\n' % (instance.filename, sourceline, offset + 1, text))
-
         pep8_options = {}
 
         config_file = self.get_config_path(options)
@@ -63,21 +61,22 @@ class Reporter(object):
         set_option(pep8_options, 'max_complexity', options['flake8-max-complexity'], config_file,
                    default=-1)
 
+        old_stdout, flake8_output = sys.stdout, StringIO()
+        sys.stdout = flake8_output
+
         pep8style = get_style_guide(
             parse_argv=False,
-            reporter=JenkinsReport,
             jobs='1',
             **pep8_options)
 
-        pep8style.options.report.start()
-        for location in apps_locations:
-            if hasattr(pep8style, '_styleguide'):
-                # pyflakes >=2.5.0
-                pep8style._styleguide.input_dir(os.path.relpath(location))  # TODO Better fix required
-            else:
-                pep8style.input_dir(os.path.relpath(location))
-        pep8style.options.report.stop()
+        try:
+            for location in apps_locations:
+                pep8style.input_file(os.path.relpath(location))
+        finally:
+            sys.stdout = old_stdout
 
+        flake8_output.seek(0)
+        output.write(flake8_output.read())
         output.close()
 
     def get_config_path(self, options):

@@ -9,6 +9,7 @@ reports
 .tox
 django_jenkins.egg-info/
 MANIFEST
-.idea/*
+geckodriver.log
+
 
 
