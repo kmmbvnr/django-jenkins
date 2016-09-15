@@ -9,9 +9,6 @@ Plug and play continuous integration with Django and Jenkins
 .. image:: https://requires.io/github/kmmbvnr/django-jenkins/requirements.png?branch=master
    :target: https://requires.io/github/kmmbvnr/django-jenkins/requirements/?branch=master
 
-.. image:: https://img.shields.io/pypi/dm/django-jenkins.svg
-        :target: https://pypi.python.org/pypi/django-jenkins
-
 .. image:: https://badges.gitter.im/Join%20Chat.svg
         :target: https://gitter.im/kmmbvnr/django-jenkins?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
@@ -36,6 +33,16 @@ Installation for Python 3::
 
     Works out of the box
 
+
+Django compatibility
+--------------------
+
+django-jenkins=0.XX.Y version suppose to work with django=X.X.Z version.
+
+Probably same version of django-jenkins will works for nearest versions of django=>X.X-1.Z<X.X+1.Z
+But it's not guarantied.
+
+All older versions of django-jenkins below current are not supported.
 
 Usage
 -----
@@ -145,14 +152,11 @@ Here is the reporters prebuild with django-jenkins
 Changelog
 ---------
 
+0.110.0 2016-09-15
+~~~~~~~~~~~~~~~~~~
 
-0.19.0 2016-06-15
-~~~~~~~~~~~~~~~~~
-
-* Flake8 >= 2.5.0 support
-* Drop django 1.7 support
-* Tested on django 1.10
-* Add suppport for `.add_arguments` from custom test runner for `jenkins` command
+* Flake8 >= 3.0 support
+* `scss-lint` task added
 
 
 Contribution guide
