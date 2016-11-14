@@ -162,7 +162,7 @@ Contribution guide
 * Ensure that everything works
 * Modify the *the only one thing*
 * Ensure that everything works again
-* Fix pep8/pyflakes errors and minimize pylint's warninigs
+* Fix pep8/pyflakes errors and minimize pylint's warnings
 * Pull request!
 
 Authors
