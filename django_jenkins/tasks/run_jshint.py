@@ -12,8 +12,12 @@ class Reporter(object):
         parser.add_argument("--jshint-exclude",
                             dest="jshint_exclude", default="",
                             help="Exclude patterns")
+        parser.add_argument("--jshint-disable", dest="jshint-disable",
+                            help="Disable the jshint task", action='store_true')
 
     def run(self, apps_locations, **options):
+        if options['jshint-disable']:
+            return
         output = codecs.open(os.path.join(options['output_dir'], 'jshint.xml'), 'w', 'utf-8')
 
         files = list(

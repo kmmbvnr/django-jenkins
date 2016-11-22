@@ -28,8 +28,12 @@ class Reporter(object):
         parser.add_argument("--pylint-load-plugins",
                             dest="pylint_load_plugins",
                             help="list of pylint plugins to load")
+        parser.add_argument("--pylint-disable", action='store_true', dest="pylint-disable",
+                            help="Disable the pylint task")
 
     def run(self, apps_locations, **options):
+        if options['pylint-disable']:
+            return
         output = open(os.path.join(options['output_dir'], 'pylint.report'), 'w')
 
         args = []

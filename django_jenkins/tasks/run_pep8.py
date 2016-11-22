@@ -22,8 +22,13 @@ class Reporter(object):
                             help="set maximum allowed line length (default: %d)" % pep8.MAX_LINE_LENGTH)
         parser.add_argument("--pep8-rcfile", dest="pep8-rcfile",
                             help="PEP8 configuration file")
+        parser.add_argument("--pep8-disable", dest="pep8-disable",
+                            help="Disable the PEP8 task", action='store_true')
 
     def run(self, apps_locations, **options):
+        if options['pep8-disable']:
+            return
+
         output = open(os.path.join(options['output_dir'], 'pep8.report'), 'w')
 
         class JenkinsReport(pep8.BaseReport):
