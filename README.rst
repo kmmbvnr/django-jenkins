@@ -44,7 +44,7 @@ Configure Jenkins to run the following command::
 This will create reports/ directory with junit xml, Coverage and Pylint
 reports.
 
-For more details see the generic tutorial: https://sites.google.com/site/kmmbvnr/home/django-jenkins-tutorial
+For more details see the `documentation <https://django-jenkins.readthedocs.io>`_
 
 Settings
 --------
