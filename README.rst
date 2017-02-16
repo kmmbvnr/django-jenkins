@@ -33,17 +33,6 @@ Installation for Python 3::
 
     Works out of the box
 
-
-Django compatibility
---------------------
-
-django-jenkins=0.XX.Y version suppose to work with django=X.X.Z version.
-
-Probably same version of django-jenkins will works for nearest versions of django=>X.X-1.Z<X.X+1.Z
-But it's not guarantied.
-
-All older versions of django-jenkins below current are not supported.
-
 Usage
 -----
 
@@ -146,7 +135,7 @@ Contribution guide
 * Ensure that everything works
 * Modify the *the only one thing*
 * Ensure that everything works again
-* Fix pep8/pyflakes errors and minimize pylint's warninigs
+* Fix pep8/pyflakes errors and minimize pylint's warnings
 * Pull request!
 
 Authors
