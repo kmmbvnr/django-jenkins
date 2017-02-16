@@ -12,4 +12,6 @@ MANIFEST
 geckodriver.log
 
 
-
+# Stuff in the doc directory.
+_build
+_spell
