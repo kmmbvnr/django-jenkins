@@ -93,23 +93,6 @@ Here is the reporters prebuild with django-jenkins
 
 .. _Pylint: http://www.logilab.org/project/pylint
 
-- ``django_jenkins.tasks.run_csslint``
-
-  Runs CSS lint tools over `app/static/*/*.css` files.
-  Creates CSS Lint compatible report for Jenkins
-
-  You should have the csslint package installed
-
-- ``django_jenkins.tasks.run_scsslint``
-
-  Runs SCSS lint tool over `app/static/*/*.scss` files.
-  Creates CSS Lint compatible report for Jenkins
-
-  You should have the scss-lint_ and scss_lint_reporter_checkstyle_ tools installed
-
-.. _scss-lint: https://github.com/brigade/scss-lint
-.. _scss_lint_reporter_checkstyle: https://github.com/Sweetchuck/scss_lint_reporter_checkstyle
-
 - ``django_jenkins.tasks.run_pep8``
 
   Runs pep8 tool over selected Django apps.
@@ -139,24 +122,14 @@ Here is the reporters prebuild with django-jenkins
 
 .. _flake8: http://pypi.python.org/pypi/flake8
 
-- ``django_jenkins.tasks.run_sloccount``
-
-  Runs SLOCCount_ tool over selected Django apps.
-  Creates sloccount plugin compatible report for Jenkins.
-
-  You should have the SLOCCount program installed to run this task.
-
-.. _SLOCCount: http://www.dwheeler.com/sloccount/
-
 
 Changelog
 ---------
 
-0.110.0 2016-09-15
+GIT Version
 ~~~~~~~~~~~~~~~~~~
 
-* Flake8 >= 3.0 support
-* `scss-lint` task added
+* csslint/jshint/sccsLint/sloccount task removed (could be used as standalone tools)
 
 
 Contribution guide
