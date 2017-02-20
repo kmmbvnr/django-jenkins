@@ -134,3 +134,10 @@ class CITestSuiteRunner(DiscoverRunner):
         result.dump_xml(self.output_dir)
 
         return result
+
+
+    def build_suite(self, test_labels=None, extra_tests=None, **kwargs):
+        if test_labels is None or not test_labels:
+            test_labels = getattr(settings, 'PROJECT_APPS', test_labels)
+
+        return super(CITestSuiteRunner, self).build_suite(test_labels=test_labels, extra_tests=extra_tests, **kwargs)
