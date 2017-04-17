@@ -1,6 +1,10 @@
 django-jenkins
 ==============
 
+.. image:: https://badges.gitter.im/Join%20Chat.svg
+   :alt: Join the chat at https://gitter.im/kmmbvnr/django-jenkins
+   :target: https://gitter.im/kmmbvnr/django-jenkins?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
 Plug and play continuous integration with Django and Jenkins
 
 .. image:: https://img.shields.io/pypi/v/django-jenkins.svg
