@@ -14,7 +14,7 @@ class Reporter(object):
     def add_arguments(self, parser):
         parser.add_argument("--pyflakes-exclude-dir",
                             action="append",
-                            default=['south_migrations'],
+                            default=['south_migrations', 'migrations'],
                             dest="pyflakes_exclude_dirs",
                             help="Path name to exclude")
 
