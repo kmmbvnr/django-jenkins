@@ -1,7 +1,6 @@
 [MASTER]
 persistent=yes
-ignore=south_migrations
-ignore=migrations
+ignore=south_migrations,migrations
 cache-size=500
 
 [MESSAGES CONTROL]
