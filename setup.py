@@ -40,7 +40,8 @@ setup(
         'Topic :: Software Development :: Testing'
     ],
     install_requires=[
-        'Django>=1.8',
+        'Django>=1.8,<2.0; python_version<="2.7"', 
+        'Django>=1.8; python_version>"2.7"',
     ],
     packages=['django_jenkins', 'django_jenkins.management',
               'django_jenkins.tasks', 'django_jenkins.management.commands'],
