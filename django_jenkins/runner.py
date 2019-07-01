@@ -78,7 +78,7 @@ class EXMLTestResult(TextTestResult):
         self.tree.set('name', 'Django Project Tests')
         self.tree.set('errors', str(len(self.errors)))
         self.tree.set('failures', str(len(self.failures)))
-        self.tree.set('skips', str(len(self.skipped)))
+        self.tree.set('skipped', str(len(self.skipped)))
         self.tree.set('tests', str(self.testsRun))
         self.tree.set('time', "%.3f" % run_time_taken)
         super(EXMLTestResult, self).stopTestRun()
