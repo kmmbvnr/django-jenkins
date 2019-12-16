@@ -52,7 +52,7 @@ class CoverageReporter(object):
         # Exclude by directory
         excluded.extend(getattr(settings, 'COVERAGE_EXCLUDES_FOLDERS', []))
 
-        return [filename for filename in coverage.data.measured_files()
+        return [filename for filename in coverage.get_data().measured_files()
                 if not (os.sep + 'migrations' + os.sep) in filename
                 if not (os.sep + 'south_migrations' + os.sep) in filename
                 if any(filename.startswith(location) for location in tested_locations)
