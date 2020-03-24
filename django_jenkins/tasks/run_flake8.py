@@ -8,7 +8,7 @@ except ImportError:
     from io import StringIO
 
 
-from flake8.api.legacy import get_style_guide  # Quck hack again, 3d time flake8 would be removed, if no volounters found
+from flake8.api.legacy import get_style_guide  # Quck hack again, 3d time flake8 would be removed, if no volunteers found
 from django.conf import settings
 
 from . import set_option
