@@ -41,7 +41,7 @@ class Reporter(object):
             args += ['--errors-only']
         args += apps_locations
 
-        lint.Run(args, reporter=ParseableTextReporter(output=output), exit=False)
+        lint.Run(args, reporter=ParseableTextReporter(output=output), do_exit=False)
 
         output.close()
 
