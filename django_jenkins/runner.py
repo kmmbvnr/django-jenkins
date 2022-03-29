@@ -6,7 +6,10 @@ from unittest import TextTestResult
 from xml.etree import ElementTree as ET
 
 from django.test.runner import DiscoverRunner
-from django.utils.encoding import smart_text
+try:
+    from django.utils.encoding import smart_str
+except:
+    from django.utils.encoding import smart_text as smart_str
 
 
 class EXMLTestResult(TextTestResult):
@@ -64,12 +67,12 @@ class EXMLTestResult(TextTestResult):
             output = sys.stdout.getvalue() if hasattr(sys.stdout, 'getvalue') else ''
             if output:
                 sysout = ET.SubElement(self.testcase, 'system-out')
-                sysout.text = smart_text(output, errors='ignore')
+                sysout.text = smart_str(output, errors='ignore')
 
             error = sys.stderr.getvalue() if hasattr(sys.stderr, 'getvalue') else ''
             if error:
                 syserr = ET.SubElement(self.testcase, 'system-err')
-                syserr.text = smart_text(error, errors='ignore')
+                syserr.text = smart_str(error, errors='ignore')
 
         super(EXMLTestResult, self).stopTest(test)
 
@@ -103,8 +106,8 @@ class EXMLTestResult(TextTestResult):
         exc_class, exc_value, tb = err
         tb_str = self._exc_info_to_string(err, test)
         test_result.set('type', '%s.%s' % (exc_class.__module__, exc_class.__name__))
-        test_result.set('message', smart_text(exc_value))
-        test_result.text = smart_text(tb_str)
+        test_result.set('message', smart_str(exc_value))
+        test_result.text = smart_str(tb_str)
 
     def dump_xml(self, output_dir):
         """
